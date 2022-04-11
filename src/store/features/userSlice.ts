@@ -1,27 +1,21 @@
 import { createSlice, createAsyncThunk, SerializedError } from '@reduxjs/toolkit';
 import apiClient from '../../lib/api';
 import { userURL } from '../../lib/api/URL';
-import { UserEntityState } from '../../modules/user';
+import { UserInfoState } from '../../modules/user';
 
 interface UserState {
-  entity: UserEntityState | null;
+  userInfo: UserInfoState | null;
   loading: 'idle' | 'pending' | 'succeeded' | 'failed';
   login_id: number | null;
   token: string | null;
   currentRequestId?: string;
   error: SerializedError | null;
 }
-interface ResponseUserState {
-  entity: UserEntityState;
-  login_id: number;
-  token: string;
-}
-
 const initialState: UserState = {
   loading: 'idle',
   token: null,
   login_id: null,
-  entity: null,
+  userInfo: null,
   currentRequestId: undefined,
   error: null,
 };
@@ -51,7 +45,7 @@ export const userSlice = createSlice({
         const { requestId } = action.meta;
         if (state.loading === 'pending' && state.currentRequestId === requestId) {
           state.loading = 'idle';
-          state.entity = action.payload.user;
+          state.userInfo = action.payload.user;
           state.login_id = action.payload.login_id;
           state.token = action.payload.token;
           state.currentRequestId = undefined;

@@ -4,10 +4,10 @@ import { useSelector } from 'react-redux';
 import { RootState } from './store';
 
 function AuthenticatedRoute({ children }: { children: JSX.Element }) {
-  const { entity, loading, error, token } = useSelector((state: RootState) => state.user);
+  const { userInfo, loading, error, token } = useSelector((state: RootState) => state.user);
   const location = useLocation();
 
-  if (!entity) {
+  if (!userInfo) {
     return <Navigate to='/login' state={{ from: location }} replace />;
   }
 

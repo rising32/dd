@@ -1,4 +1,4 @@
-export interface UserEntityState {
+export interface UserInfoState {
   user_id: number;
   email: string;
   phone_number: string;
