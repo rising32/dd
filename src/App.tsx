@@ -9,7 +9,7 @@ import Tasks from './pages/task/Tasks';
 function App() {
   return (
     <Routes>
-      <Route index element={<Home />} />
+      <Route index element={<LogIn />} />
       <Route path='login' element={<LogIn />} />
       <Route element={<MainLayout />}>
         <Route
