@@ -8,6 +8,7 @@ export { ReactComponent as PreviewSvg } from './preview.svg';
 export { ReactComponent as PreviousSvg } from './previous.svg';
 export { ReactComponent as NextSvg } from './next.svg';
 export { ReactComponent as DownSvg } from './next.svg';
+export { ReactComponent as UpSvg } from './up.svg';
 export { ReactComponent as CarSvg } from './car.svg';
 export { ReactComponent as TrainSvg } from './train.svg';
 export { ReactComponent as BusSvg } from './bus.svg';
