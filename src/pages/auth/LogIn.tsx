@@ -1,6 +1,5 @@
 import React from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { logoThumbnail, crayon, person, password } from '../../assets/images';
 import { useForm, SubmitHandler } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
@@ -8,6 +7,8 @@ import { toast } from 'react-toastify';
 import { validateEmail } from '../../lib/utils';
 import { useDispatch, useSelector } from 'react-redux';
 import { onLogin } from '../../store/features/userSlice';
+import { PenSvg } from '../../assets/svg';
+import { logoThumbnail } from '../../assets/images';
 
 interface IFormInputs {
   email: string;
@@ -59,13 +60,13 @@ const LogIn = () => {
         <div className='flex items-center justify-start relative w-20 h-20 sm:hidden'>
           <img src={logoThumbnail} alt='Logo' className='h-full w-full' />
           <div className='h-1/3 w-1/3 absolute top-0 -right-1/4'>
-            <img src={crayon} alt='Crayon' className='h-full w-full' />
+            <PenSvg className='h-full w-full' />
           </div>
         </div>
         <div className='font-sans font-bold text-base sm:text-lg lg:text-2xl text-white mt-6 sm:mt-8'>Login with your account</div>
         <label className='mt-6 w-full relative block'>
           <span className='absolute inset-y-0 left-0 flex items-center pl-6'>
-            <img src={person} alt='Crayon' className='h-auto w-4 sm:w-6 lg:w-8' />
+            {/* <img src={person} alt='Crayon' className='h-auto w-4 sm:w-6 lg:w-8' /> */}
           </span>
           <input
             className='w-full bg-input px-12 py-2 rounded-full text-center text-white placeholder:text-white'
@@ -76,7 +77,7 @@ const LogIn = () => {
         </label>
         <label className='mt-6 w-full relative block'>
           <span className='absolute inset-y-0 left-0 flex items-center pl-6'>
-            <img src={password} alt='Crayon' className='h-auto w-4 sm:w-6 lg:w-8' />
+            {/* <img src={password} alt='Crayon' className='h-auto w-4 sm:w-6 lg:w-8' /> */}
           </span>
           <input
             className='w-full bg-input px-4 py-2 rounded-full text-center text-white placeholder:text-white'

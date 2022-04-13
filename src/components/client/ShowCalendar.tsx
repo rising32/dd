@@ -1,9 +1,7 @@
 import React, { useState } from 'react';
 import { useSelector } from 'react-redux';
-import { CheckSvg } from '../../assets/svg';
 import { sendGetMyClients } from '../../lib/api';
 import useRequest from '../../lib/hooks/useRequest';
-import { ClientState } from '../../modules/client';
 import { RootState } from '../../store';
 import FullCalendar from '../calendar/FullCalendar';
 import AnimatedView from '../common/AnimatedView';
@@ -15,7 +13,6 @@ interface Props {
 }
 function ShowCalendar({ selectedWhen, onSelectWhen }: Props) {
   const [showCalendar, setShowCalendar] = useState(false);
-  const [clientList, setClientList] = useState<ClientState[]>([]);
 
   const { userInfo } = useSelector((state: RootState) => state.user);
   const [_sendGetMyClients, , getMyClientsRes] = useRequest(sendGetMyClients);
@@ -31,7 +28,7 @@ function ShowCalendar({ selectedWhen, onSelectWhen }: Props) {
   return (
     <>
       <div className='flex justify-between items-center py-1'>
-        <span className='text-white text-lg font-bold pr-2'>Client :</span>
+        <span className='text-white text-lg font-bold pr-2'>Who :</span>
         <div className='border-dotted border-b-4 border-white flex-1 self-end' />
         <div className='text-rouge-blue text-lg font-bold px-2'>{selectedWhen?.toDateString()}</div>
         <div className='w-6 h-6 flex items-center justify-center' onClick={openCalendar}>

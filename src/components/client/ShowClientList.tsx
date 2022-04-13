@@ -29,7 +29,6 @@ function ShowClientList({ selectedClient, onSelectClient }: Props) {
   };
   React.useEffect(() => {
     if (getMyClientsRes) {
-      console.log(getMyClientsRes);
       setClientList(getMyClientsRes.clients);
       setShowClient(true);
     }

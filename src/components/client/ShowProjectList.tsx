@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
+import ReactModal from 'react-modal';
 import { useSelector } from 'react-redux';
 import { CheckSvg } from '../../assets/svg';
-import { sendProjectWithClientId } from '../../lib/api';
+import { sendProjectWithClientId, sendSetClient } from '../../lib/api';
 import useRequest from '../../lib/hooks/useRequest';
 import { ClientState } from '../../modules/client';
 import { ProjectState } from '../../modules/project';
@@ -9,6 +10,7 @@ import { RootState } from '../../store';
 import AnimatedView from '../common/AnimatedView';
 import DownUpIcon from '../common/DownUpIcon';
 
+ReactModal.setAppElement('#root');
 interface Props {
   selectedClient: ClientState | null;
   selectedProject: ProjectState | null;
@@ -17,9 +19,12 @@ interface Props {
 function ShowProjectList({ selectedClient, selectedProject, onSelectProject }: Props) {
   const [showProject, setShowProject] = useState(false);
   const [projectList, setProjectList] = useState<ProjectState[]>([]);
+  const [selectableProejct, setSelectableProject] = useState<ProjectState | null>(null);
+  const [showProjectModal, setShowProjectModal] = useState(false);
 
   const { userInfo } = useSelector((state: RootState) => state.user);
   const [_sendProjectWithClientId, , sendProjectWithClientIdRes] = useRequest(sendProjectWithClientId);
+  const [_sendSetClient, , sendSetClientRes] = useRequest(sendSetClient);
 
   const openProjects = () => {
     if (showProject) {
@@ -46,9 +51,42 @@ function ShowProjectList({ selectedClient, selectedProject, onSelectProject }: P
     }
   }, [sendProjectWithClientIdRes]);
   const onClickProject = (project: ProjectState) => {
+    if (project.client_id) {
+      onSelect(project);
+    } else {
+      setSelectableProject(project);
+      setShowProjectModal(true);
+    }
+  };
+  const onSelect = (project: ProjectState) => {
     onSelectProject(project);
     setShowProject(false);
   };
+  const onCancelProjectWithClient = () => {
+    setShowProjectModal(false);
+  };
+  const onLinkProjectWithClient = () => {
+    const client_id = selectedClient?.client_id;
+    const project_id = selectableProejct?.project_id;
+    _sendSetClient(client_id, project_id);
+  };
+  React.useEffect(() => {
+    if (sendSetClientRes) {
+      let newProject: ProjectState = {} as ProjectState;
+      const newProjectList = projectList.map(project => {
+        if (project.project_id === sendSetClientRes.project_id) {
+          project.client_id = sendSetClientRes.client_id;
+          newProject = project;
+          console.log(project);
+        }
+        return project;
+      });
+      setProjectList(newProjectList);
+      setShowProjectModal(false);
+      setShowProject(false);
+      onSelectProject(newProject);
+    }
+  }, [sendSetClientRes]);
 
   return (
     <>
@@ -72,6 +110,36 @@ function ShowProjectList({ selectedClient, selectedProject, onSelectProject }: P
           ))}
         </ul>
       </AnimatedView>
+      <ReactModal
+        isOpen={showProjectModal}
+        className='w-4/5 max-h-96 bg-white p-4 overflow-auto rounded-sm flex flex-col items-center justify-center'
+        style={{
+          overlay: {
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            background: 'rgba(0, 0, 0, 0.5)',
+          },
+        }}
+      >
+        <div className='text-center'>Do you want to link this project with client</div>
+        <div className='flex flex-row'>
+          <div className='font-bold pr-2'>Client:</div>
+          <div className='font-bold'>{selectedClient?.client_name}</div>
+        </div>
+        <div className='flex flex-row'>
+          <div className='font-bold pr-2'>Project:</div>
+          <div className='font-bold'>{selectableProejct?.project_name}</div>
+        </div>
+        <div className='flex flex-row items-start justify-between w-full px-8 pt-4'>
+          <div className='text-lg font-bold' onClick={onCancelProjectWithClient}>
+            No
+          </div>
+          <div className='text-lg font-bold text-rouge-blue' onClick={onLinkProjectWithClient}>
+            Yes
+          </div>
+        </div>
+      </ReactModal>
     </>
   );
 }

@@ -1,9 +1,10 @@
 import axios from 'axios';
 import { ClientState } from '../../modules/client';
-import { ProjectState } from '../../modules/project';
+import { ClientProjectState, ProjectState } from '../../modules/project';
 import { TaskState } from '../../modules/task';
 import { UserInfoState } from '../../modules/user';
-import { clientURL, projectURL, taskURL, teamURL } from './URL';
+import { PriorityState } from '../../modules/weekPriority';
+import { clientURL, priorityURL, projectURL, taskURL, teamURL } from './URL';
 
 const host = process.env.REACT_APP_API_HOST;
 const apiClient = axios.create({
@@ -41,3 +42,21 @@ export const sendTeamMembers = (owner_id: number) =>
     owner_id: number;
     member: UserInfoState[];
   }>(teamURL.getTeamMember, { owner_id });
+
+export const sendSetClient = (client_id: number, project_id: number) =>
+  apiClient.post<ClientProjectState>(projectURL.setClient, { client_id, project_id });
+
+export const sendUpdateTask = (params: TaskState) => apiClient.post<TaskState>(taskURL.updateTask, params);
+
+export const sendPriorityByWeek = (user_id: number, week: number) =>
+  apiClient.post<{
+    user_id: number;
+    priority: PriorityState[];
+  }>(priorityURL.getPriorityByWeek, { user_id, week });
+
+export const sendCreatePriority = (params: PriorityState) => apiClient.post<PriorityState>(priorityURL.createPriority, params);
+export const sendPastNotAchievedPriorities = (user_id: number, week: number) =>
+  apiClient.post<{
+    user_id: number;
+    priority: PriorityState[];
+  }>(priorityURL.getPastNotAchievedPriorities, { user_id, week });

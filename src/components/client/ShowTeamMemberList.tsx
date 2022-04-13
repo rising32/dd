@@ -3,7 +3,6 @@ import { useSelector } from 'react-redux';
 import { CheckSvg } from '../../assets/svg';
 import { sendTeamMembers } from '../../lib/api';
 import useRequest from '../../lib/hooks/useRequest';
-import { ClientState } from '../../modules/client';
 import { UserInfoState } from '../../modules/user';
 import { RootState } from '../../store';
 import AnimatedView from '../common/AnimatedView';

@@ -1,18 +1,16 @@
 import React, { useState } from 'react';
-import { useSelector } from 'react-redux';
-import { controlThumbnail } from '../../assets/images';
-import { DownSvg, UpSvg } from '../../assets/svg';
+import { PlusSvg } from '../../assets/svg';
 import SmallLayout from '../../container/common/SmallLayout';
 import { ClientState } from '../../modules/client';
 import { ProjectState } from '../../modules/project';
 import { TaskState } from '../../modules/task';
 import { UserInfoState } from '../../modules/user';
-import { RootState } from '../../store';
 import ShowCalendar from '../client/ShowCalendar';
 import ShowClientList from '../client/ShowClientList';
 import ShowProjectList from '../client/ShowProjectList';
 import ShowTaskList from '../client/ShowTaskList';
 import ShowUserList from '../client/ShowTeamMemberList';
+import PlusButton from '../common/PlusButton';
 
 function TaskFilter() {
   const [selectedClient, setSelectedClient] = useState<ClientState | null>(null);
@@ -28,6 +26,8 @@ function TaskFilter() {
     } else {
       setSelectedClient(client);
     }
+    setSelectedProject(null);
+    setSelectedTask(null);
   };
   const onSelectProject = (project: ProjectState) => {
     if (selectedProject?.project_id === project.project_id) {
@@ -52,9 +52,12 @@ function TaskFilter() {
   const onSelectWhen = (date: Date) => {
     setSelectWhen(date);
   };
+  const onCreateTaskAndDeliverable = () => {
+    // setSelectWhen(date);
+  };
 
   return (
-    <SmallLayout className='mx-4 p-4 border-rouge-blue border-4 bg-card-gray text-white'>
+    <SmallLayout className='mx-4 p-4 border-rouge-blue border-4 text-white'>
       <ShowClientList selectedClient={selectedClient} onSelectClient={onSelectClient} />
       <ShowProjectList selectedClient={selectedClient} selectedProject={selectedProject} onSelectProject={onSelectProject} />
       <ShowTaskList selectedTask={selectedTask} selectedProject={selectedProject} onSelectTask={onSelectTask} />
@@ -72,6 +75,7 @@ function TaskFilter() {
       </div>
       <ShowUserList selectedMember={selectedMember} onSelectMember={onSelectMember} />
       <ShowCalendar selectedWhen={selectWhen} onSelectWhen={onSelectWhen} />
+      <PlusButton className='flex items-center justify-end mt-4' onPlus={onCreateTaskAndDeliverable} />
     </SmallLayout>
   );
 }

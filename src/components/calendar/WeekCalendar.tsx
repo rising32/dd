@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { format, startOfWeek, addDays, isSameDay } from 'date-fns';
-import { nextThumbnail, previewThumbnail } from '../../assets/images';
+import { LeftArrowSvg, NextSvg, PreviousSvg, RightArrowSvg } from '../../assets/svg';
 import { subDays } from 'date-fns/esm';
 
 interface Props {
@@ -42,11 +42,11 @@ const WeekCalendar = ({ selectedDate, onSelectDate }: Props) => {
   return (
     <section className='w-full bg-white flex flex-row p-2 rounded-md'>
       <div className='flex items-center justify-center' onClick={() => changeWeekHandle('prev')}>
-        <img src={previewThumbnail} className='h-4 w-auto' />
+        <LeftArrowSvg stroke='#5B8EAB' strokeWidth={2} />
       </div>
       {getDates()}
       <div className='flex items-center justify-center' onClick={() => changeWeekHandle('next')}>
-        <img src={nextThumbnail} className='h-4 w-auto' />
+        <RightArrowSvg stroke='#5B8EAB' strokeWidth={2} />
       </div>
     </section>
   );

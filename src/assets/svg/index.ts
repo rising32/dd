@@ -29,3 +29,5 @@ export { ReactComponent as CameraSvg } from './carmera.svg';
 export { ReactComponent as SelfieSvg } from './selfie.svg';
 export { ReactComponent as PortraitSvg } from './portrait.svg';
 export { ReactComponent as ReturnSvg } from './return.svg';
+export { ReactComponent as PenSvg } from './pen.svg';
+export { ReactComponent as PlusSvg } from './plus.svg';
