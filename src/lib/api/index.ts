@@ -1,10 +1,11 @@
 import axios from 'axios';
 import { ClientState } from '../../modules/client';
+import { DeliverableState } from '../../modules/deliverable';
 import { ClientProjectState, ProjectState } from '../../modules/project';
 import { TaskState } from '../../modules/task';
 import { UserInfoState } from '../../modules/user';
 import { PriorityState } from '../../modules/weekPriority';
-import { clientURL, priorityURL, projectURL, taskURL, teamURL } from './URL';
+import { clientURL, deliverableURL, priorityURL, projectURL, taskURL, teamURL } from './URL';
 
 const host = process.env.REACT_APP_API_HOST;
 const apiClient = axios.create({
@@ -60,3 +61,18 @@ export const sendPastNotAchievedPriorities = (user_id: number, week: number) =>
     user_id: number;
     priority: PriorityState[];
   }>(priorityURL.getPastNotAchievedPriorities, { user_id, week });
+
+export const sendDeliverablesWithPlanedDate = (user_id: number, planned_end_date: Date) =>
+  apiClient.post<{
+    user_id: number;
+    deliverable: DeliverableState[];
+  }>(deliverableURL.getDeliverablesWithPlanedDate, { user_id, planned_end_date });
+
+export const sendMyBeforePriorities = (user_id: number, week: number) =>
+  apiClient.post<{
+    user_id: number;
+    priority: PriorityState[];
+  }>(priorityURL.getMyBeforePriorities, { user_id, week });
+
+export const sendCreateDeliverable = (params: DeliverableState) =>
+  apiClient.post<DeliverableState>(deliverableURL.createDeliverable, params);

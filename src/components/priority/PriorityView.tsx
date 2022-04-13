@@ -15,7 +15,6 @@ function PriorityView() {
     setSelectedWeek(currentWeek);
   };
   const addWeekPriority = (priority: PriorityState) => {
-    console.log('----', priority);
     setNewCreatedWeekPriority(priority);
   };
   const onSelectPriority = (priority: PriorityState) => {

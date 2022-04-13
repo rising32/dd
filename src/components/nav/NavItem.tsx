@@ -17,7 +17,7 @@ const NavItem = ({ item }: { item: NavProps }) => {
       <div className='flex items-center'>
         <img src={isActive ? item.active_image : item.inactive_image} alt='Logo' className='w-auto h-6' />
       </div>
-      <p className={`text-lg ${isActive ? 'text-rouge-blue' : 'text-white'}`}>{item.pathName}</p>
+      <p className={`${isActive ? 'text-rouge-blue' : 'text-white'}`}>{item.pathName}</p>
     </NavLink>
   );
 };

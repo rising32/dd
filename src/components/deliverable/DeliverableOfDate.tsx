@@ -1,8 +1,8 @@
-import { getWeek } from 'date-fns';
+import { format, getWeek } from 'date-fns';
 import React, { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import SmallLayout from '../../container/common/SmallLayout';
-import { sendPriorityByWeek } from '../../lib/api';
+import { sendDeliverablesWithPlanedDate } from '../../lib/api';
 import useRequest from '../../lib/hooks/useRequest';
 import { DeliverableState } from '../../modules/deliverable';
 import { PriorityState } from '../../modules/weekPriority';
@@ -12,31 +12,31 @@ import SelectedAndCompltedIcon from '../common/SelectedAndCompltedIcon';
 interface Props {
   selectedDate: Date;
   selectedDeliverable: DeliverableState | null;
-  newCreatedWeekDeliverable: DeliverableState | null;
+  newCreatedDeliverable: DeliverableState | null;
   onSelectDeliverable: (deliverable: DeliverableState) => void;
 }
-function TodayDeliverable({ selectedDate, selectedDeliverable, newCreatedWeekDeliverable, onSelectDeliverable }: Props) {
-  const [todayDeliverables, setTodayDeliverables] = useState<DeliverableState[]>([]);
+function DeliverableOfDate({ selectedDate, selectedDeliverable, newCreatedDeliverable, onSelectDeliverable }: Props) {
+  const [deliverables, setDeliverables] = useState<DeliverableState[]>([]);
 
   const { userInfo } = useSelector((state: RootState) => state.user);
 
-  const [_sendPriorityByWeek, , sendPriorityByWeekRes] = useRequest(sendPriorityByWeek);
+  const [_sendDeliverablesWithPlanedDate, , sendDeliverablesWithPlanedDateRes] = useRequest(sendDeliverablesWithPlanedDate);
 
-  //   useEffect(() => {
-  //     if (newCreatedWeekPriority) {
-  //       setWeeklyPriorities([...weeklyPriorities, newCreatedWeekPriority]);
-  //     }
-  //   }, [newCreatedWeekPriority]);
-  //   useEffect(() => {
-  //     const user_id = userInfo?.user_id;
-  //     const week = selectedWeek;
-  //     _sendPriorityByWeek(user_id, week);
-  //   }, [selectedWeek]);
-  //   React.useEffect(() => {
-  //     if (sendPriorityByWeekRes) {
-  //       setWeeklyPriorities(sendPriorityByWeekRes.priority);
-  //     }
-  //   }, [sendPriorityByWeekRes]);
+  useEffect(() => {
+    if (newCreatedDeliverable) {
+      setDeliverables([...deliverables, newCreatedDeliverable]);
+    }
+  }, [newCreatedDeliverable]);
+  useEffect(() => {
+    const user_id = userInfo?.user_id;
+    const planned_end_date = format(selectedDate, 'yyyy-MM-dd');
+    _sendDeliverablesWithPlanedDate(user_id, planned_end_date);
+  }, [selectedDate]);
+  React.useEffect(() => {
+    if (sendDeliverablesWithPlanedDateRes) {
+      setDeliverables(sendDeliverablesWithPlanedDateRes.deliverable);
+    }
+  }, [sendDeliverablesWithPlanedDateRes]);
   return (
     <div className='text-white mt-4'>
       <div className='flex justify-center'>
@@ -44,8 +44,8 @@ function TodayDeliverable({ selectedDate, selectedDeliverable, newCreatedWeekDel
       </div>
       <SmallLayout className='w-full rounded-md flex'>
         <ul role='list' className='p-4'>
-          {todayDeliverables.length > 0 ? (
-            todayDeliverables.map((deliverable, index) => (
+          {deliverables.length > 0 ? (
+            deliverables.map((deliverable, index) => (
               <li
                 key={deliverable.deliverable_id}
                 className={`flex items-center pb-2 first:pt-0 last:pb-0 ${
@@ -57,7 +57,7 @@ function TodayDeliverable({ selectedDate, selectedDeliverable, newCreatedWeekDel
               </li>
             ))
           ) : (
-            <div>{'Deliverable of ' + selectedDate.toDateString() + ' is empty!'}</div>
+            <div>empty!</div>
           )}
         </ul>
       </SmallLayout>
@@ -65,4 +65,4 @@ function TodayDeliverable({ selectedDate, selectedDeliverable, newCreatedWeekDel
   );
 }
 
-export default TodayDeliverable;
+export default DeliverableOfDate;

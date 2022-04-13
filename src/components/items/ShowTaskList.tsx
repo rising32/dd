@@ -8,6 +8,7 @@ import { ProjectState } from '../../modules/project';
 import { TaskState } from '../../modules/task';
 import { RootState } from '../../store';
 import AnimatedView from '../common/AnimatedView';
+import DownUpIcon from '../common/DownUpIcon';
 
 ReactModal.setAppElement('#root');
 interface Props {
@@ -16,9 +17,8 @@ interface Props {
   onSelectTask: (task: TaskState | null) => void;
 }
 function ShowTaskList({ selectedProject, selectedTask, onSelectTask }: Props) {
+  const [showTask, setShowTask] = useState(false);
   const [taskList, setTaskList] = useState<TaskState[]>([]);
-  const [hasFocus, setFocus] = useState(false);
-  const [taskValue, setTaskValue] = React.useState('');
   const [showTaskModal, setShowTaskModal] = useState(false);
   const [selectableTask, setSelectableTask] = useState<TaskState>({} as TaskState);
 
@@ -34,7 +34,6 @@ function ShowTaskList({ selectedProject, selectedTask, onSelectTask }: Props) {
       _sendTaskWithProjectId(creator_id, project_id);
     } else {
       setTaskList([]);
-      setTaskValue('');
     }
   }, [selectedProject]);
 
@@ -49,19 +48,19 @@ function ShowTaskList({ selectedProject, selectedTask, onSelectTask }: Props) {
     } else {
       setSelectableTask(task);
       setShowTaskModal(true);
-      setFocus(true);
     }
   };
   const onSelect = (task: TaskState) => {
-    setTaskValue(task.task_name);
     onSelectTask(task);
-    setFocus(false);
+    setShowTask(false);
   };
-  const handleTaskChange = (event: React.FormEvent<HTMLInputElement>) => {
-    onSelectTask(null);
-    setTaskValue(event.currentTarget.value);
+  const openTasks = () => {
+    if (showTask) {
+      setShowTask(false);
+    } else {
+      setShowTask(true);
+    }
   };
-  const filtered = !taskValue ? taskList : taskList.filter(task => task.task_name.toLowerCase().includes(taskValue.toLowerCase()));
 
   const onCancelTaskWithProject = () => {
     setShowTaskModal(false);
@@ -79,7 +78,6 @@ function ShowTaskList({ selectedProject, selectedTask, onSelectTask }: Props) {
       });
       setTaskList(newTaskList);
       setShowTaskModal(false);
-      setFocus(false);
       onSelect(sendUpdateTaskRes);
     }
   }, [sendUpdateTaskRes]);
@@ -87,22 +85,16 @@ function ShowTaskList({ selectedProject, selectedTask, onSelectTask }: Props) {
   return (
     <>
       <div className='flex justify-between items-center py-1'>
-        <span className='text-lg font-bold pr-2'>Task :</span>
-        <div className='ml-4 flex flex-1 w-full relative'>
-          <input
-            ref={taskRef}
-            type='text'
-            value={taskValue}
-            onChange={handleTaskChange}
-            onFocus={() => setFocus(true)}
-            onBlur={() => setFocus(false)}
-            className='w-full bg-card-gray focus:outline-none truncate'
-          />
+        <span className='text-white text-lg font-bold pr-2'>Task :</span>
+        <div className='border-dotted border-b-4 border-white flex-1 self-end' />
+        <div className='text-rouge-blue text-lg font-bold px-2'>{selectedTask?.task_name}</div>
+        <div className='w-6 h-6 flex items-center justify-center' onClick={openTasks}>
+          <DownUpIcon isShow={showTask} />
         </div>
       </div>
-      <AnimatedView show={hasFocus}>
+      <AnimatedView show={showTask}>
         <ul role='list' className='p-6'>
-          {filtered.map(task => (
+          {taskList.map(task => (
             <li key={task.task_id} className='flex items-center py-2 first:pt-0 last:pb-0' onClick={() => onClickTask(task)}>
               <div className='flex flex-1 overflow-hidden'>
                 <span className={`${task.project_id ? 'text-rouge-blue' : 'text-blue'}`}>{task.task_name}</span>

@@ -25,4 +25,10 @@ export const priorityURL = {
   createPriority: '/priority/create',
   getPriorityByWeek: '/priority/get/userid/week',
   getPastNotAchievedPriorities: '/priority/get/userid/week/before/not_completed',
+  getMyBeforePriorities: '/priority/get/userid/week/before',
+};
+
+export const deliverableURL = {
+  createDeliverable: '/project/deliverable/create',
+  getDeliverablesWithPlanedDate: '/project/deliverable/get/planned_end_date',
 };

@@ -71,8 +71,8 @@ function AchievedPriority({ selectedWeek, addWeekPriority }: Props) {
             name='priority'
             value={priorityValue}
             onChange={changePriorityValue}
-            className='mt-1 px-3 py-2 bg-transparent border shadow-sm border-dark-gray placeholder-card-gray focus:outline-none focus:border-rouge-blue block w-full rounded-md sm:text-sm focus:ring-1'
-            placeholder='Enter Rate'
+            className='mt-1 px-3 py-2 bg-transparent border shadow-sm border-dark-gray focus:outline-none focus:border-rouge-blue block w-full rounded-md sm:text-sm focus:ring-1'
+            placeholder='Enter Priority Name'
           />
         </label>
         <label className='block mt-4 w-full'>
@@ -82,8 +82,8 @@ function AchievedPriority({ selectedWeek, addWeekPriority }: Props) {
             name='goal'
             value={goalValue}
             onChange={changeGoalValue}
-            className='mt-1 px-3 py-2 bg-transparent border shadow-sm border-dark-gray placeholder-card-gray focus:outline-none focus:border-rouge-blue block w-full rounded-md sm:text-sm focus:ring-1'
-            placeholder='Enter Rate'
+            className='mt-1 px-3 py-2 bg-transparent border shadow-sm border-dark-gray focus:outline-none focus:border-rouge-blue block w-full rounded-md sm:text-sm focus:ring-1'
+            placeholder='Enter Goal'
           />
         </label>
         <PlusButton className='flex items-center justify-end my-4' onPlus={onCreateWeekPriority} />

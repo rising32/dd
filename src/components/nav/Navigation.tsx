@@ -5,7 +5,7 @@ import NavItem from './NavItem';
 function Navigation() {
   const navLinkList = getNavLinkList();
   return (
-    <div className='bg-white flex flex-row items-center justify-evenly m-4 rounded-lg'>
+    <div className='bg-white flex flex-row items-center justify-evenly m-4 rounded-lg overflow-hidden'>
       {navLinkList.map(nav => (
         <div key={nav.pathName} className='py-2'>
           <NavItem item={nav} />

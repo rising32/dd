@@ -62,7 +62,7 @@ function WeeklyPriorities({ selectedWeek, selectedPriority, newCreatedWeekPriori
               </li>
             ))
           ) : (
-            <div>{'Weekly priority of ' + selectedWeek + ' week is empty'}</div>
+            <div>empty!</div>
           )}
         </ul>
       </SmallLayout>
