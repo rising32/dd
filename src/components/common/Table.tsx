@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { Column, useTable } from 'react-table';
-import { TableDataState } from '../../modules/setting';
 export interface Props {
   columns: Array<Column<any>>;
   data: Array<any>;

@@ -1,12 +1,9 @@
 import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { ClickArrowSvg, HouseSvg, PersonSvg } from '../../assets/svg';
 import { sendUpdateUser } from '../../lib/api';
 import useRequest from '../../lib/hooks/useRequest';
-import { validateEmail } from '../../lib/utils';
-import { UserInfoState } from '../../modules/user';
 import { RootState } from '../../store';
 import { updateUser } from '../../store/features/userSlice';
 import AnimatedView from '../common/AnimatedView';
