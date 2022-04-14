@@ -10,7 +10,7 @@ function MemberProfile() {
   const { userInfo } = useSelector((state: RootState) => state.user);
   const navigate = useNavigate();
   return (
-    <SmallLayout className='mt-4 px-1 py-4 bg-dark-gray text-black relative' onClick={() => navigate('/account/user')}>
+    <SmallLayout className='mt-4 px-1 py-4 bg-dark-gray text-black relative'>
       <div className='text-lg font-bold uppercase text-center'>MEMBER PROFILE</div>
       <ItemLayout>
         <div className='w-10 flex items-center justify-center'>
@@ -19,7 +19,7 @@ function MemberProfile() {
         <div className='font-bold pr-2'>{userInfo?.display_name}</div>
         <div className='flex flex-1 truncate'>{userInfo?.email}</div>
       </ItemLayout>
-      <ItemLayout className='mt-2'>
+      <ItemLayout className='mt-2' onClick={() => navigate('clients')}>
         <div className='w-10 flex items-center justify-center'>
           <HomeSvg className='w-6 h-6 fill-rouge-blue' />
         </div>
@@ -43,7 +43,7 @@ function MemberProfile() {
           <div className='pr-2'>5 Tasks</div>
         </div>
       </ItemLayout>
-      <div className='absolute top-4 right-4'>
+      <div className='absolute top-4 right-4' onClick={() => navigate('/account/user')}>
         <PenSvg className='w-6 h-6 fill-rouge-blue' />
       </div>
     </SmallLayout>

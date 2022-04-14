@@ -22,7 +22,7 @@ const LoginSchema = yup
   })
   .required();
 
-const LogIn = () => {
+const LogInPage = () => {
   const navigate = useNavigate();
   const location: any = useLocation();
   const dispatch = useDispatch();
@@ -105,4 +105,4 @@ const LogIn = () => {
   );
 };
 
-export default LogIn;
+export default LogInPage;

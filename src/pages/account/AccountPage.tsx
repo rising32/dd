@@ -1,13 +1,13 @@
 import React from 'react';
-import StatisticsView from '../../components/statistics/StatisticsView';
+import AccountView from '../../components/account/AccountView';
 import MainResponsive from '../../container/MainResponsive';
 
-function Statistics() {
+function AccountPage() {
   return (
     <MainResponsive>
-      <StatisticsView />
+      <AccountView />
     </MainResponsive>
   );
 }
 
-export default Statistics;
+export default AccountPage;

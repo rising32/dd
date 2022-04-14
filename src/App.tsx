@@ -1,29 +1,30 @@
 import React from 'react';
 import { Routes, Route, Link } from 'react-router-dom';
-import LogIn from './pages/auth/LogIn';
+import LogInPage from './pages/auth/LogInPage';
 import AuthenticatedRoute from './AuthenticatedRoute';
 import MainLayout from './container/MainLayout';
-import Tasks from './pages/tasks/Tasks';
-import Priorities from './pages/priorities/Priorities';
-import Deliverables from './pages/deliverables/Deliverables';
-import Statistics from './pages/statistics/Statistics';
-import Account from './pages/account/Account';
-import UserProfile from './pages/account/UserProfile';
+import TasksPage from './pages/tasks/TasksPage';
+import PrioritiesPage from './pages/priorities/PrioritiesPage';
+import DeliverablesPage from './pages/deliverables/DeliverablesPage';
+import StatisticsPage from './pages/statistics/StatisticsPage';
+import AccountPage from './pages/account/AccountPage';
+import UserProfilePage from './pages/account/UserProfilePage';
 import Core from './container/base/Core';
 import WorkSetting from './pages/account/WorkSetting';
+import ClientsPage from './pages/client/ClientsPage';
 
 function App() {
   return (
     <>
       <Routes>
-        <Route index element={<LogIn />} />
-        <Route path='login' element={<LogIn />} />
+        <Route index element={<LogInPage />} />
+        <Route path='login' element={<LogInPage />} />
         <Route element={<MainLayout />}>
           <Route
             path='tasks'
             element={
               <AuthenticatedRoute>
-                <Tasks />
+                <TasksPage />
               </AuthenticatedRoute>
             }
           />
@@ -31,7 +32,7 @@ function App() {
             path='priorities'
             element={
               <AuthenticatedRoute>
-                <Priorities />
+                <PrioritiesPage />
               </AuthenticatedRoute>
             }
           />
@@ -39,7 +40,7 @@ function App() {
             path='deliverables'
             element={
               <AuthenticatedRoute>
-                <Deliverables />
+                <DeliverablesPage />
               </AuthenticatedRoute>
             }
           />
@@ -47,7 +48,7 @@ function App() {
             path='statistics'
             element={
               <AuthenticatedRoute>
-                <Statistics />
+                <StatisticsPage />
               </AuthenticatedRoute>
             }
           />
@@ -55,7 +56,7 @@ function App() {
             path='account'
             element={
               <AuthenticatedRoute>
-                <Account />
+                <AccountPage />
               </AuthenticatedRoute>
             }
           />
@@ -63,19 +64,27 @@ function App() {
             path='account/user'
             element={
               <AuthenticatedRoute>
-                <UserProfile />
+                <UserProfilePage />
+              </AuthenticatedRoute>
+            }
+          />
+          <Route
+            path='account/work-setting'
+            element={
+              <AuthenticatedRoute>
+                <WorkSetting />
+              </AuthenticatedRoute>
+            }
+          />
+          <Route
+            path='account/clients'
+            element={
+              <AuthenticatedRoute>
+                <ClientsPage />
               </AuthenticatedRoute>
             }
           />
         </Route>
-        <Route
-          path='account/work-setting'
-          element={
-            <AuthenticatedRoute>
-              <WorkSetting />
-            </AuthenticatedRoute>
-          }
-        />
       </Routes>
       <Core />
     </>

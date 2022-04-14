@@ -1,13 +1,13 @@
 import React from 'react';
-import AccountView from '../../components/account/AccountView';
+import PriorityView from '../../components/priority/PriorityView';
 import MainResponsive from '../../container/MainResponsive';
 
-function Account() {
+function PrioritiesPage() {
   return (
     <MainResponsive>
-      <AccountView />
+      <PriorityView />
     </MainResponsive>
   );
 }
 
-export default Account;
+export default PrioritiesPage;

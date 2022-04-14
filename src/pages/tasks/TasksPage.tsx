@@ -1,13 +1,13 @@
 import React from 'react';
-import PriorityView from '../../components/priority/PriorityView';
+import Task from '../../components/task/Task';
 import MainResponsive from '../../container/MainResponsive';
 
-function Priorities() {
+function TasksPage() {
   return (
     <MainResponsive>
-      <PriorityView />
+      <Task />
     </MainResponsive>
   );
 }
 
-export default Priorities;
+export default TasksPage;

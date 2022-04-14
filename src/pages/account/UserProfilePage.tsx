@@ -2,7 +2,7 @@ import React from 'react';
 import UserProfileView from '../../components/account/UserProfileView';
 import MainResponsive from '../../container/MainResponsive';
 
-function UserProfile() {
+function UserProfilePage() {
   return (
     <MainResponsive>
       <UserProfileView />
@@ -10,4 +10,4 @@ function UserProfile() {
   );
 }
 
-export default UserProfile;
+export default UserProfilePage;
