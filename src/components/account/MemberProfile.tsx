@@ -27,7 +27,7 @@ function MemberProfile() {
           <div className='pr-2'>4 Clients</div>
         </div>
       </ItemLayout>
-      <ItemLayout className='mt-2'>
+      <ItemLayout className='mt-2' onClick={() => navigate('projects')}>
         <div className='w-10 flex items-center justify-center'>
           <ProjectSvg className='w-6 h-6 fill-rouge-blue' />
         </div>

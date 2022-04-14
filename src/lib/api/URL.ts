@@ -5,9 +5,14 @@ export const userURL = {
 
 export const clientURL = {
   getMyClients: '/admin/get_my_clients',
+  createClient: '/admin/create_client',
+  registerMyClient: '/admin/regist_my_client',
+  updateClient: '/admin/update_client',
 };
 
 export const projectURL = {
+  createProject: '/project/create',
+  updateProject: '/project/update',
   getUserProject: '/project/get_user_projects',
   getProjectWithClientId: '/project/get/client_no_assign',
   setClient: '/project/set_Client',

@@ -60,7 +60,7 @@ function TaskFilter() {
   };
 
   return (
-    <SmallLayout className='mx-4 p-4 bg-card-gray border-rouge-blue border-4 text-white'>
+    <SmallLayout className='p-4 bg-card-gray border-rouge-blue border-4 text-white'>
       <ShowClientList selectedClient={selectedClient} onSelectClient={onSelectClient} />
       <ShowProjectList selectedClient={selectedClient} selectedProject={selectedProject} onSelectProject={onSelectProject} />
       <ShowCreateAndSelectTaskList selectedTask={selectedTask} selectedProject={selectedProject} onSelectTask={onSelectTask} />

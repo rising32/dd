@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { ClientState } from '../../modules/client';
+import { ClientState, UserClientState } from '../../modules/client';
 import { DeliverableState } from '../../modules/deliverable';
 import { ClientProjectState, ProjectState, StatisticTableState } from '../../modules/project';
 import { StatisticState } from '../../modules/statistic';
@@ -18,11 +18,23 @@ export default apiClient;
 
 export const sendUpdateUser = (params: UserInfoState) => apiClient.post<UserInfoState>(userURL.updateUser, params);
 
+//////////////////////////////         Client            ///////////////
+export const sendCreateClient = (client_name: string, is_active: boolean) =>
+  apiClient.post<ClientState>(clientURL.createClient, { client_name, is_active });
 export const sendGetMyClients = (user_id: number) =>
   apiClient.post<{
     user_id: number;
     clients: ClientState[];
   }>(clientURL.getMyClients, { user_id });
+
+export const sendRegisterMyClient = (user_id: number, client_id: number, is_active: boolean) =>
+  apiClient.post<UserClientState>(clientURL.registerMyClient, { user_id, client_id, is_active });
+
+export const sendUpdateClient = (params: ClientState) => apiClient.post<ClientState>(clientURL.updateClient, params);
+
+/////////////////////            Project                ///////////////////////////////
+export const sendCreateProject = (params: ProjectState) => apiClient.post<ProjectState>(projectURL.createProject, params);
+export const sendUpdateProject = (params: ProjectState) => apiClient.post<ProjectState>(projectURL.updateProject, params);
 
 export const sendProjectOfCreater = (creator_id: number) =>
   apiClient.post<{

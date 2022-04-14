@@ -94,7 +94,7 @@ function CreateDeliverable({ selectedDate, addDeliverable }: Props) {
       <div className='flex justify-center'>
         <span className='text-base'>At least 2 deliverable per day</span>
       </div>
-      <SmallLayout className='mx-4 p-4 bg-card-gray border-rouge-blue border-4 text-white relative'>
+      <SmallLayout className='p-4 bg-card-gray border-rouge-blue border-4 text-white relative'>
         <ShowClientList selectedClient={selectedClient} onSelectClient={onSelectClient} />
         <ShowProjectList selectedClient={selectedClient} selectedProject={selectedProject} onSelectProject={onSelectProject} />
         <ShowTaskList selectedTask={selectedTask} selectedProject={selectedProject} onSelectTask={onSelectTask} />

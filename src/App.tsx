@@ -12,6 +12,7 @@ import UserProfilePage from './pages/account/UserProfilePage';
 import Core from './container/base/Core';
 import WorkSetting from './pages/account/WorkSetting';
 import ClientsPage from './pages/client/ClientsPage';
+import ProjectsPage from './pages/project/ProjectsPage';
 
 function App() {
   return (
@@ -81,6 +82,14 @@ function App() {
             element={
               <AuthenticatedRoute>
                 <ClientsPage />
+              </AuthenticatedRoute>
+            }
+          />
+          <Route
+            path='account/projects'
+            element={
+              <AuthenticatedRoute>
+                <ProjectsPage />
               </AuthenticatedRoute>
             }
           />
