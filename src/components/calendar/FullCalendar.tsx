@@ -39,7 +39,7 @@ const FullCalendar = ({ selectedDate, onSelectDate }: Props) => {
         </div>,
       );
     }
-    return <div className='flex flex-row w-full p-2 bg-main-back'>{weekDays}</div>;
+    return <div className='flex flex-row w-full p-2 bg-background'>{weekDays}</div>;
   };
   const generateDatesForCurrentWeek = (date: Date, selectedDate: Date, activeDate: Date) => {
     let currentDate = date;

@@ -6,7 +6,7 @@ import { StatisticState } from '../../modules/statistic';
 import { TaskState } from '../../modules/task';
 import { UserInfoState } from '../../modules/user';
 import { PriorityState } from '../../modules/weekPriority';
-import { clientURL, deliverableURL, priorityURL, projectURL, taskURL, teamURL } from './URL';
+import { clientURL, deliverableURL, priorityURL, projectURL, taskURL, teamURL, userURL } from './URL';
 
 const host = process.env.REACT_APP_API_HOST;
 const apiClient = axios.create({
@@ -16,10 +16,8 @@ const apiClient = axios.create({
 
 export default apiClient;
 
-interface UserClientListState {
-  user_id: number;
-  clients: ClientState[];
-}
+export const sendUpdateUser = (params: UserInfoState) => apiClient.post<UserInfoState>(userURL.updateUser, params);
+
 export const sendGetMyClients = (user_id: number) =>
   apiClient.post<{
     user_id: number;

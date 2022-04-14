@@ -22,7 +22,7 @@ const Table = ({ columns, data }: Props) => {
           <tr
             {...column.getHeaderProps()}
             key={column.getHeaderProps()['key']}
-            className='bg-main-back flex flex-1 flex-col py-2 items-center justify-center outline outline-1 outline-white'
+            className='bg-background flex flex-1 flex-col py-2 items-center justify-center outline outline-1 outline-white'
           >
             {column
               .render('Header')
@@ -59,7 +59,7 @@ const Table = ({ columns, data }: Props) => {
                     onClick={() => onClickRow(cell.row.id)}
                   >
                     {cell.column.id === 'week' || cell.column.id === 'month' ? (
-                      <div className='text-white bg-main-back flex flex-1 items-center justify-center p-1'>
+                      <div className='text-white bg-background flex flex-1 items-center justify-center p-1'>
                         <div className='text-white'>{cell.render('Cell')}</div>
                       </div>
                     ) : (

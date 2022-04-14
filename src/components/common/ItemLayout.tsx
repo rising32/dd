@@ -6,8 +6,8 @@ interface Props {
   onClick?: () => void;
 }
 
-function SmallLayout({ className, children, onClick }: Props): JSX.Element {
-  const wholeClassName = 'shadow-xl ' + className;
+function ItemLayout({ className, children, onClick }: Props): JSX.Element {
+  const wholeClassName = 'flex flex-row px-2 py-2 rounded-md items-center justify-between ' + className;
 
   return (
     <div className={wholeClassName} onClick={onClick}>
@@ -16,4 +16,4 @@ function SmallLayout({ className, children, onClick }: Props): JSX.Element {
   );
 }
 
-export default SmallLayout;
+export default ItemLayout;

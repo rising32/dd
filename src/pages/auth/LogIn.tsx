@@ -55,7 +55,7 @@ const LogIn = () => {
   };
 
   return (
-    <div className='w-screen h-screen flex items-center justify-center bg-main-back'>
+    <div className='w-screen h-screen flex items-center justify-center bg-background'>
       <form onSubmit={handleSubmit(onLoginSubmit)} className='flex flex-col items-center justify-center'>
         <div className='flex items-center justify-start relative w-20 h-20 sm:hidden'>
           <img src={logoThumbnail} alt='Logo' className='h-full w-full' />

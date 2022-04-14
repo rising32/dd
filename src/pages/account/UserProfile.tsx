@@ -1,13 +1,13 @@
 import React from 'react';
-import AccountView from '../../components/account/AccountView';
+import UserProfileView from '../../components/account/UserProfileView';
 import MainResponsive from '../../container/MainResponsive';
 
-function Account() {
+function UserProfile() {
   return (
     <MainResponsive>
-      <AccountView />
+      <UserProfileView />
     </MainResponsive>
   );
 }
 
-export default Account;
+export default UserProfile;

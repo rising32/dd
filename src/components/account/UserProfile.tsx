@@ -1,31 +1,23 @@
 import React from 'react';
+import { useSelector } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
 import { redDocumentThumbnail } from '../../assets/images';
 import { BriefcaseSvg, ClickArrowSvg, EuroSvg, GroupSvg, HouseSvg, PersonSvg, SettingSvg } from '../../assets/svg';
 import SmallLayout from '../../container/common/SmallLayout';
+import { RootState } from '../../store';
 import ItemLayout from '../common/ItemLayout';
+import Organization from '../items/Organization';
+import UserNameAndEmail from '../items/UserNameAndEmail';
 
-function CompanyProfile() {
+function UserProfile() {
+  const { userInfo } = useSelector((state: RootState) => state.user);
+  const navigate = useNavigate();
   return (
     <SmallLayout className='mt-4 px-1 py-4 bg-white text-black'>
-      <div className='text-lg font-bold uppercase text-center'>company profile</div>
-      <ItemLayout>
-        <div className='w-10 flex items-center justify-center'>
-          <PersonSvg className='w-6 h-6 fill-card-gray' />
-        </div>
-        <div className='font-bold pr-2'>Loubeyre</div>
-        <div className='flex flex-1 truncate'>jf.loubeyre@gmail.com</div>
-      </ItemLayout>
-      <ItemLayout className='mt-2'>
-        <div className='w-10 flex items-center justify-center'>
-          <HouseSvg className='w-6 h-6' />
-        </div>
-        <div className='flex flex-1'>
-          <div className='pr-2'>Organization</div>
-          <div className='text-rouge-blue'>ID Logistics</div>
-        </div>
-        <ClickArrowSvg className='w-6 h-6' />
-      </ItemLayout>
-      <ItemLayout className='mt-2'>
+      <div className='text-lg font-bold uppercase text-center'>profile</div>
+      <UserNameAndEmail />
+      <Organization />
+      <ItemLayout className='mt-2' onClick={() => navigate('/account/work-setting')}>
         <div className='w-10 flex items-center justify-center'>
           <BriefcaseSvg className='w-6 h-6' />
         </div>
@@ -62,4 +54,4 @@ function CompanyProfile() {
   );
 }
 
-export default CompanyProfile;
+export default UserProfile;
