@@ -1,13 +1,13 @@
 import React from 'react';
-import ClientsView from '../../components/client/ClientsView';
+import TasksView from '../../components/task/TasksView';
 import MainResponsive from '../../container/MainResponsive';
 
-function ClientsPage() {
+function TaskManagePage() {
   return (
     <MainResponsive>
-      <ClientsView />
+      <TasksView />
     </MainResponsive>
   );
 }
 
-export default ClientsPage;
+export default TaskManagePage;

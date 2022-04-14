@@ -1,13 +1,13 @@
 import React from 'react';
-import ProjectsView from '../../components/project/ProjectsView';
+import ClientsView from '../../components/client/ClientsView';
 import MainResponsive from '../../container/MainResponsive';
 
-function ProjectsPage() {
+function ClientManagePage() {
   return (
     <MainResponsive>
-      <ProjectsView />
+      <ClientsView />
     </MainResponsive>
   );
 }
 
-export default ProjectsPage;
+export default ClientManagePage;
