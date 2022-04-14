@@ -1,7 +1,8 @@
 import axios from 'axios';
 import { ClientState } from '../../modules/client';
 import { DeliverableState } from '../../modules/deliverable';
-import { ClientProjectState, ProjectState } from '../../modules/project';
+import { ClientProjectState, ProjectState, StatisticTableState } from '../../modules/project';
+import { StatisticState } from '../../modules/statistic';
 import { TaskState } from '../../modules/task';
 import { UserInfoState } from '../../modules/user';
 import { PriorityState } from '../../modules/weekPriority';
@@ -76,3 +77,8 @@ export const sendMyBeforePriorities = (user_id: number, week: number) =>
 
 export const sendCreateDeliverable = (params: DeliverableState) =>
   apiClient.post<DeliverableState>(deliverableURL.createDeliverable, params);
+
+export const sendWeekStaticsticsData = (user_id: number) =>
+  apiClient.post<{ data: StatisticTableState[] }>(projectURL.getWeekStaticsticsData, { user_id });
+export const sendMonthStaticsticsData = (user_id: number) =>
+  apiClient.post<{ data: StatisticTableState[] }>(projectURL.getMonthStaticsticsData, { user_id });

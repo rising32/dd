@@ -19,7 +19,7 @@ export interface MonthWorkDay {
   work_days: number;
 }
 
-export interface StatisticState {
+export interface StatisticTableState {
   client_id: number;
   client_name: string;
   realWorkdays: WeekWorkDay[] | MonthWorkDay[];

@@ -6,7 +6,7 @@ interface Props {
 }
 
 function SmallLayout({ className, children }: Props): JSX.Element {
-  const wholeClassName = 'bg-card-gray shadow-xl' + className;
+  const wholeClassName = 'shadow-xl' + className;
 
   return <div className={wholeClassName}>{children}</div>;
 }

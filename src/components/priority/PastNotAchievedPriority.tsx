@@ -31,7 +31,7 @@ function PastNotAchievedPriority({ selectedWeek }: Props) {
       <div className='flex justify-center'>
         <span className='text-base'>Past priorities not achieved</span>
       </div>
-      <SmallLayout className='w-full rounded-md flex'>
+      <SmallLayout className='w-full bg-card-gray rounded-md flex'>
         <ul role='list' className='p-4'>
           {pastNotAchievedPriorities.length > 0 ? (
             pastNotAchievedPriorities.map((priority, index) => (

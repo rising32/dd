@@ -41,7 +41,7 @@ function WeeklyPriorities({ selectedWeek, selectedPriority, newCreatedWeekPriori
       <div className='flex justify-center'>
         <span className='text-base'>Weekly priorities</span>
       </div>
-      <SmallLayout className='w-full rounded-md flex'>
+      <SmallLayout className='w-full bg-card-gray rounded-md flex'>
         <ul role='list' className='p-4'>
           {weeklyPriorities.length > 0 ? (
             weeklyPriorities.map((priority, index) => (

@@ -10,6 +10,8 @@ export const projectURL = {
   getUserProject: '/project/get_user_projects',
   getProjectWithClientId: '/project/get/client_no_assign',
   setClient: '/project/set_Client',
+  getWeekStaticsticsData: '/project/get_real_workdays/week/client',
+  getMonthStaticsticsData: '/project/get_real_workdays/month/client',
 };
 
 export const taskURL = {

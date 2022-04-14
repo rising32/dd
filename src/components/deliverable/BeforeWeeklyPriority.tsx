@@ -35,7 +35,7 @@ function BeforeWeeklyPriority({ selectedDate, selectedPriority, onSelectPriority
       <div className='flex justify-center'>
         <span className='text-base'>Remember your weekly priorities</span>
       </div>
-      <SmallLayout className='w-full rounded-md flex'>
+      <SmallLayout className='w-full bg-card-gray rounded-md flex'>
         <ul role='list' className='p-4'>
           {myWeeklyPriorities.length > 0 ? (
             myWeeklyPriorities.map(priority => (

@@ -42,7 +42,7 @@ function DeliverableOfDate({ selectedDate, selectedDeliverable, newCreatedDelive
       <div className='flex justify-center'>
         <span className='text-base'>Weekly priorities</span>
       </div>
-      <SmallLayout className='w-full rounded-md flex'>
+      <SmallLayout className='w-full bg-card-gray rounded-md flex'>
         <ul role='list' className='p-4'>
           {deliverables.length > 0 ? (
             deliverables.map((deliverable, index) => (

@@ -63,7 +63,7 @@ function AchievedPriority({ selectedWeek, addWeekPriority }: Props) {
       <div className='flex justify-center'>
         <span className='text-base'>Priority achieved this week with clear goal defined</span>
       </div>
-      <SmallLayout className='w-full rounded-md flex flex-col border-rouge-blue border-4 p-4 relative'>
+      <SmallLayout className='w-full bg-card-gray rounded-md flex flex-col border-rouge-blue border-4 p-4 relative'>
         <label className='block mt-4 w-full'>
           <span className="after:content-['*'] after:ml-0.5 after:text-rouge-blue block font-bold">Priority</span>
           <input

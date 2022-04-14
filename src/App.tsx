@@ -6,6 +6,8 @@ import MainLayout from './container/MainLayout';
 import Tasks from './pages/tasks/Tasks';
 import Priorities from './pages/priorities/Priorities';
 import Deliverables from './pages/deliverables/Deliverables';
+import Statistics from './pages/statistics/Statistics';
+import Account from './pages/account/Account';
 
 function App() {
   return (
@@ -34,6 +36,22 @@ function App() {
           element={
             <AuthenticatedRoute>
               <Deliverables />
+            </AuthenticatedRoute>
+          }
+        />
+        <Route
+          path='statistics'
+          element={
+            <AuthenticatedRoute>
+              <Statistics />
+            </AuthenticatedRoute>
+          }
+        />
+        <Route
+          path='account'
+          element={
+            <AuthenticatedRoute>
+              <Account />
             </AuthenticatedRoute>
           }
         />
