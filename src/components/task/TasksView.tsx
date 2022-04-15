@@ -7,69 +7,59 @@ import HeaderWithTitle from '../base/HeaderWithTitle';
 import { ProjectState } from '../../modules/project';
 import ReactModal from 'react-modal';
 import SelectedAndCompltedIcon from '../common/SelectedAndCompltedIcon';
-import { sendProjectOfCreater, sendCreateProject } from '../../lib/api';
+import { getUserTasks } from '../../lib/api';
 import { toast } from 'react-toastify';
+import { TaskState } from '../../modules/task';
+import TaskSetting from './TaskSetting';
 
 function TasksView() {
-  const [myProjectList, setMyProjectList] = useState<ProjectState[]>([]);
-  const [selectedProject, setSelectedProject] = useState<ProjectState | null>(null);
+  const [myTaskList, setMyTaskList] = useState<TaskState[]>([]);
+  const [selectedTask, setSelectedTask] = useState<TaskState | null>(null);
   const [showModal, setShowModal] = useState(false);
 
   const { userInfo } = useSelector((state: RootState) => state.user);
-  const [_sendProjectOfCreater, , sendProjectOfCreaterRes] = useRequest(sendProjectOfCreater);
-  const [_sendCreateProject, , sendCreateProjectRes] = useRequest(sendCreateProject);
+  const [_getUserTasks, , getUserTasksRes] = useRequest(getUserTasks);
 
   React.useEffect(() => {
     const creator_id = userInfo?.user_id;
-    _sendProjectOfCreater(creator_id);
+    _getUserTasks(creator_id);
   }, []);
   React.useEffect(() => {
-    if (sendProjectOfCreaterRes) {
-      setMyProjectList(sendProjectOfCreaterRes.project);
+    if (getUserTasksRes) {
+      setMyTaskList(getUserTasksRes.task);
     }
-  }, [sendProjectOfCreaterRes]);
-  const onSelectProject = (project: ProjectState) => {
-    if (selectedProject?.project_id === project.project_id) {
-      setSelectedProject(null);
+  }, [getUserTasksRes]);
+  const onCreateTask = () => {
+    setSelectedTask(null);
+    setShowModal(!showModal);
+  };
+  const onSelectTask = (task: TaskState) => {
+    if (selectedTask?.task_id === task.task_id) {
+      setSelectedTask(null);
     } else {
-      setSelectedProject(project);
-    }
-  };
-  const onCreateProject = () => {
-    if (userInfo) {
-      const newProject: ProjectState = {
-        project_id: null,
-        creator_id: userInfo.user_id,
-        project_name: 'New Project',
-        description: null,
-        planned_start_date: null,
-        planned_end_date: null,
-        actual_start_date: null,
-        actual_end_date: null,
-      };
-      _sendCreateProject(newProject);
-    }
-  };
-  React.useEffect(() => {
-    if (sendCreateProjectRes) {
-      const newMyProjectList = myProjectList;
-      newMyProjectList.unshift(sendCreateProjectRes);
       setShowModal(false);
-      toast.success('project created successfully!');
-      setMyProjectList(newMyProjectList);
-      onSelectProject(sendCreateProjectRes);
+      setSelectedTask(task);
     }
-  }, [sendCreateProjectRes]);
-  const onUpdateSuccess = (project: ProjectState) => {
-    const newMyProjectList = myProjectList.map(item => {
-      if (item.project_id === project.project_id) {
-        return project;
-      } else {
-        return item;
-      }
-    });
-    setMyProjectList(newMyProjectList);
-    setSelectedProject(null);
+  };
+  const onSuccess = (task: TaskState) => {
+    if (selectedTask) {
+      const newMyTaskList = myTaskList.map(item => {
+        if (item.task_id === task.task_id) {
+          return task;
+        } else {
+          return item;
+        }
+      });
+      toast.success('task updated successfully!');
+      setMyTaskList(newMyTaskList);
+      onSelectTask(task);
+    } else {
+      const newMyTaskList = myTaskList;
+      newMyTaskList.unshift(task);
+      toast.success('task created successfully!');
+      setMyTaskList(newMyTaskList);
+      onCreateTask();
+    }
   };
 
   return (
@@ -82,43 +72,27 @@ function TasksView() {
             Create
           </div>
         </div>
-        <ul role='list' className='p-4'>
-          {myProjectList.map(project => (
-            <li key={project.project_id} className='py-1 first:pt-0 last:pb-0'>
-              <div className='flex' onClick={() => onSelectProject(project)}>
-                <SelectedAndCompltedIcon isSelected={project.project_id === selectedProject?.project_id} />
-                <div
-                  className={`ml-2 overflow-hidden ${project.project_id === selectedProject?.project_id && 'text-rouge-blue rounded-full'}`}
-                >
-                  {project.project_name}
+        {showModal && <TaskSetting selectedTask={selectedTask} onCancel={onCreateTask} onSuccess={onSuccess} />}
+        <ul role='list' className='p-4 divide-y divide-light-gray'>
+          {myTaskList.map(task => (
+            <li key={task.task_id} className='py-1 first:pt-0 last:pb-0'>
+              <div className='flex bg-dark-gray rounded-md p-2 items-center' onClick={() => onSelectTask(task)}>
+                <div className={`flex flex-1 text-lg capitalize truncate ${task.task_id === selectedTask?.task_id && 'text-rouge-blue'}`}>
+                  {task.task_name}
                 </div>
+                <div
+                  className={`w-4 h-4 rounded-full ${
+                    task.is_active ? 'bg-rouge-blue outline outline-2 outline-rouge-blue' : 'bg-ligth-gray outline outline-2'
+                  }`}
+                />
               </div>
+              {selectedTask && selectedTask.task_id === task.task_id && (
+                <TaskSetting selectedTask={selectedTask} onCancel={() => onSelectTask(task)} onSuccess={onSuccess} />
+              )}
             </li>
           ))}
         </ul>
       </SmallLayout>
-      <ReactModal
-        isOpen={showModal}
-        className='w-4/5 max-h-96 bg-white p-4 overflow-auto rounded-sm flex flex-col items-center justify-center'
-        style={{
-          overlay: {
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            background: 'rgba(0, 0, 0, 0.5)',
-          },
-        }}
-      >
-        <div className='text-center'>Do you want to create new Project?</div>
-        <div className='flex flex-row items-start justify-between w-full px-8 pt-4'>
-          <div className='text-lg font-bold' onClick={() => setShowModal(false)}>
-            No
-          </div>
-          <div className='text-lg font-bold text-rouge-blue' onClick={onCreateProject}>
-            Yes
-          </div>
-        </div>
-      </ReactModal>
     </>
   );
 }

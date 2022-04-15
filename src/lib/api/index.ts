@@ -46,6 +46,11 @@ export const sendProjectWithClientId = (creator_id: number, client_id: number) =
     project: ProjectState[];
   }>(projectURL.getProjectWithClientId, { creator_id, client_id });
 
+////////////////////////////////   Task  ///////////////////////////////////
+export const sendCreateTask = (params: TaskState) => apiClient.post<{ task: TaskState }>(taskURL.createTask, params);
+
+export const getUserTasks = (creator_id: number) => apiClient.post<{ task: TaskState[] }>(taskURL.getUserTask, { creator_id });
+
 export const sendTaskWithProjectId = (creator_id: number, project_id: number) =>
   apiClient.post<{ task: TaskState[] }>(taskURL.getTaskListWithProjectId, { creator_id, project_id });
 

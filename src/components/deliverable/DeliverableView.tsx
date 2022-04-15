@@ -20,7 +20,11 @@ function DeliverableView() {
     setSelectedDate(date);
   };
   const onSelectDeliverable = (deliverable: DeliverableState) => {
-    setSelectedDeliverable(deliverable);
+    if (selectedDeliverable?.deliverable_id === deliverable.deliverable_id) {
+      setSelectedDeliverable(null);
+    } else {
+      setSelectedDeliverable(deliverable);
+    }
   };
   const onSelectPriority = (priority: PriorityState) => {
     if (selectedPriority?.wp_id === priority.wp_id) {

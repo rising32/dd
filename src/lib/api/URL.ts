@@ -21,7 +21,9 @@ export const projectURL = {
 };
 
 export const taskURL = {
+  createTask: '/project/task/create',
   updateTask: '/project/task/update',
+  getUserTask: '/project/task/get_user_tasks',
   getTaskListWithProjectId: '/project/task/get_by_pna',
 };
 
