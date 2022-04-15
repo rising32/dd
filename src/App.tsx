@@ -10,7 +10,7 @@ import StatisticsPage from './pages/statistics/StatisticsPage';
 import AccountPage from './pages/account/AccountPage';
 import UserProfilePage from './pages/account/UserProfilePage';
 import Core from './container/base/Core';
-import WorkSetting from './pages/account/WorkSetting';
+import WorkSettingPage from './pages/account/WorkSettingPage';
 import ClientManagePage from './pages/client/ClientManagePage';
 import ProjectManagePage from './pages/project/ProjectManagePage';
 import TaskManagePage from './pages/tasks/TaskManagePage';
@@ -74,7 +74,7 @@ function App() {
             path='account/work-setting'
             element={
               <AuthenticatedRoute>
-                <WorkSetting />
+                <WorkSettingPage />
               </AuthenticatedRoute>
             }
           />

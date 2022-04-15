@@ -1,5 +1,6 @@
 export const userURL = {
   login: '/user/login',
+  signout: '/user/logout',
   updateUser: '/user/update',
 };
 

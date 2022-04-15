@@ -1,15 +1,16 @@
-import React, { useState, useEffect } from 'react';
-import MainResponsive from '../../container/MainResponsive';
+import React, { useEffect, useState } from 'react';
 import { addWeeks, endOfYear, getWeek, getYear, lastDayOfWeek, startOfWeek, startOfYear } from 'date-fns';
+
+import SmallLayout from '../../container/common/SmallLayout';
+import AnimatedView from '../common/AnimatedView';
 import { DisplayWorkSettingState } from '../../modules/setting';
-import WorkSettingItem from '../../components/account/WorkSettingItem';
-import AnimatedView from '../../components/common/AnimatedView';
+import WorkSettingItem from './WorkSettingItem';
 
 const WorkSetting = () => {
   const [year, setYear] = useState(getYear(new Date()));
-  const [displayWorkSettingList, setDisplayWorkSetting] = useState<DisplayWorkSettingState[]>([]);
   const [yearOptions, setYearOptions] = useState<number[]>([]);
   const [showYear, setShowYear] = useState(false);
+  const [displayWorkSettingList, setDisplayWorkSetting] = useState<DisplayWorkSettingState[]>([]);
 
   useEffect(() => {
     const startDay = startOfYear(new Date(year, 1, 1));
@@ -62,44 +63,36 @@ const WorkSetting = () => {
     setYear(year);
     setShowYear(false);
   };
-
   return (
-    <MainResponsive>
-      <div className='flex flex-row w-full h-12 px-4 mb-4 items-center justify-between bg-light-gray'>
-        <div className='text-sm text-rouge-blue font-normal'></div>
-        <div className='text-lg text-rouge-blue font-bold'>Your Account</div>
-        <div className='text-sm text-rouge-blue font-normal'></div>
+    <SmallLayout className='flex flex-1 flex-col mt-4 px-1 py-4 bg-white text-black'>
+      <div className='flex items-center justify-between px-8 py-3'>
+        <div className='text-lg font-bold'>Work Setting</div>
+        <div className='text-lg text-rouge-blue font-bold'>Submit</div>
       </div>
-      <div className='w-full mt-4 p-1 bg-white'>
-        <div className='flex flex-row items-center justify-between px-8 py-3'>
-          <div className='text-lg text-black font-bold'>Work Setting</div>
-          <div className='text-lg text-rouge-blue font-bold'>Submit</div>
+      <div className='flex items-center justify-between px-10 py-2'>
+        <div className='text-lg text-rouge-blue font-bold'>Year:</div>
+        <div className='text-lg text-blue font-bold' onClick={dropYear}>
+          {year}
         </div>
-        <div className='flex flex-row items-center justify-between px-10 py-2'>
-          <div className='text-lg text-rouge-blue font-bold'>Year:</div>
-          <div className='text-lg text-blue font-bold' onClick={dropYear}>
-            {year}
-          </div>
-        </div>
-        <AnimatedView show={showYear}>
-          <div className='flex flex-row'>
-            {yearOptions.map(year => (
-              <div key={year} className='flex flex-1 items-center justify-center text-blue' onClick={() => onSelectYear(year)}>
-                {year}
-              </div>
-            ))}
-          </div>
-        </AnimatedView>
-        <div className='flex flex-row items-center justify-between px-1 py-2 w-full'>
-          <div className='text-base text-blue font-bold w-1/5 flex items-center justify-center'>Week</div>
-          <div className='text-base text-blue font-bold w-2/5 flex items-center justify-center text-center'>First Day of Week</div>
-          <div className='text-base text-blue font-bold w-2/5 flex items-center justify-center'>Work on Week</div>
-        </div>
-        {displayWorkSettingList.map(displayWorkSetting => (
-          <WorkSettingItem key={displayWorkSetting.week} displayWorkSetting={displayWorkSetting} onChange={onChange} />
-        ))}
       </div>
-    </MainResponsive>
+      <AnimatedView show={showYear}>
+        <div className='flex flex-row'>
+          {yearOptions.map(year => (
+            <div key={year} className='flex flex-1 items-center justify-center text-blue' onClick={() => onSelectYear(year)}>
+              {year}
+            </div>
+          ))}
+        </div>
+      </AnimatedView>
+      <div className='flex flex-row items-center justify-between px-1 py-2 w-full text-blue font-bold'>
+        <div className='w-1/5 flex items-center justify-center'>Week</div>
+        <div className='w-2/5 flex items-center justify-center text-center'>First Day of Week</div>
+        <div className='w-2/5 flex items-center justify-center'>Work on Week</div>
+      </div>
+      {displayWorkSettingList.map(displayWorkSetting => (
+        <WorkSettingItem key={displayWorkSetting.week} displayWorkSetting={displayWorkSetting} onChange={onChange} />
+      ))}
+    </SmallLayout>
   );
 };
 

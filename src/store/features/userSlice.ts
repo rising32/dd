@@ -24,6 +24,10 @@ export const onLogin = createAsyncThunk('user/login', async (params: { email: st
   const response = await apiClient.post(userURL.login, params);
   return response.data;
 });
+export const onSignout = createAsyncThunk('user/signout', async (params: { user_id: number }) => {
+  const response = await apiClient.post(userURL.signout, params);
+  return response.data;
+});
 
 export const userSlice = createSlice({
   name: 'user',
@@ -59,6 +63,13 @@ export const userSlice = createSlice({
           state.currentRequestId = undefined;
         }
       });
+    builder.addCase(onSignout.fulfilled, (state, action) => {
+      state.loading = 'idle';
+      state.userInfo = null;
+      state.login_id = null;
+      state.token = null;
+      state.currentRequestId = undefined;
+    });
   },
 });
 

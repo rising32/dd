@@ -78,7 +78,7 @@ function ProjectsView() {
       <HeaderWithTitle title='Manage Projects' />
       <SmallLayout className='flex flex-1 flex-col bg-white py-4 mt-4 text-black'>
         <div className='flex flex-row px-4 items-center justify-between pb-2'>
-          <div className='text-lg text-black font-bold'>Clients</div>
+          <div className='text-lg text-black font-bold'>Projects</div>
           <div className='text-base text-blue' onClick={() => setShowModal(true)}>
             Create
           </div>
