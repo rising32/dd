@@ -73,6 +73,8 @@ export const sendPriorityByWeek = (user_id: number, week: number) =>
   }>(priorityURL.getPriorityByWeek, { user_id, week });
 
 export const sendCreatePriority = (params: PriorityState) => apiClient.post<PriorityState>(priorityURL.createPriority, params);
+export const sendUpdatePriority = (params: PriorityState) => apiClient.post<PriorityState>(priorityURL.updatePriority, params);
+
 export const sendPastNotAchievedPriorities = (user_id: number, week: number) =>
   apiClient.post<{
     user_id: number;
@@ -88,6 +90,9 @@ export const sendMyBeforePriorities = (user_id: number, week: number) =>
 ////////////////////////////  Deliverable   ////////////////////////
 export const sendCreateDeliverable = (params: DeliverableState) =>
   apiClient.post<DeliverableState>(deliverableURL.createDeliverable, params);
+export const sendUpdateDeliverable = (params: DeliverableState) =>
+  apiClient.post<DeliverableState>(deliverableURL.updateDeliverable, params);
+
 export const sendDeliverableInfo = (deliverable_id: number) =>
   apiClient.post<{ data: DeliverableInfoState }>(deliverableURL.deliverableInfo, { deliverable_id });
 

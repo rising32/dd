@@ -11,7 +11,7 @@ import DownUpIcon from '../common/DownUpIcon';
 
 interface Props {
   selectedClient: ClientState | null;
-  onSelectClient: (client: ClientState) => void;
+  onSelectClient: (client: ClientState | null) => void;
   deliverableInfo?: DeliverableInfoState | null;
 }
 function ShowClientList({ selectedClient, deliverableInfo, onSelectClient }: Props) {
@@ -25,7 +25,7 @@ function ShowClientList({ selectedClient, deliverableInfo, onSelectClient }: Pro
     if (deliverableInfo) {
       getMyClients();
     } else {
-      // onSelectClient(client);
+      setClientList([]);
     }
   }, [deliverableInfo]);
   const openClients = () => {
@@ -61,6 +61,15 @@ function ShowClientList({ selectedClient, deliverableInfo, onSelectClient }: Pro
     onSelectClient(client);
     setShowClient(false);
   };
+  const onClickClientItem = (client: ClientState) => {
+    if (selectedClient?.client_id === client.client_id) {
+      onSelectClient(null);
+    } else {
+      onSelectClient(client);
+    }
+    onSelectClient(client);
+    setShowClient(false);
+  };
 
   return (
     <>
@@ -75,7 +84,7 @@ function ShowClientList({ selectedClient, deliverableInfo, onSelectClient }: Pro
       <AnimatedView show={showClient}>
         <ul role='list' className='p-6'>
           {clientList.map(client => (
-            <li key={client.client_id} className='flex items-center py-2 first:pt-0 last:pb-0' onClick={() => onClickClient(client)}>
+            <li key={client.client_id} className='flex items-center py-2 first:pt-0 last:pb-0' onClick={() => onClickClientItem(client)}>
               <div className='flex flex-1 overflow-hidden'>
                 <p className='font-medium text-slate-900'>{client.client_name}</p>
               </div>

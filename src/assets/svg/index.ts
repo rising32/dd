@@ -39,3 +39,4 @@ export { ReactComponent as SettingSvg } from './setting.svg';
 export { ReactComponent as GroupSvg } from './group.svg';
 export { ReactComponent as ProjectSvg } from './project.svg';
 export { ReactComponent as TaskSvg } from './task.svg';
+export { ReactComponent as CompleteSvg } from './complete.svg';

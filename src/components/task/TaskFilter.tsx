@@ -19,12 +19,8 @@ function TaskFilter() {
   const [deliverableValue, setDeliverableValue] = useState('');
   const [selectWhen, setSelectWhen] = useState<Date | null>(null);
 
-  const onSelectClient = (client: ClientState) => {
-    if (selectedClient?.client_id === client.client_id) {
-      setSelectedClient(null);
-    } else {
-      setSelectedClient(client);
-    }
+  const onSelectClient = (client: ClientState | null) => {
+    setSelectedClient(client);
     setSelectedProject(null);
     setSelectedTask(null);
   };

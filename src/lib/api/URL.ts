@@ -33,6 +33,7 @@ export const teamURL = {
 
 export const priorityURL = {
   createPriority: '/priority/create',
+  updatePriority: '/priority/update',
   getPriorityByWeek: '/priority/get/userid/week',
   getPastNotAchievedPriorities: '/priority/get/userid/week/before/not_completed',
   getMyBeforePriorities: '/priority/get/userid/week/before',
@@ -40,6 +41,7 @@ export const priorityURL = {
 
 export const deliverableURL = {
   createDeliverable: '/project/deliverable/create',
+  updateDeliverable: '/project/deliverable/update',
   getDeliverablesWithPlanedDate: '/project/deliverable/get/planned_end_date',
   deliverableInfo: '/project/deliverable/get_cpt_by_id',
 };

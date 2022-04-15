@@ -10,16 +10,29 @@ import SelectedAndCompltedIcon from '../common/SelectedAndCompltedIcon';
 
 interface Props {
   selectedDate: Date;
+  updatedPriority: PriorityState | null;
   selectedPriority: PriorityState | null;
   onSelectPriority: (priority: PriorityState) => void;
 }
-function BeforeWeeklyPriority({ selectedDate, selectedPriority, onSelectPriority }: Props) {
+function BeforeWeeklyPriority({ selectedDate, selectedPriority, updatedPriority, onSelectPriority }: Props) {
   const [myWeeklyPriorities, setMyWeeklyPriorities] = useState<PriorityState[]>([]);
 
   const { userInfo } = useSelector((state: RootState) => state.user);
 
   const [_sendMyBeforePriorities, , sendMyBeforePrioritiesRes] = useRequest(sendMyBeforePriorities);
 
+  useEffect(() => {
+    if (updatedPriority) {
+      const newMyWeeklyPriorities = myWeeklyPriorities.map(priority => {
+        if (priority.wp_id === updatedPriority.wp_id) {
+          return updatedPriority;
+        } else {
+          return priority;
+        }
+      });
+      setMyWeeklyPriorities(newMyWeeklyPriorities);
+    }
+  }, [updatedPriority]);
   useEffect(() => {
     const user_id = userInfo?.user_id;
     const week = getWeek(selectedDate, { weekStartsOn: 1, firstWeekContainsDate: 4 });
