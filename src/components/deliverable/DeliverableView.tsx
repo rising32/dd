@@ -24,6 +24,7 @@ function DeliverableView() {
       setSelectedDeliverable(null);
     } else {
       setSelectedDeliverable(deliverable);
+      setSelectedPriority(null);
     }
   };
   const onSelectPriority = (priority: PriorityState) => {
@@ -31,10 +32,13 @@ function DeliverableView() {
       setSelectedPriority(null);
     } else {
       setSelectedPriority(priority);
+      setSelectedDeliverable(null);
     }
   };
   const addDeliverable = (deliverable: DeliverableState) => {
     setNewCreatedDeliverable(deliverable);
+    setSelectedPriority(null);
+    setSelectedDeliverable(null);
   };
 
   return (
@@ -46,7 +50,12 @@ function DeliverableView() {
         onSelectDeliverable={onSelectDeliverable}
         newCreatedDeliverable={newCreatedDeliverable}
       />
-      <CreateDeliverable selectedDate={selectedDate} addDeliverable={addDeliverable} />
+      <CreateDeliverable
+        selectedDate={selectedDate}
+        addDeliverable={addDeliverable}
+        selectedDeliverable={selectedDeliverable}
+        selectedPriority={selectedPriority}
+      />
       <BeforeWeeklyPriority selectedDate={selectedDate} selectedPriority={selectedPriority} onSelectPriority={onSelectPriority} />
     </>
   );

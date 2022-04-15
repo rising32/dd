@@ -5,6 +5,7 @@ import { CheckSvg } from '../../assets/svg';
 import { sendProjectWithClientId, sendSetClient } from '../../lib/api';
 import useRequest from '../../lib/hooks/useRequest';
 import { ClientState } from '../../modules/client';
+import { DeliverableInfoState } from '../../modules/deliverable';
 import { ProjectState } from '../../modules/project';
 import { RootState } from '../../store';
 import AnimatedView from '../common/AnimatedView';
@@ -15,8 +16,9 @@ interface Props {
   selectedClient: ClientState | null;
   selectedProject: ProjectState | null;
   onSelectProject: (project: ProjectState) => void;
+  deliverableInfo?: DeliverableInfoState | null;
 }
-function ShowProjectList({ selectedClient, selectedProject, onSelectProject }: Props) {
+function ShowProjectList({ selectedClient, selectedProject, deliverableInfo, onSelectProject }: Props) {
   const [showProject, setShowProject] = useState(false);
   const [projectList, setProjectList] = useState<ProjectState[]>([]);
   const [selectableProejct, setSelectableProject] = useState<ProjectState | null>(null);
@@ -48,6 +50,14 @@ function ShowProjectList({ selectedClient, selectedProject, onSelectProject }: P
   React.useEffect(() => {
     if (sendProjectWithClientIdRes) {
       setProjectList(sendProjectWithClientIdRes.project);
+
+      if (deliverableInfo) {
+        sendProjectWithClientIdRes.project.map(project => {
+          if (project.project_id === deliverableInfo.project_id) {
+            onClickProject(project);
+          }
+        });
+      }
     }
   }, [sendProjectWithClientIdRes]);
   const onClickProject = (project: ProjectState) => {
@@ -77,7 +87,6 @@ function ShowProjectList({ selectedClient, selectedProject, onSelectProject }: P
         if (project.project_id === sendSetClientRes.project_id) {
           project.client_id = sendSetClientRes.client_id;
           newProject = project;
-          console.log(project);
         }
         return project;
       });

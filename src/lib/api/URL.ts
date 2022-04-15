@@ -41,4 +41,5 @@ export const priorityURL = {
 export const deliverableURL = {
   createDeliverable: '/project/deliverable/create',
   getDeliverablesWithPlanedDate: '/project/deliverable/get/planned_end_date',
+  deliverableInfo: '/project/deliverable/get_cpt_by_id',
 };

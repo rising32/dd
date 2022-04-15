@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { ClientState, UserClientState } from '../../modules/client';
-import { DeliverableState } from '../../modules/deliverable';
+import { DeliverableInfoState, DeliverableState } from '../../modules/deliverable';
 import { ClientProjectState, ProjectState, StatisticTableState } from '../../modules/project';
 import { StatisticState } from '../../modules/statistic';
 import { TaskState } from '../../modules/task';
@@ -65,6 +65,7 @@ export const sendSetClient = (client_id: number, project_id: number) =>
 
 export const sendUpdateTask = (params: TaskState) => apiClient.post<TaskState>(taskURL.updateTask, params);
 
+///////////////////// Priority     ///////////////////////
 export const sendPriorityByWeek = (user_id: number, week: number) =>
   apiClient.post<{
     user_id: number;
@@ -78,21 +79,25 @@ export const sendPastNotAchievedPriorities = (user_id: number, week: number) =>
     priority: PriorityState[];
   }>(priorityURL.getPastNotAchievedPriorities, { user_id, week });
 
-export const sendDeliverablesWithPlanedDate = (user_id: number, planned_end_date: Date) =>
-  apiClient.post<{
-    user_id: number;
-    deliverable: DeliverableState[];
-  }>(deliverableURL.getDeliverablesWithPlanedDate, { user_id, planned_end_date });
-
 export const sendMyBeforePriorities = (user_id: number, week: number) =>
   apiClient.post<{
     user_id: number;
     priority: PriorityState[];
   }>(priorityURL.getMyBeforePriorities, { user_id, week });
 
+////////////////////////////  Deliverable   ////////////////////////
 export const sendCreateDeliverable = (params: DeliverableState) =>
   apiClient.post<DeliverableState>(deliverableURL.createDeliverable, params);
+export const sendDeliverableInfo = (deliverable_id: number) =>
+  apiClient.post<{ data: DeliverableInfoState }>(deliverableURL.deliverableInfo, { deliverable_id });
 
+export const sendDeliverablesWithPlanedDate = (user_id: number, planned_end_date: Date) =>
+  apiClient.post<{
+    user_id: number;
+    deliverable: DeliverableState[];
+  }>(deliverableURL.getDeliverablesWithPlanedDate, { user_id, planned_end_date });
+
+/////////////////////////  Statistics     /////////////////////
 export const sendWeekStaticsticsData = (user_id: number) =>
   apiClient.post<{ data: StatisticTableState[] }>(projectURL.getWeekStaticsticsData, { user_id });
 export const sendMonthStaticsticsData = (user_id: number) =>

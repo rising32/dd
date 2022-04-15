@@ -9,27 +9,49 @@ import ShowTaskList from '../items/ShowTaskList';
 import PlusButton from '../common/PlusButton';
 import DeliverableTab from './DeliverableTab';
 import useRequest from '../../lib/hooks/useRequest';
-import { sendCreateDeliverable } from '../../lib/api';
-import { DeliverableState } from '../../modules/deliverable';
+import { sendCreateDeliverable, sendDeliverableInfo } from '../../lib/api';
+import { DeliverableInfoState, DeliverableState } from '../../modules/deliverable';
 import { useSelector } from 'react-redux';
 import { RootState } from '../../store';
 import { toast } from 'react-toastify';
 import { format } from 'date-fns';
+import { PriorityState } from '../../modules/weekPriority';
 
 interface Props {
   selectedDate: Date;
   addDeliverable: (deliverable: DeliverableState) => void;
+  selectedPriority?: PriorityState | null;
+  selectedDeliverable?: DeliverableState | null;
 }
-function CreateDeliverable({ selectedDate, addDeliverable }: Props) {
+function CreateDeliverable({ selectedDate, selectedDeliverable, selectedPriority, addDeliverable }: Props) {
   const [selectedClient, setSelectedClient] = useState<ClientState | null>(null);
   const [selectedProject, setSelectedProject] = useState<ProjectState | null>(null);
   const [selectedTask, setSelectedTask] = useState<TaskState | null>(null);
   const [deliverableValue, setDeliverableValue] = useState('');
   const [selectedDeliverableTab, setSelectedDeliverableTab] = useState<string>('');
+  const [deliverableInfo, setDeliverableInfo] = useState<DeliverableInfoState | null>(null);
 
   const [_sendCreateDeliverable, , sendCreateDeliverableRes] = useRequest(sendCreateDeliverable);
+  const [_sendDeliverableInfo, , sendDeliverableInfoRes] = useRequest(sendDeliverableInfo);
   const { userInfo } = useSelector((state: RootState) => state.user);
 
+  React.useEffect(() => {
+    if (selectedDeliverable) {
+      const deliverable_id = selectedDeliverable.deliverable_id;
+      _sendDeliverableInfo(deliverable_id);
+    } else {
+      setSelectedClient(null);
+      setSelectedProject(null);
+      setSelectedTask(null);
+      setDeliverableValue('');
+    }
+  }, [selectedDeliverable]);
+  React.useEffect(() => {
+    if (sendDeliverableInfoRes) {
+      setDeliverableInfo(sendDeliverableInfoRes.data);
+      setDeliverableValue(sendDeliverableInfoRes.data.deliverable_name);
+    }
+  }, [sendDeliverableInfoRes]);
   const onSelectClient = (client: ClientState) => {
     if (selectedClient?.client_id === client.client_id) {
       setSelectedClient(null);
@@ -95,9 +117,19 @@ function CreateDeliverable({ selectedDate, addDeliverable }: Props) {
         <span className='text-base'>At least 2 deliverable per day</span>
       </div>
       <SmallLayout className='p-4 bg-card-gray border-rouge-blue border-4 text-white relative'>
-        <ShowClientList selectedClient={selectedClient} onSelectClient={onSelectClient} />
-        <ShowProjectList selectedClient={selectedClient} selectedProject={selectedProject} onSelectProject={onSelectProject} />
-        <ShowTaskList selectedTask={selectedTask} selectedProject={selectedProject} onSelectTask={onSelectTask} />
+        <ShowClientList selectedClient={selectedClient} onSelectClient={onSelectClient} deliverableInfo={deliverableInfo} />
+        <ShowProjectList
+          selectedClient={selectedClient}
+          selectedProject={selectedProject}
+          onSelectProject={onSelectProject}
+          deliverableInfo={deliverableInfo}
+        />
+        <ShowTaskList
+          selectedTask={selectedTask}
+          selectedProject={selectedProject}
+          onSelectTask={onSelectTask}
+          deliverableInfo={deliverableInfo}
+        />
 
         <label className='block mt-4 w-full'>
           <span className="after:content-['*'] after:ml-0.5 after:text-rouge-blue block font-bold">Deliverable</span>

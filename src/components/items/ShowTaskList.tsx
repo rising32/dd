@@ -4,6 +4,7 @@ import { useSelector } from 'react-redux';
 import { CheckSvg } from '../../assets/svg';
 import { sendTaskWithProjectId, sendUpdateTask } from '../../lib/api';
 import useRequest from '../../lib/hooks/useRequest';
+import { DeliverableInfoState } from '../../modules/deliverable';
 import { ProjectState } from '../../modules/project';
 import { TaskState } from '../../modules/task';
 import { RootState } from '../../store';
@@ -15,8 +16,9 @@ interface Props {
   selectedProject: ProjectState | null;
   selectedTask: TaskState | null;
   onSelectTask: (task: TaskState | null) => void;
+  deliverableInfo?: DeliverableInfoState | null;
 }
-function ShowTaskList({ selectedProject, selectedTask, onSelectTask }: Props) {
+function ShowTaskList({ selectedProject, selectedTask, deliverableInfo, onSelectTask }: Props) {
   const [showTask, setShowTask] = useState(false);
   const [taskList, setTaskList] = useState<TaskState[]>([]);
   const [showTaskModal, setShowTaskModal] = useState(false);
@@ -40,6 +42,13 @@ function ShowTaskList({ selectedProject, selectedTask, onSelectTask }: Props) {
   React.useEffect(() => {
     if (sendTaskWithProjectIdRes) {
       setTaskList(sendTaskWithProjectIdRes.task);
+      if (deliverableInfo) {
+        sendTaskWithProjectIdRes.task.map(task => {
+          if (task.task_id === deliverableInfo.task_id) {
+            onClickTask(task);
+          }
+        });
+      }
     }
   }, [sendTaskWithProjectIdRes]);
   const onClickTask = (task: TaskState) => {
