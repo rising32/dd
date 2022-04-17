@@ -3,7 +3,7 @@ import { ClientState, UserClientState } from '../../modules/client';
 import { DeliverableInfoState, DeliverableState } from '../../modules/deliverable';
 import { ClientProjectState, ProjectState, StatisticTableState } from '../../modules/project';
 import { StatisticState } from '../../modules/statistic';
-import { TaskState } from '../../modules/task';
+import { CPMDState, TaskAssignState, TaskState } from '../../modules/task';
 import { TeamMemberState } from '../../modules/team';
 import { UserInfoState } from '../../modules/user';
 import { PriorityState } from '../../modules/weekPriority';
@@ -50,6 +50,7 @@ export const sendProjectWithClientId = (creator_id: number, client_id: number) =
   }>(projectURL.getProjectWithClientId, { creator_id, client_id });
 
 ////////////////////////////////   Task  ///////////////////////////////////
+
 export const sendCreateTask = (params: TaskState) => apiClient.post<{ task: TaskState }>(taskURL.createTask, params);
 
 export const getUserTasks = (creator_id: number) => apiClient.post<{ task: TaskState[] }>(taskURL.getUserTask, { creator_id });
@@ -61,6 +62,16 @@ export const sendSetClient = (client_id: number, project_id: number) =>
   apiClient.post<ClientProjectState>(projectURL.setClient, { client_id, project_id });
 
 export const sendUpdateTask = (params: TaskState) => apiClient.post<TaskState>(taskURL.updateTask, params);
+
+interface UCTPParams {
+  member_id?: number;
+  client_id?: number;
+  project_id?: number;
+  planned_end_date?: Date;
+}
+
+export const sendTasksWithCPMD = (params: UCTPParams) => apiClient.post<CPMDState[]>(taskURL.getTasksWithCPMD, params);
+export const sendDeveloperToTask = (params: TaskAssignState) => apiClient.post<{ task: TaskState }>(taskURL.setDeveloperToTask, params);
 
 ///////////////////// Priority     ///////////////////////
 export const sendPriorityByWeek = (user_id: number, week: number) =>

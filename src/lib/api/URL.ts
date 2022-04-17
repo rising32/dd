@@ -27,6 +27,8 @@ export const taskURL = {
   updateTask: '/project/task/update',
   getUserTask: '/project/task/get_user_tasks',
   getTaskListWithProjectId: '/project/task/get_by_pna',
+  getTasksWithCPMD: '/project/task/get_ucpt',
+  setDeveloperToTask: '/project/task/assign',
 };
 
 export const teamURL = {

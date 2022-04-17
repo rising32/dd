@@ -28,7 +28,7 @@ function ShowCalendar({ selectedWhen, onSelectWhen }: Props) {
   return (
     <>
       <div className='flex justify-between items-center py-1'>
-        <span className='text-white text-lg font-bold pr-2'>Who :</span>
+        <span className='text-white text-lg font-bold pr-2'>When :</span>
         <div className='border-dotted border-b-4 border-white flex-1 self-end' />
         <div className='text-rouge-blue text-lg font-bold px-2'>{selectedWhen?.toDateString()}</div>
         <div className='w-6 h-6 flex items-center justify-center' onClick={openCalendar}>

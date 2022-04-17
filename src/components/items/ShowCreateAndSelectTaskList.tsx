@@ -14,8 +14,9 @@ interface Props {
   selectedProject: ProjectState | null;
   selectedTask: TaskState | null;
   onSelectTask: (task: TaskState | null) => void;
+  sendTaskValue: (value: string) => void;
 }
-function ShowCreateAndSelectTaskList({ selectedProject, selectedTask, onSelectTask }: Props) {
+function ShowCreateAndSelectTaskList({ selectedProject, selectedTask, onSelectTask, sendTaskValue }: Props) {
   const [taskList, setTaskList] = useState<TaskState[]>([]);
   const [hasFocus, setFocus] = useState(false);
   const [taskValue, setTaskValue] = React.useState('');
@@ -83,6 +84,10 @@ function ShowCreateAndSelectTaskList({ selectedProject, selectedTask, onSelectTa
       onSelect(sendUpdateTaskRes);
     }
   }, [sendUpdateTaskRes]);
+  const onEndEdit = () => {
+    setFocus(false);
+    sendTaskValue(taskValue);
+  };
 
   return (
     <>
@@ -94,7 +99,7 @@ function ShowCreateAndSelectTaskList({ selectedProject, selectedTask, onSelectTa
           value={taskValue}
           onChange={handleTaskChange}
           onFocus={() => setFocus(true)}
-          onBlur={() => setFocus(false)}
+          onBlur={onEndEdit}
           className='mt-1 px-3 py-2 bg-transparent border shadow-sm border-dark-gray focus:outline-none focus:border-rouge-blue block w-full rounded-md sm:text-sm focus:ring-1'
           placeholder='Enter Task Name'
         />

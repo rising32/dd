@@ -3,7 +3,7 @@ export interface TaskState {
   creator_id: number;
   project_id: number | null;
   task_name: string;
-  description: string;
+  description: string | null;
   planned_start_date: string | null;
   planned_end_date: string | null;
   actual_start_date: string | null;
@@ -25,4 +25,12 @@ export interface TaskAssignState {
   task_id: number;
   member_id: number;
   role_id: number;
+}
+
+export interface CPMDState {
+  week: number;
+  client_id: number;
+  client_name: string;
+  member_id: number;
+  task: TaskState[];
 }
