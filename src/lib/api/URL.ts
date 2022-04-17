@@ -2,6 +2,7 @@ export const userURL = {
   login: '/user/login',
   signout: '/user/logout',
   updateUser: '/user/update',
+  allUsers: '/user/all',
 };
 
 export const clientURL = {
@@ -29,6 +30,7 @@ export const taskURL = {
 };
 
 export const teamURL = {
+  addTeamMember: '/team/add_member',
   getTeamMember: '/team/get_team_members',
 };
 

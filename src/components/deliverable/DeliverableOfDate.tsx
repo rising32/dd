@@ -56,6 +56,7 @@ function DeliverableOfDate({ selectedDate, selectedDeliverable, newCreatedDelive
     if (deliverable.is_completed === 0) {
       _sendUpdateDeliverable({
         ...deliverable,
+        planned_end_date: format(selectedDate, 'yyyy-MM-dd'),
         is_completed: 1,
       });
     }

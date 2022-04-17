@@ -12,7 +12,7 @@ function MemberProfile() {
   return (
     <SmallLayout className='mt-4 px-1 py-4 bg-dark-gray text-black relative'>
       <div className='text-lg font-bold uppercase text-center'>MEMBER PROFILE</div>
-      <ItemLayout>
+      <ItemLayout onClick={() => navigate('/account/user')}>
         <div className='w-10 flex items-center justify-center'>
           <PersonSvg className='w-6 h-6 fill-rouge-blue' />
         </div>

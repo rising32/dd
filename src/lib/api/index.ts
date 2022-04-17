@@ -4,6 +4,7 @@ import { DeliverableInfoState, DeliverableState } from '../../modules/deliverabl
 import { ClientProjectState, ProjectState, StatisticTableState } from '../../modules/project';
 import { StatisticState } from '../../modules/statistic';
 import { TaskState } from '../../modules/task';
+import { TeamMemberState } from '../../modules/team';
 import { UserInfoState } from '../../modules/user';
 import { PriorityState } from '../../modules/weekPriority';
 import { clientURL, deliverableURL, priorityURL, projectURL, taskURL, teamURL, userURL } from './URL';
@@ -16,6 +17,8 @@ const apiClient = axios.create({
 
 export default apiClient;
 
+///////////////////////////////    User          ////////////////////////
+export const sendUserAll = () => apiClient.get<UserInfoState[]>(userURL.allUsers);
 export const sendUpdateUser = (params: UserInfoState) => apiClient.post<UserInfoState>(userURL.updateUser, params);
 
 //////////////////////////////         Client            ///////////////
@@ -53,12 +56,6 @@ export const getUserTasks = (creator_id: number) => apiClient.post<{ task: TaskS
 
 export const sendTaskWithProjectId = (creator_id: number, project_id: number) =>
   apiClient.post<{ task: TaskState[] }>(taskURL.getTaskListWithProjectId, { creator_id, project_id });
-
-export const sendTeamMembers = (owner_id: number) =>
-  apiClient.post<{
-    owner_id: number;
-    member: UserInfoState[];
-  }>(teamURL.getTeamMember, { owner_id });
 
 export const sendSetClient = (client_id: number, project_id: number) =>
   apiClient.post<ClientProjectState>(projectURL.setClient, { client_id, project_id });
@@ -107,3 +104,12 @@ export const sendWeekStaticsticsData = (user_id: number) =>
   apiClient.post<{ data: StatisticTableState[] }>(projectURL.getWeekStaticsticsData, { user_id });
 export const sendMonthStaticsticsData = (user_id: number) =>
   apiClient.post<{ data: StatisticTableState[] }>(projectURL.getMonthStaticsticsData, { user_id });
+
+/////////////////////////////     Team         //////////////////////////
+export const sendAddMember = (params: TeamMemberState) => apiClient.post<TeamMemberState>(teamURL.addTeamMember, params);
+
+export const sendTeamMembers = (owner_id: number) =>
+  apiClient.post<{
+    owner_id: number;
+    member: UserInfoState[];
+  }>(teamURL.getTeamMember, { owner_id });

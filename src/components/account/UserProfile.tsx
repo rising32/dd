@@ -51,19 +51,19 @@ function UserProfile() {
           <SettingSvg className='w-6 h-6' />
         </div>
         <div className='flex flex-1 items-center justify-between'>
-          <div className='pr-2'>Date, time and currency</div>
+          <div className='pr-2 truncate'>Date, time and currency</div>
           <EuroSvg className='w-6 h-6 fill-rouge-blue' />
           <div className='text-rouge-blue'>AM/PM</div>
         </div>
         <ClickArrowSvg className='w-6 h-6' />
       </ItemLayout>
       <Organization />
-      <ItemLayout className='mt-2 text-link' onClick={() => navigate('/account/work-setting')}>
+      <ItemLayout className='mt-2 text-link'>
         <span className='w-full text-center'>View Terms & Privacy policy</span>
       </ItemLayout>
 
       <div className='text-lg font-bold uppercase pl-6'>Manage</div>
-      <ItemLayout className='mt-2'>
+      <ItemLayout className='mt-2' onClick={() => navigate('/account/teams')}>
         <div className='w-10 flex items-center justify-center'>
           <GroupSvg className='w-6 h-6' />
         </div>

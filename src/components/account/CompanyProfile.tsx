@@ -31,9 +31,7 @@ function CompanyProfile() {
         </div>
         <div className='flex flex-1 items-center justify-between'>
           <div className='pr-2'>Work Setting</div>
-          <div>
-            <img src={redDocumentThumbnail} className='h-4 w-auto' />
-          </div>
+          <img src={redDocumentThumbnail} className='h-4 w-auto' />
           <div className='text-rouge-blue'>AM/PM</div>
         </div>
         <ClickArrowSvg className='w-6 h-6' />
@@ -43,9 +41,9 @@ function CompanyProfile() {
           <SettingSvg className='w-6 h-6' />
         </div>
         <div className='flex flex-1 items-center justify-between'>
-          <div className='pr-2'>Date, time and currency</div>
+          <div className='pr-2 truncate'>Date, time and currency</div>
+          <img src={redDocumentThumbnail} className='h-4 w-auto' />
           <EuroSvg className='w-6 h-6 fill-rouge-blue' />
-          <div className='text-rouge-blue'>AM/PM</div>
         </div>
         <ClickArrowSvg className='w-6 h-6' />
       </ItemLayout>

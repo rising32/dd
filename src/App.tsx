@@ -14,6 +14,7 @@ import WorkSettingPage from './pages/account/WorkSettingPage';
 import ClientManagePage from './pages/client/ClientManagePage';
 import ProjectManagePage from './pages/project/ProjectManagePage';
 import TaskManagePage from './pages/tasks/TaskManagePage';
+import TeamManagePage from './pages/team/TeamManagePage';
 
 function App() {
   return (
@@ -99,6 +100,14 @@ function App() {
             element={
               <AuthenticatedRoute>
                 <TaskManagePage />
+              </AuthenticatedRoute>
+            }
+          />
+          <Route
+            path='account/teams'
+            element={
+              <AuthenticatedRoute>
+                <TeamManagePage />
               </AuthenticatedRoute>
             }
           />
