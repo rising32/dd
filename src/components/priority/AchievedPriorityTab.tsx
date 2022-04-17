@@ -1,17 +1,28 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
+import { PriorityState } from '../../modules/weekPriority';
 
 interface Props {
   selectedPriorityTab: string;
+  selectedPriority: PriorityState | null;
   onSelectPriorityTab: (index: string) => void;
 }
-function AchievedPriorityTab({ selectedPriorityTab, onSelectPriorityTab }: Props) {
+function AchievedPriorityTab({ selectedPriorityTab, selectedPriority, onSelectPriorityTab }: Props) {
+  const navigate = useNavigate();
+  const onSelectTab = (item: string) => {
+    if (!selectedPriority) return;
+    if (item === 'Agenda') {
+      navigate(`/priorities/agenda-${selectedPriority?.wp_id}`);
+    }
+    onSelectPriorityTab(item);
+  };
   return (
     <div className='absolute -bottom-1 left-0 w-full flex flex-row justify-evenly items-center'>
       {['Details', 'Agenda', 'Project', 'Support', '?'].map(item => (
         <div
           key={item}
           className='rounded-t-md px-2'
-          onClick={() => onSelectPriorityTab(item)}
+          onClick={() => onSelectTab(item)}
           style={{ background: selectedPriorityTab === item ? 'white' : '#365B9D' }}
         >
           <span className='text-sm' style={{ color: selectedPriorityTab === item ? '#DD0000' : 'white' }}>

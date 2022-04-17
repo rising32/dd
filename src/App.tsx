@@ -15,6 +15,7 @@ import ClientManagePage from './pages/client/ClientManagePage';
 import ProjectManagePage from './pages/project/ProjectManagePage';
 import TaskManagePage from './pages/tasks/TaskManagePage';
 import TeamManagePage from './pages/team/TeamManagePage';
+import AgendaPage from './pages/agenda/AgendaPage';
 
 function App() {
   return (
@@ -36,6 +37,14 @@ function App() {
             element={
               <AuthenticatedRoute>
                 <PrioritiesPage />
+              </AuthenticatedRoute>
+            }
+          />
+          <Route
+            path='priorities/agenda-:wp_id'
+            element={
+              <AuthenticatedRoute>
+                <AgendaPage />
               </AuthenticatedRoute>
             }
           />

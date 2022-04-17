@@ -45,7 +45,11 @@ function AchievedPriority({ selectedWeek, selectedPriority, addWeekPriority }: P
         ) : (
           <CreatePriority selectedWeek={selectedWeek} addWeekPriority={addWeekPriority} />
         )}
-        <AchievedPriorityTab selectedPriorityTab={selectedPriorityTab} onSelectPriorityTab={onSelectPriorityTab} />
+        <AchievedPriorityTab
+          selectedPriorityTab={selectedPriorityTab}
+          selectedPriority={selectedPriority}
+          onSelectPriorityTab={onSelectPriorityTab}
+        />
       </SmallLayout>
     </div>
   );
