@@ -28,11 +28,11 @@ export const dateFormatOptions: KeyValueState[] = [
 ];
 export const currencyOptions: KeyValueState[] = [
   {
-    key: 1,
+    key: 0,
     value: 'Euro (€)',
   },
   {
-    key: 2,
+    key: 1,
     value: 'Dollar ($)',
   },
 ];

@@ -3,6 +3,7 @@ export const userURL = {
   signout: '/user/logout',
   updateUser: '/user/update',
   allUsers: '/user/all',
+  companyProfile: '/user/get_my_company/profile',
 };
 
 export const clientURL = {

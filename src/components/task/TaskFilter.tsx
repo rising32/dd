@@ -19,7 +19,10 @@ import { toast } from 'react-toastify';
 import { format } from 'date-fns';
 import { DeliverableState } from '../../modules/deliverable';
 
-function TaskFilter() {
+interface Props {
+  selectedWeek: number;
+}
+function TaskFilter({ selectedWeek }: Props) {
   const [selectedClient, setSelectedClient] = useState<ClientState | null>(null);
   const [selectedProject, setSelectedProject] = useState<ProjectState | null>(null);
   const [selectedTask, setSelectedTask] = useState<TaskState | null>(null);
@@ -47,7 +50,7 @@ function TaskFilter() {
   }, [selectedClient, selectedProject, selectedMember, selectWhen]);
   React.useEffect(() => {
     if (sendTasksWithCPMDRes) {
-      // console.log(sendTasksWithCPMDRes);
+      console.log(sendTasksWithCPMDRes);
       setWeekTask(sendTasksWithCPMDRes);
     }
   }, [sendTasksWithCPMDRes]);
@@ -209,14 +212,15 @@ function TaskFilter() {
         <ShowCalendar selectedWhen={selectWhen} onSelectWhen={onSelectWhen} />
         <PlusButton className='flex items-center justify-end mt-4' onPlus={onCreateTaskAndDeliverable} />
       </SmallLayout>
-      <SmallLayout className='p-4 mt-4 bg-card-gray text-white'>
+      <div className='mt-4 text-center'>{'Tasks Week ' + selectedWeek}</div>
+      <SmallLayout className='p-4 bg-card-gray text-white'>
         {weekTasks.map(item => (
           <div key={item.client_id} className='flex flex-col mb-3'>
             <span className='font-bold mb-2 text-center'>{item.client_name}</span>
             {item.task.map(task => (
               <div key={task.task_id} className='flex items-center'>
                 <SelectedAndCompltedIcon isSelected={false} isCompleted={false} />
-                <span className='pl-2'>{task.task_name}</span>
+                <span className='pl-2 truncate'>{'JEF' + '-' + 'W' + selectedWeek + ': ' + task.task_name}</span>
               </div>
             ))}
           </div>

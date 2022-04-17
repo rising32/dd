@@ -1,3 +1,4 @@
+import { getWeek } from 'date-fns';
 import React, { useState } from 'react';
 import { useSelector } from 'react-redux';
 import WeekCalendar from '../../components/calendar/WeekCalendar';
@@ -20,7 +21,7 @@ function Task() {
         <span className='flex-1 font-bold truncate'>{new Date(selectedDate).toLocaleDateString(undefined, options)}</span>
         <span>On time: 90%</span>
       </div>
-      <TaskFilter />
+      <TaskFilter selectedWeek={getWeek(selectedDate, { weekStartsOn: 1, firstWeekContainsDate: 4 })} />
     </>
   );
 }

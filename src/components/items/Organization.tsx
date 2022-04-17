@@ -9,7 +9,10 @@ import { updateUser } from '../../store/features/userSlice';
 import AnimatedView from '../common/AnimatedView';
 import ItemLayout from '../common/ItemLayout';
 
-function Organization() {
+interface Props {
+  company_name: string;
+}
+function Organization({ company_name }: Props) {
   const [isEdit, setIsEdit] = useState(false);
   const [organizationName, setOrganizationName] = React.useState('');
   const { userInfo } = useSelector((state: RootState) => state.user);
@@ -33,15 +36,6 @@ function Organization() {
       toast.error('name is empty!');
       return;
     }
-
-    // if (userInfo) {
-    //   const updateUser: UserInfoState = {
-    //     ...userInfo,
-    //     display_name: userName,
-    //     email: userEmail,
-    //   };
-    //   _sendUpdateUser(updateUser);
-    // }
   };
   React.useEffect(() => {
     if (sendUpdateUserRes) {
@@ -58,7 +52,7 @@ function Organization() {
         </div>
         <div className='flex flex-1'>
           <div className='pr-2'>Organization</div>
-          <div className='text-rouge-blue'>ID Logistics</div>
+          <div className='text-rouge-blue'>{company_name}</div>
         </div>
         <ClickArrowSvg className='w-6 h-6' />
       </ItemLayout>

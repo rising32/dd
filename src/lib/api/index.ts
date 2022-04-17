@@ -1,5 +1,7 @@
 import axios from 'axios';
 import { ClientState, UserClientState } from '../../modules/client';
+import { CompanyInfoState } from '../../modules/company';
+import { DateTimeCurrencyType } from '../../modules/dateTimeCurrency';
 import { DeliverableInfoState, DeliverableState } from '../../modules/deliverable';
 import { ClientProjectState, ProjectState, StatisticTableState } from '../../modules/project';
 import { StatisticState } from '../../modules/statistic';
@@ -20,6 +22,8 @@ export default apiClient;
 ///////////////////////////////    User          ////////////////////////
 export const sendUserAll = () => apiClient.get<UserInfoState[]>(userURL.allUsers);
 export const sendUpdateUser = (params: UserInfoState) => apiClient.post<UserInfoState>(userURL.updateUser, params);
+export const sendCompanyProfile = (member_id: number) =>
+  apiClient.post<{ company: CompanyInfoState }>(userURL.companyProfile, { member_id });
 
 //////////////////////////////         Client            ///////////////
 export const sendCreateClient = (client_name: string, is_active: boolean) =>
@@ -124,3 +128,11 @@ export const sendTeamMembers = (owner_id: number) =>
     owner_id: number;
     member: UserInfoState[];
   }>(teamURL.getTeamMember, { owner_id });
+
+////////////////////////////   Date Time Currency  ////////
+export const sendDateTimeCurrencyCreate = (params: DateTimeCurrencyType) =>
+  apiClient.post<DateTimeCurrencyType>('/user/create_date_time_currency', params);
+
+export const sendDateTimeCurrencyUpdate = (params: DateTimeCurrencyType) =>
+  apiClient.post<DateTimeCurrencyType>('/user/update_date_time_currency', params);
+export const sendDateTimeCurrency = (user_id: number) => apiClient.post<DateTimeCurrencyType>('/user/get_date_time_currency', { user_id });
