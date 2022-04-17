@@ -16,6 +16,7 @@ import ProjectManagePage from './pages/project/ProjectManagePage';
 import TaskManagePage from './pages/tasks/TaskManagePage';
 import TeamManagePage from './pages/team/TeamManagePage';
 import AgendaPage from './pages/agenda/AgendaPage';
+import FileManagerPage from './pages/file/FileManagerPage';
 
 function App() {
   return (
@@ -53,6 +54,14 @@ function App() {
             element={
               <AuthenticatedRoute>
                 <DeliverablesPage />
+              </AuthenticatedRoute>
+            }
+          />
+          <Route
+            path='deliverables/file'
+            element={
+              <AuthenticatedRoute>
+                <FileManagerPage />
               </AuthenticatedRoute>
             }
           />

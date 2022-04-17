@@ -11,8 +11,8 @@ function DeliverableTab({ selectedDeliverableTab, selectedDeliverable, onSelectD
   const navigate = useNavigate();
   const onSelectTab = (item: string) => {
     if (!selectedDeliverable) return;
-    if (item === 'Agenda') {
-      navigate(`/priorities/agenda-${selectedDeliverable?.deliverable_id}`);
+    if (item === 'File') {
+      navigate('/deliverables/file');
     }
     onSelectDeliverableTab(item);
   };
