@@ -1,23 +1,16 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
-import SmallLayout from '../../container/common/SmallLayout';
 import { sendCreatePriority } from '../../lib/api';
 import useRequest from '../../lib/hooks/useRequest';
-import { ClientState } from '../../modules/client';
-import { ProjectState } from '../../modules/project';
 import { PriorityState } from '../../modules/weekPriority';
 import { RootState } from '../../store';
 import PlusButton from '../common/PlusButton';
-import ShowClientList from '../items/ShowClientList';
-import ShowProjectList from '../items/ShowProjectList';
-import AchievedPriorityTab from './AchievedPriorityTab';
-
 interface Props {
   selectedWeek: number;
-  addWeekPriority: (priority: PriorityState) => void;
+  addPriority: (priority: PriorityState) => void;
 }
-function CreatePriority({ selectedWeek, addWeekPriority }: Props) {
+function CreatePriority({ selectedWeek, addPriority }: Props) {
   const [priorityValue, setPriorityValue] = useState('');
   const [goalValue, setGoalValue] = useState('');
 
@@ -52,7 +45,7 @@ function CreatePriority({ selectedWeek, addWeekPriority }: Props) {
   };
   React.useEffect(() => {
     if (sendCreatePriorityRes) {
-      addWeekPriority(sendCreatePriorityRes);
+      addPriority(sendCreatePriorityRes);
       setPriorityValue('');
       setGoalValue('');
     }

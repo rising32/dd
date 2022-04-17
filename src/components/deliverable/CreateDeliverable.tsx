@@ -22,7 +22,7 @@ interface Props {
   addDeliverable: (deliverable: DeliverableState) => void;
   updateDeliverable: (deliverable: DeliverableState) => void;
   selectedPriority?: PriorityState | null;
-  selectedDeliverable?: DeliverableState | null;
+  selectedDeliverable: DeliverableState | null;
 }
 function CreateDeliverable({ selectedDate, selectedDeliverable, selectedPriority, addDeliverable, updateDeliverable }: Props) {
   const [selectedClient, setSelectedClient] = useState<ClientState | null>(null);
@@ -42,12 +42,14 @@ function CreateDeliverable({ selectedDate, selectedDeliverable, selectedPriority
     if (selectedDeliverable) {
       const deliverable_id = selectedDeliverable.deliverable_id;
       _sendDeliverableInfo(deliverable_id);
+      setSelectedDeliverableTab('Details');
     } else {
       setSelectedClient(null);
       setSelectedProject(null);
       setSelectedTask(null);
       setDeliverableValue('');
       setDeliverableInfo(null);
+      setSelectedDeliverableTab('');
     }
   }, [selectedDeliverable]);
   React.useEffect(() => {
@@ -171,7 +173,11 @@ function CreateDeliverable({ selectedDate, selectedDeliverable, selectedPriority
             placeholder='Enter Deliverable Name'
           />
         </label>
-        <DeliverableTab selectedDeliverableTab={selectedDeliverableTab} onSelectDeliverableTab={onSelectDeliverableTab} />
+        <DeliverableTab
+          selectedDeliverableTab={selectedDeliverableTab}
+          selectedDeliverable={selectedDeliverable}
+          onSelectDeliverableTab={onSelectDeliverableTab}
+        />
         <PlusButton className='flex items-center justify-end my-4' onPlus={onCreateDeliverable} />
       </SmallLayout>
     </div>

@@ -1,28 +1,18 @@
-import React, { useEffect, useState } from 'react';
-import { useSelector } from 'react-redux';
-import { toast } from 'react-toastify';
-import SmallLayout from '../../container/common/SmallLayout';
-import { sendCreatePriority } from '../../lib/api';
-import useRequest from '../../lib/hooks/useRequest';
+import React, { useState } from 'react';
 import { ClientState } from '../../modules/client';
 import { ProjectState } from '../../modules/project';
 import { PriorityState } from '../../modules/weekPriority';
-import { RootState } from '../../store';
 import PlusButton from '../common/PlusButton';
 import ShowClientList from '../items/ShowClientList';
 import ShowProjectList from '../items/ShowProjectList';
-import AchievedPriorityTab from './AchievedPriorityTab';
 
 interface Props {
-  selectedWeek: number;
   selectedPriorityTab: string;
   selectedPriority: PriorityState;
 }
-function DetailPriority({ selectedWeek, selectedPriorityTab, selectedPriority }: Props) {
+function DetailPriority({ selectedPriorityTab, selectedPriority }: Props) {
   const [selectedClient, setSelectedClient] = useState<ClientState | null>(null);
   const [selectedProject, setSelectedProject] = useState<ProjectState | null>(null);
-
-  const { userInfo } = useSelector((state: RootState) => state.user);
 
   const onSelectClient = (client: ClientState | null) => {
     setSelectedClient(client);

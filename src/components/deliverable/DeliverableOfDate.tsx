@@ -1,14 +1,12 @@
-import { format, getWeek } from 'date-fns';
+import { format } from 'date-fns';
 import React, { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
-import { CheckSvg, CompleteSvg } from '../../assets/svg';
+import { CompleteSvg } from '../../assets/svg';
 import SmallLayout from '../../container/common/SmallLayout';
 import { sendDeliverablesWithPlanedDate, sendUpdateDeliverable } from '../../lib/api';
 import useRequest from '../../lib/hooks/useRequest';
 import { DeliverableState } from '../../modules/deliverable';
-import { PriorityState } from '../../modules/weekPriority';
 import { RootState } from '../../store';
-import SelectedAndCompltedIcon from '../common/SelectedAndCompltedIcon';
 import Tag from '../common/Tag';
 
 interface Props {
@@ -41,12 +39,12 @@ function DeliverableOfDate({ selectedDate, selectedDeliverable, newCreatedDelive
       });
       setDeliverables(newDeliverables);
     }
-  }, [newCreatedDeliverable, updatedDeliverable]);
+  }, [newCreatedDeliverable, updatedDeliverable, deliverables]);
   useEffect(() => {
     const user_id = userInfo?.user_id;
     const planned_end_date = format(selectedDate, 'yyyy-MM-dd');
     _sendDeliverablesWithPlanedDate(user_id, planned_end_date);
-  }, [selectedDate]);
+  }, [selectedDate, userInfo]);
   React.useEffect(() => {
     if (sendDeliverablesWithPlanedDateRes) {
       setDeliverables(sendDeliverablesWithPlanedDateRes.deliverable);
@@ -71,7 +69,7 @@ function DeliverableOfDate({ selectedDate, selectedDeliverable, newCreatedDelive
       });
       setDeliverables(newDeliverables);
     }
-  }, [sendUpdateDeliverableRes]);
+  }, [sendUpdateDeliverableRes, deliverables]);
 
   React.useEffect(() => {
     let percentage = 0;

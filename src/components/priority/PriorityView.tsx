@@ -14,7 +14,7 @@ function PriorityView() {
   const onSelectWeek = (currentWeek: number) => {
     setSelectedWeek(currentWeek);
   };
-  const addWeekPriority = (priority: PriorityState) => {
+  const addPriority = (priority: PriorityState) => {
     setNewCreatedWeekPriority(priority);
   };
   const onSelectPriority = (priority: PriorityState) => {
@@ -34,7 +34,7 @@ function PriorityView() {
         onSelectPriority={onSelectPriority}
         newCreatedWeekPriority={newCreatedWeekPriority}
       />
-      <AchievedPriority selectedWeek={selectedWeek} selectedPriority={selectedPriority} addWeekPriority={addWeekPriority} />
+      <AchievedPriority selectedWeek={selectedWeek} selectedPriority={selectedPriority} addPriority={addPriority} />
       <PastNotAchievedPriority selectedWeek={selectedWeek} />
     </>
   );

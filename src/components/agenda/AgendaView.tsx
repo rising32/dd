@@ -3,7 +3,6 @@ import { useSelector } from 'react-redux';
 import { CalenderSvg, MenuSvg, SearchSvg } from '../../assets/svg';
 import SmallLayout from '../../container/common/SmallLayout';
 import { RootState } from '../../store';
-import HeaderWithTitle from '../base/HeaderWithTitle';
 import DayScheduler from '../calendar/DayScheduler';
 import WeekCalendarAgenda from '../calendar/WeekCalendarAgenda';
 
