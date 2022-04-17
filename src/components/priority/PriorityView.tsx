@@ -34,7 +34,7 @@ function PriorityView() {
         onSelectPriority={onSelectPriority}
         newCreatedWeekPriority={newCreatedWeekPriority}
       />
-      <AchievedPriority selectedWeek={selectedWeek} addWeekPriority={addWeekPriority} />
+      <AchievedPriority selectedWeek={selectedWeek} selectedPriority={selectedPriority} addWeekPriority={addWeekPriority} />
       <PastNotAchievedPriority selectedWeek={selectedWeek} />
     </>
   );

@@ -6,6 +6,6 @@ export interface PriorityState {
   goal: string;
   detail: string | null;
   is_completed: number;
-  is_weekly: null;
+  is_weekly: number;
   end_date: Date | null;
 }
