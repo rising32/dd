@@ -162,7 +162,7 @@ function SelectProject({ selectedClient, selectedProject, deliverableInfo, onSel
 
   return (
     <div className='flex justify-between items-center py-1, text-white'>
-      <span className='font-bold pr-2'>Projects :</span>
+      <span className='font-bold'>Projects:</span>
       <CreatableSelect<SelectOpionState>
         isClearable
         isLoading={isLoading}

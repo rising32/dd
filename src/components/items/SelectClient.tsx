@@ -103,7 +103,7 @@ function SelectClient({ selectedClient, deliverableInfo, onSelectClient }: Props
 
   return (
     <div className='flex justify-between items-center py-1, text-white'>
-      <span className='font-bold pr-2'>Client :</span>
+      <span className='font-bold flex'>Client:</span>
       <CreatableSelect<SelectOpionState>
         isClearable
         isLoading={isLoading}

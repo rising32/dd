@@ -186,7 +186,7 @@ function SelectTask({ selectedProject, selectedTask, onSelectTask, deliverableIn
 
   return (
     <div className='flex justify-between items-center py-1, text-white'>
-      <span className='font-bold pr-2'>Task :</span>
+      <span className='font-bold'>Task:</span>
       <CreatableSelect<SelectOpionState>
         isClearable
         isLoading={isLoading}

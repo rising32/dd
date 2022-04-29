@@ -2,8 +2,8 @@ import Select, { StylesConfig } from 'react-select';
 import { SelectOpionState } from '../../modules/common';
 
 export const colourStyles: StylesConfig<SelectOpionState> = {
-  container: styles => ({ ...styles, display: 'flex', flex: 1 }),
-  control: styles => ({ ...styles, backgroundColor: 'transparent', display: 'flex', flex: 1, border: 'none', boxShadow: 'none' }),
+  container: styles => ({ ...styles, width: '100%' }),
+  control: styles => ({ ...styles, backgroundColor: 'transparent', width: '100%', border: 'none', boxShadow: 'none' }),
   option: (styles, { data, isDisabled, isFocused, isSelected }) => {
     return {
       ...styles,

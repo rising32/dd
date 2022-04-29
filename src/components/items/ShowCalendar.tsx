@@ -19,7 +19,7 @@ function ShowCalendar({ selectedWhen, onSelectWhen }: Props) {
   return (
     <>
       <div className='flex justify-between items-center py-1, text-white'>
-        <span className='font-bold pr-2'>When :</span>
+        <span className='font-bold'>When:</span>
         <div className='text-rouge-blue font-bold px-2'>{selectedWhen?.toDateString()}</div>
         <CalenderSvg className='mr-2' onClick={openCalendar} />
       </div>

@@ -60,7 +60,7 @@ function ShowTeamMemberList({ selectedMember, onSelectMember }: Props) {
 
   return (
     <div className='flex justify-between items-center py-1, text-white'>
-      <span className='font-bold pr-2'>Who :</span>
+      <span className='font-bold'>Who:</span>
       <Select<SelectOpionState>
         isClearable
         isLoading={isLoading}
