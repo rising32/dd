@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
-import { format, startOfWeek, addDays, isSameDay } from 'date-fns';
-import { subDays } from 'date-fns/esm';
+import { format, startOfWeek, addDays, isSameDay, getWeek } from 'date-fns';
 
 interface Props {
   selectedDate: Date;
@@ -42,7 +41,7 @@ const WeekCalendarAgenda = ({ selectedDate, onSelectDate }: Props) => {
       <div className='flex flex-row flex-1'>
         <div className='flex flex-1 flex-col w-full items-center justify-end' onClick={goBeforeWeek}>
           <div>
-            <span className='text-lg font-normal text-white'>{format(subDays(weekStartDate, 1), 'd')}</span>
+            <span className='text-lg font-normal text-white'>{getWeek(weekStartDate, { weekStartsOn: 1, firstWeekContainsDate: 4 })}</span>
           </div>
         </div>
         {weekDays}

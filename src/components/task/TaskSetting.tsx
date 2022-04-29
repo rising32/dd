@@ -6,7 +6,8 @@ import { DownSvg } from '../../assets/svg';
 import { TaskState } from '../../modules/task';
 import FullCalendar from '../calendar/FullCalendar';
 import { useSelector } from 'react-redux';
-import { RootState } from '../../store';
+import { RootState, useAppDispatch } from '../../store';
+import { changeTaskCount } from '../../store/features/companySlice';
 
 interface Props {
   selectedTask: TaskState | null;
@@ -34,6 +35,7 @@ const TaskSetting = ({ selectedTask, onCancel, onSuccess }: Props) => {
   const [isAddAll, setIsAddAll] = useState(selectedTask ? selectedTask.is_add_all : true);
 
   const { userInfo } = useSelector((state: RootState) => state.user);
+  const dispatch = useAppDispatch();
 
   const [_sendCreateTask, , createTaskRes] = useRequest(sendCreateTask);
   const [_sendUpdateTask, , sendUpdateTaskRes] = useRequest(sendUpdateTask);
@@ -92,7 +94,7 @@ const TaskSetting = ({ selectedTask, onCancel, onSuccess }: Props) => {
   const onCreateOrEditClient = () => {
     if (!userInfo) return;
     if (selectedTask) {
-      const newTask: TaskState = {
+      const newTask = {
         task_id: selectedTask.task_id,
         creator_id: userInfo.user_id,
         project_id: selectedTask.project_id,
@@ -109,7 +111,7 @@ const TaskSetting = ({ selectedTask, onCancel, onSuccess }: Props) => {
       };
       _sendUpdateTask(newTask);
     } else {
-      const newTask: TaskState = {
+      const newTask = {
         task_id: null,
         creator_id: userInfo.user_id,
         project_id: null,
@@ -130,6 +132,7 @@ const TaskSetting = ({ selectedTask, onCancel, onSuccess }: Props) => {
   React.useEffect(() => {
     if (createTaskRes) {
       onSuccess(createTaskRes.task);
+      dispatch(changeTaskCount());
     }
   }, [createTaskRes]);
   React.useEffect(() => {
@@ -146,6 +149,7 @@ const TaskSetting = ({ selectedTask, onCancel, onSuccess }: Props) => {
           type='text'
           name='taskName'
           value={taskName}
+          autoComplete='off'
           onChange={onChangeClientName}
           className='mt-1 px-3 py-2 bg-white border shadow-sm border-dark-gray placeholder-card-gray focus:outline-none focus:border-rouge-blue block w-full rounded-md sm:text-sm focus:ring-1'
           placeholder='Enter Name'
@@ -156,6 +160,7 @@ const TaskSetting = ({ selectedTask, onCancel, onSuccess }: Props) => {
         <input
           type='text'
           name='taskRate'
+          autoComplete='off'
           value={taskRate}
           onChange={onChangeClientRate}
           className='mt-1 px-3 py-2 bg-white border shadow-sm border-dark-gray placeholder-card-gray focus:outline-none focus:border-rouge-blue block w-full rounded-md sm:text-sm focus:ring-1'

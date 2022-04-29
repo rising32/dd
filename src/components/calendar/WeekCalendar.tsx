@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { format, startOfWeek, addDays, isSameDay } from 'date-fns';
-import { LeftArrowSvg, NextSvg, PreviousSvg, RightArrowSvg } from '../../assets/svg';
+import { LeftArrowSvg, RightArrowSvg } from '../../assets/svg';
 import { subDays } from 'date-fns/esm';
 
 interface Props {

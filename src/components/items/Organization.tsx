@@ -1,49 +1,51 @@
 import React, { useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
-import { ClickArrowSvg, HouseSvg, PersonSvg } from '../../assets/svg';
-import { sendUpdateUser } from '../../lib/api';
+import { ClickArrowSvg, HouseSvg } from '../../assets/svg';
+import { sendUpdateCompany } from '../../lib/api';
 import useRequest from '../../lib/hooks/useRequest';
-import { RootState } from '../../store';
-import { updateUser } from '../../store/features/userSlice';
+import { RootState, useAppDispatch } from '../../store';
+import { updateCompanyName } from '../../store/features/companySlice';
 import AnimatedView from '../common/AnimatedView';
 import ItemLayout from '../common/ItemLayout';
 
-interface Props {
-  company_name: string;
-}
-function Organization({ company_name }: Props) {
-  const [isEdit, setIsEdit] = useState(false);
-  const [organizationName, setOrganizationName] = React.useState('');
+function Organization() {
   const { userInfo } = useSelector((state: RootState) => state.user);
+  const dispatch = useAppDispatch();
+  const { company_name, company_id } = useSelector((state: RootState) => state.companyInfo);
+  const [isEdit, setIsEdit] = useState(false);
+  const [organizationName, setOrganizationName] = React.useState(company_name);
 
-  const [_sendUpdateUser, , sendUpdateUserRes] = useRequest(sendUpdateUser);
-  const dispatch = useDispatch();
+  const [_sendUpdateCompany, , sendUpdateCompanyRes] = useRequest(sendUpdateCompany);
 
   const onEdit = () => {
-    if (isEdit) {
-      setIsEdit(false);
+    if (userInfo && userInfo.role_id !== 1) {
+      toast.error('Only Admin could control!');
     } else {
-      setOrganizationName('');
-      setIsEdit(true);
+      if (isEdit) {
+        setIsEdit(false);
+      } else {
+        setOrganizationName(company_name);
+        setIsEdit(true);
+      }
     }
   };
   const changeOrganizationName = (event: React.FormEvent<HTMLInputElement>) => {
     setOrganizationName(event.currentTarget.value);
   };
-  const onUserProfileUpdate = () => {
+  const onOrganizationUpdate = () => {
     if (!organizationName) {
       toast.error('name is empty!');
       return;
     }
+    _sendUpdateCompany({ company_id, company_name: organizationName });
   };
   React.useEffect(() => {
-    if (sendUpdateUserRes) {
-      dispatch(updateUser(sendUpdateUserRes));
-      toast.success('profile update successed!');
+    if (sendUpdateCompanyRes) {
+      dispatch(updateCompanyName(sendUpdateCompanyRes));
       onEdit();
     }
-  }, [sendUpdateUserRes]);
+  }, [sendUpdateCompanyRes]);
   return (
     <>
       <ItemLayout className='mt-2' onClick={onEdit}>
@@ -63,7 +65,7 @@ function Organization({ company_name }: Props) {
               Cancel
             </div>
             <div className='text-lg font-bold'>Organization</div>
-            <div className='text-sm font-normal' onClick={onUserProfileUpdate}>
+            <div className='text-sm font-normal' onClick={onOrganizationUpdate}>
               Save
             </div>
           </div>
@@ -72,6 +74,7 @@ function Organization({ company_name }: Props) {
             <input
               type='text'
               name='organizationName'
+              autoComplete='off'
               value={organizationName}
               onChange={changeOrganizationName}
               className='mt-1 px-3 py-2 bg-transparent border shadow-sm border-dark-gray focus:outline-none focus:border-rouge-blue block w-full rounded-md sm:text-sm focus:ring-1'

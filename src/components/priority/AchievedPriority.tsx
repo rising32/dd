@@ -27,7 +27,7 @@ function AchievedPriority({ selectedWeek, selectedPriority, addPriority }: Props
   return (
     <div className='text-white mt-4'>
       <div className='flex justify-center'>
-        <span className='text-base'>Priority achieved this week with clear goal defined</span>
+        <span className='text-center'>Priority achieved this week with clear goal defined</span>
       </div>
       <SmallLayout className='w-full bg-card-gray rounded-md flex flex-col border-rouge-blue border-4 p-4 relative'>
         {selectedPriority ? (

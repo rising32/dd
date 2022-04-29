@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { DownSvg, UpSvg } from '../../assets/svg';
 
 interface Props {

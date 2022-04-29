@@ -1,14 +1,10 @@
 import { getWeek } from 'date-fns';
 import React, { useState } from 'react';
-import { useSelector } from 'react-redux';
 import WeekCalendar from '../../components/calendar/WeekCalendar';
-import { RootState } from '../../store';
 import TaskFilter from './TaskFilter';
 
 function Task() {
   const [selectedDate, setSelectedDate] = useState(new Date());
-  const { userInfo } = useSelector((state: RootState) => state.user);
-
   const onSelectDate = (date: Date) => {
     setSelectedDate(date);
   };

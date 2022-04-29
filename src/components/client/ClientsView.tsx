@@ -4,9 +4,10 @@ import SmallLayout from '../../container/common/SmallLayout';
 import useRequest from '../../lib/hooks/useRequest';
 import { sendCreateClient, sendGetMyClients, sendRegisterMyClient, sendUpdateClient } from '../../lib/api';
 import { ClientState } from '../../modules/client';
-import { RootState } from '../../store';
+import { RootState, useAppDispatch } from '../../store';
 import HeaderWithTitle from '../base/HeaderWithTitle';
 import ReactModal from 'react-modal';
+import { changeClientCount } from '../../store/features/companySlice';
 
 function ClientsView() {
   const [myClientList, setMyClientList] = useState<ClientState[]>([]);
@@ -21,6 +22,7 @@ function ClientsView() {
   const [_sendCreateClient, , createClientRes] = useRequest(sendCreateClient);
   const [_sendRegisterMyClient, , sendRegisterMyClientRes] = useRequest(sendRegisterMyClient);
   const [_sendUpdateClient, , sendUpdateClientRes] = useRequest(sendUpdateClient);
+  const dispatch = useAppDispatch();
 
   React.useEffect(() => {
     const user_id = userInfo?.user_id;
@@ -85,6 +87,7 @@ function ClientsView() {
       setMyClientList([...myClientList, selectableClient]);
       setSelectedClient(selectableClient);
       onOpenAndCloseModal();
+      dispatch(changeClientCount());
     }
   }, [sendRegisterMyClientRes]);
   React.useEffect(() => {
@@ -155,6 +158,7 @@ function ClientsView() {
               <input
                 type='text'
                 name='name'
+                autoComplete='off'
                 value={clientName}
                 onChange={onChangeClientName}
                 className='mt-1 px-3 py-2 bg-white border shadow-sm border-dark-gray placeholder-card-gray focus:outline-none focus:border-rouge-blue block w-full rounded-md sm:text-sm focus:ring-1'

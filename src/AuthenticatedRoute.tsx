@@ -6,8 +6,7 @@ import { RootState } from './store';
 function AuthenticatedRoute({ children }: { children: JSX.Element }) {
   const { userInfo } = useSelector((state: RootState) => state.user);
   const location = useLocation();
-
-  if (!userInfo) {
+  if (!userInfo?.user_id) {
     return <Navigate to='/login' state={{ from: location }} replace />;
   }
 

@@ -6,6 +6,8 @@ import useRequest from '../../lib/hooks/useRequest';
 import { PriorityState } from '../../modules/weekPriority';
 import { RootState } from '../../store';
 import PlusButton from '../common/PlusButton';
+import { ReactSearchAutocomplete } from 'react-search-autocomplete';
+
 interface Props {
   selectedWeek: number;
   addPriority: (priority: PriorityState) => void;
@@ -53,25 +55,27 @@ function CreatePriority({ selectedWeek, addPriority }: Props) {
 
   return (
     <>
-      <label className='block mt-4 w-full'>
-        <span className="after:content-['*'] after:ml-0.5 after:text-rouge-blue block font-bold">Priority</span>
+      <label className='flex items-center mt-4 w-full'>
+        <span className="after:content-['*'] after:ml-0.5 after:text-rouge-blue flex font-bold">Priority</span>
         <input
           type='text'
           name='priority'
+          autoComplete='off'
           value={priorityValue}
           onChange={changePriorityValue}
-          className='mt-1 px-3 py-2 bg-transparent border shadow-sm border-dark-gray focus:outline-none focus:border-rouge-blue block w-full rounded-md sm:text-sm focus:ring-1'
+          className='ml-2 py-2 bg-transparent focus:outline-none focus:border-none flex border-none w-full'
           placeholder='Enter Priority Name'
         />
       </label>
-      <label className='block mt-4 w-full'>
+      <label className='flex items-center w-full'>
         <span className='block font-bold'>Goal</span>
         <input
           type='text'
           name='goal'
+          autoComplete='off'
           value={goalValue}
           onChange={changeGoalValue}
-          className='mt-1 px-3 py-2 bg-transparent border shadow-sm border-dark-gray focus:outline-none focus:border-rouge-blue block w-full rounded-md sm:text-sm focus:ring-1'
+          className='ml-2 py-2 bg-transparent border-none focus:outline-none focus:border-none w-full'
           placeholder='Enter Goal'
         />
       </label>

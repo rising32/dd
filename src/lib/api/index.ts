@@ -1,15 +1,13 @@
 import axios from 'axios';
 import { ClientState, UserClientState } from '../../modules/client';
-import { CompanyInfoState } from '../../modules/company';
-import { DateTimeCurrencyType } from '../../modules/dateTimeCurrency';
+import { CompanyInfoState, CompanyState } from '../../modules/company';
 import { DeliverableInfoState, DeliverableState } from '../../modules/deliverable';
 import { ClientProjectState, ProjectState, StatisticTableState } from '../../modules/project';
-import { StatisticState } from '../../modules/statistic';
 import { CPMDState, TaskAssignState, TaskState } from '../../modules/task';
 import { TeamMemberState } from '../../modules/team';
 import { UserInfoState } from '../../modules/user';
 import { PriorityState } from '../../modules/weekPriority';
-import { clientURL, deliverableURL, priorityURL, projectURL, taskURL, teamURL, userURL } from './URL';
+import { clientURL, companyURL, deliverableURL, priorityURL, projectURL, taskURL, teamURL, userURL } from './URL';
 
 const host = process.env.REACT_APP_API_HOST;
 const apiClient = axios.create({
@@ -40,7 +38,8 @@ export const sendRegisterMyClient = (user_id: number, client_id: number, is_acti
 export const sendUpdateClient = (params: ClientState) => apiClient.post<ClientState>(clientURL.updateClient, params);
 
 /////////////////////            Project                ///////////////////////////////
-export const sendCreateProject = (params: ProjectState) => apiClient.post<ProjectState>(projectURL.createProject, params);
+export const sendCreateProject = (params: { creator_id: number; project_name: string }) =>
+  apiClient.post<ProjectState>(projectURL.createProject, params);
 export const sendUpdateProject = (params: ProjectState) => apiClient.post<ProjectState>(projectURL.updateProject, params);
 
 export const sendProjectOfCreater = (creator_id: number) =>
@@ -55,7 +54,21 @@ export const sendProjectWithClientId = (creator_id: number, client_id: number) =
 
 ////////////////////////////////   Task  ///////////////////////////////////
 
-export const sendCreateTask = (params: TaskState) => apiClient.post<{ task: TaskState }>(taskURL.createTask, params);
+export const sendCreateTask = (params: {
+  task_id: null;
+  creator_id: number;
+  project_id?: number;
+  task_name: string;
+  description: string;
+  planned_start_date: string;
+  planned_end_date: string;
+  actual_start_date: string;
+  actual_end_date: string;
+  hourly_rate: number;
+  is_add_all: boolean;
+  is_active: boolean;
+  is_deleted: number;
+}) => apiClient.post<{ task: TaskState }>(taskURL.createTask, params);
 
 export const getUserTasks = (creator_id: number) => apiClient.post<{ task: TaskState[] }>(taskURL.getUserTask, { creator_id });
 
@@ -65,7 +78,21 @@ export const sendTaskWithProjectId = (creator_id: number, project_id: number) =>
 export const sendSetClient = (client_id: number, project_id: number) =>
   apiClient.post<ClientProjectState>(projectURL.setClient, { client_id, project_id });
 
-export const sendUpdateTask = (params: TaskState) => apiClient.post<TaskState>(taskURL.updateTask, params);
+export const sendUpdateTask = (params: {
+  task_id: number | null;
+  creator_id: number;
+  project_id: number | null;
+  task_name: string;
+  description: string | null;
+  planned_start_date: string | null;
+  planned_end_date: string | null;
+  actual_start_date: string | null;
+  actual_end_date: string | null;
+  hourly_rate: number;
+  is_add_all: boolean;
+  is_active: boolean;
+  is_deleted: number;
+}) => apiClient.post<TaskState>(taskURL.updateTask, params);
 
 interface UCTPParams {
   member_id?: number;
@@ -85,7 +112,17 @@ export const sendPriorityByWeek = (user_id: number, week: number) =>
   }>(priorityURL.getPriorityByWeek, { user_id, week });
 
 export const sendCreatePriority = (params: PriorityState) => apiClient.post<PriorityState>(priorityURL.createPriority, params);
-export const sendUpdatePriority = (params: PriorityState) => apiClient.post<PriorityState>(priorityURL.updatePriority, params);
+export const sendUpdatePriority = (params: {
+  wp_id: number;
+  user_id: number;
+  week: number;
+  priority: string;
+  goal: string;
+  detail: string | null;
+  is_completed: number;
+  is_weekly: number;
+  end_date: string;
+}) => apiClient.post<PriorityState>(priorityURL.updatePriority, params);
 
 export const sendPastNotAchievedPriorities = (user_id: number, week: number) =>
   apiClient.post<{
@@ -129,10 +166,5 @@ export const sendTeamMembers = (owner_id: number) =>
     member: UserInfoState[];
   }>(teamURL.getTeamMember, { owner_id });
 
-////////////////////////////   Date Time Currency  ////////
-export const sendDateTimeCurrencyCreate = (params: DateTimeCurrencyType) =>
-  apiClient.post<DateTimeCurrencyType>('/user/create_date_time_currency', params);
-
-export const sendDateTimeCurrencyUpdate = (params: DateTimeCurrencyType) =>
-  apiClient.post<DateTimeCurrencyType>('/user/update_date_time_currency', params);
-export const sendDateTimeCurrency = (user_id: number) => apiClient.post<DateTimeCurrencyType>('/user/get_date_time_currency', { user_id });
+///////////////////////////////    Company          ////////////////////////
+export const sendUpdateCompany = (params: CompanyState) => apiClient.post<CompanyState>(companyURL.updateCompany, params);

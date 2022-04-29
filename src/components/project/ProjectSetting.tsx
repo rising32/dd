@@ -110,6 +110,7 @@ const ProjectSetting = ({ selectedProject, onCancel, onSuccess }: Props) => {
         <input
           type='text'
           name='projectName'
+          autoComplete='off'
           value={projectName}
           onChange={handleProjectNameChange}
           className='mt-1 px-3 py-2 bg-white border shadow-sm border-dark-gray placeholder-card-gray focus:outline-none focus:border-rouge-blue block w-full rounded-md sm:text-sm focus:ring-1'
@@ -121,6 +122,7 @@ const ProjectSetting = ({ selectedProject, onCancel, onSuccess }: Props) => {
         <input
           type='text'
           name='projectName'
+          autoComplete='off'
           value={projectDec || ''}
           onChange={handleProjectDecChange}
           className='mt-1 px-3 py-2 bg-white border shadow-sm border-dark-gray placeholder-card-gray focus:outline-none focus:border-rouge-blue block w-full rounded-md sm:text-sm focus:ring-1'

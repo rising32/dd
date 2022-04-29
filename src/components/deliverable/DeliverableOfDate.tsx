@@ -7,6 +7,7 @@ import { sendDeliverablesWithPlanedDate, sendUpdateDeliverable } from '../../lib
 import useRequest from '../../lib/hooks/useRequest';
 import { DeliverableState } from '../../modules/deliverable';
 import { RootState } from '../../store';
+import LoadingModal from '../common/LoadingModal';
 import Tag from '../common/Tag';
 
 interface Props {
@@ -19,6 +20,7 @@ interface Props {
 function DeliverableOfDate({ selectedDate, selectedDeliverable, newCreatedDeliverable, updatedDeliverable, onSelectDeliverable }: Props) {
   const [deliverables, setDeliverables] = useState<DeliverableState[]>([]);
   const [percentageValue, setPercentageValue] = useState(0);
+  const [loaded, setLoaded] = useState<string | null>(null);
 
   const { userInfo } = useSelector((state: RootState) => state.user);
 
@@ -39,8 +41,9 @@ function DeliverableOfDate({ selectedDate, selectedDeliverable, newCreatedDelive
       });
       setDeliverables(newDeliverables);
     }
-  }, [newCreatedDeliverable, updatedDeliverable, deliverables]);
+  }, [newCreatedDeliverable, updatedDeliverable]);
   useEffect(() => {
+    setLoaded('start');
     const user_id = userInfo?.user_id;
     const planned_end_date = format(selectedDate, 'yyyy-MM-dd');
     _sendDeliverablesWithPlanedDate(user_id, planned_end_date);
@@ -48,10 +51,12 @@ function DeliverableOfDate({ selectedDate, selectedDeliverable, newCreatedDelive
   React.useEffect(() => {
     if (sendDeliverablesWithPlanedDateRes) {
       setDeliverables(sendDeliverablesWithPlanedDateRes.deliverable);
+      setLoaded('end');
     }
   }, [sendDeliverablesWithPlanedDateRes]);
   const onComplete = (deliverable: DeliverableState) => {
     if (deliverable.is_completed === 0) {
+      setLoaded('start');
       _sendUpdateDeliverable({
         ...deliverable,
         planned_end_date: format(selectedDate, 'yyyy-MM-dd'),
@@ -68,6 +73,7 @@ function DeliverableOfDate({ selectedDate, selectedDeliverable, newCreatedDelive
         return deliverable;
       });
       setDeliverables(newDeliverables);
+      setLoaded('end');
     }
   }, [sendUpdateDeliverableRes, deliverables]);
 
@@ -117,6 +123,7 @@ function DeliverableOfDate({ selectedDate, selectedDeliverable, newCreatedDelive
           )}
         </ul>
       </SmallLayout>
+      <LoadingModal loaded={loaded} />
     </div>
   );
 }

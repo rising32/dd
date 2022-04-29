@@ -1,9 +1,17 @@
 export const userURL = {
   login: '/user/login',
+  signup: '/user/signUp',
   signout: '/user/logout',
   updateUser: '/user/update',
   allUsers: '/user/all',
   companyProfile: '/user/get_my_company/profile',
+  getAccountSetting: '/user/get_account_setting',
+  createAccountSetting: '/user/create_account_setting',
+  updateAccountSetting: '/user/update_account_setting',
+};
+
+export const companyURL = {
+  updateCompany: '/user/update_company',
 };
 
 export const clientURL = {

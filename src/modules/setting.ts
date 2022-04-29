@@ -41,3 +41,8 @@ export interface DisplayWorkSettingState {
   end_work_time: number;
   remainder: number;
 }
+
+export const dateFormatOptions = ['YYYY-MM-DD', 'YYYY-MM-D', 'YYYY-MM-DDD'];
+export const currencyFormatOptions = ['Euro (€)', 'Dollar ($)'];
+export const timeFormatOptions = ['12-Hour', '24-Hour'];
+export const decimalSeparatorOptions = ['Point', 'Comma'];

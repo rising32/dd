@@ -6,6 +6,7 @@ import { sendPriorityByWeek } from '../../lib/api';
 import useRequest from '../../lib/hooks/useRequest';
 import { PriorityState } from '../../modules/weekPriority';
 import { RootState } from '../../store';
+import LoadingModal from '../common/LoadingModal';
 import SelectedAndCompltedIcon from '../common/SelectedAndCompltedIcon';
 
 interface Props {
@@ -16,6 +17,7 @@ interface Props {
 }
 function WeeklyPriorities({ selectedWeek, selectedPriority, newCreatedWeekPriority, onSelectPriority }: Props) {
   const [weeklyPriorities, setWeeklyPriorities] = useState<PriorityState[]>([]);
+  const [loaded, setLoaded] = useState<string | null>(null);
 
   const { userInfo } = useSelector((state: RootState) => state.user);
 
@@ -27,6 +29,7 @@ function WeeklyPriorities({ selectedWeek, selectedPriority, newCreatedWeekPriori
     }
   }, [newCreatedWeekPriority]);
   useEffect(() => {
+    setLoaded('start');
     const user_id = userInfo?.user_id;
     const week = selectedWeek;
     _sendPriorityByWeek(user_id, week);
@@ -34,12 +37,13 @@ function WeeklyPriorities({ selectedWeek, selectedPriority, newCreatedWeekPriori
   React.useEffect(() => {
     if (sendPriorityByWeekRes) {
       setWeeklyPriorities(sendPriorityByWeekRes.priority);
+      setLoaded('end');
     }
   }, [sendPriorityByWeekRes]);
   return (
     <div className='text-white mt-4'>
       <div className='flex justify-center'>
-        <span className='text-base'>Weekly priorities</span>
+        <span>Weekly priorities</span>
       </div>
       <SmallLayout className='w-full bg-card-gray rounded-md flex'>
         <ul role='list' className='p-4'>
@@ -66,6 +70,7 @@ function WeeklyPriorities({ selectedWeek, selectedPriority, newCreatedWeekPriori
           )}
         </ul>
       </SmallLayout>
+      <LoadingModal loaded={loaded} />
     </div>
   );
 }

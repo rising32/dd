@@ -2,7 +2,7 @@ import React from 'react';
 import Task from '../../components/task/Task';
 import MainResponsive from '../../container/MainResponsive';
 
-function TasksPage() {
+function TaskHomePage() {
   return (
     <MainResponsive>
       <Task />
@@ -10,4 +10,4 @@ function TasksPage() {
   );
 }
 
-export default TasksPage;
+export default TaskHomePage;

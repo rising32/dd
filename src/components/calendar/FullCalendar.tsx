@@ -13,7 +13,7 @@ const FullCalendar = ({ selectedDate, onSelectDate }: Props) => {
       <div className='flex flex-row p-3 w-full items-center justify-between bg-rouge-blue'>
         <PreviousSvg stroke='white' strokeWidth={4} onClick={() => setActiveDate(subMonths(activeDate, 1))} />
         <div
-          className='text-xl font-normal text-white'
+          className='font-normal text-white'
           onClick={() => {
             onSelectDate(new Date());
             setActiveDate(new Date());
@@ -21,7 +21,7 @@ const FullCalendar = ({ selectedDate, onSelectDate }: Props) => {
         >
           Today
         </div>
-        <div className='text-xl font-bold text-white'>{format(activeDate, 'MMMM yyyy')}</div>
+        <div className='font-bold text-white'>{format(activeDate, 'MMMM yyyy')}</div>
         <NextSvg stroke='white' strokeWidth={4} onClick={() => setActiveDate(addMonths(activeDate, 1))} />
       </div>
     );
@@ -33,7 +33,7 @@ const FullCalendar = ({ selectedDate, onSelectDate }: Props) => {
       weekDays.push(
         <div
           key={day + format(addDays(weekStartDate, day), 'E')}
-          className='flex flex-1 items-center justify-center text-white text-lg font-normal'
+          className='flex flex-1 items-center justify-center text-white font-normal'
         >
           {format(addDays(weekStartDate, day), 'E')}
         </div>,
@@ -57,7 +57,7 @@ const FullCalendar = ({ selectedDate, onSelectDate }: Props) => {
           }}
         >
           <div
-            className={`flex w-8 h-8 items-center justify-center text-lg ${
+            className={`flex w-8 h-8 items-center justify-center ${
               isSameDay(currentDate, selectedDate) ? ' border-2 border-blue rounded-full' : ''
             } ${isSameDay(currentDate, new Date()) ? 'font-bold text-[#2563eb]' : ''}`}
           >

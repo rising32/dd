@@ -3,6 +3,7 @@ export interface PriorityState {
   user_id: number;
   week: number;
   priority: string;
+  project_id?: number;
   goal: string;
   detail: string | null;
   is_completed: number;

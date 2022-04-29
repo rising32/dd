@@ -1,11 +1,13 @@
 import { getWeek } from 'date-fns';
 import React, { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
 import SmallLayout from '../../container/common/SmallLayout';
 import { sendMyBeforePriorities } from '../../lib/api';
 import useRequest from '../../lib/hooks/useRequest';
 import { PriorityState } from '../../modules/weekPriority';
 import { RootState } from '../../store';
+import MoreButton from '../common/MoreButton';
 import SelectedAndCompltedIcon from '../common/SelectedAndCompltedIcon';
 
 interface Props {
@@ -18,7 +20,7 @@ function BeforeWeeklyPriority({ selectedDate, selectedPriority, updatedPriority,
   const [myWeeklyPriorities, setMyWeeklyPriorities] = useState<PriorityState[]>([]);
 
   const { userInfo } = useSelector((state: RootState) => state.user);
-
+  const navigate = useNavigate();
   const [_sendMyBeforePriorities, , sendMyBeforePrioritiesRes] = useRequest(sendMyBeforePriorities);
 
   useEffect(() => {
@@ -48,28 +50,27 @@ function BeforeWeeklyPriority({ selectedDate, selectedPriority, updatedPriority,
       <div className='flex justify-center'>
         <span className='text-base'>Remember your weekly priorities</span>
       </div>
-      <SmallLayout className='w-full bg-card-gray rounded-md flex'>
-        <ul role='list' className='p-4'>
+      <SmallLayout className='w-full bg-card-gray rounded-md py-4'>
+        <ul role='list' className='px-4'>
           {myWeeklyPriorities.length > 0 ? (
             myWeeklyPriorities.map(priority => (
               <li
                 key={priority.wp_id}
-                className={`flex items-center pb-2 first:pt-0 last:pb-0 ${
-                  selectedPriority?.wp_id === priority.wp_id ? 'text-rouge-blue' : 'text-white'
-                }`}
+                className={`flex items-center py-1 ${selectedPriority?.wp_id === priority.wp_id ? 'text-rouge-blue' : 'text-white'}`}
                 onClick={() => onSelectPriority(priority)}
               >
                 <SelectedAndCompltedIcon
                   isSelected={selectedPriority?.wp_id === priority.wp_id}
                   isCompleted={priority.is_completed === 1}
                 />
-                <div className='flex flex-1 overflow-hidden'>{'W' + priority.week + ' : ' + priority.priority}</div>
+                <div className='flex truncate'>{'W' + priority.week + ' : ' + priority.priority}</div>
               </li>
             ))
           ) : (
             <div>Weekly priority is empty</div>
           )}
         </ul>
+        <MoreButton className='flex items-center justify-end mr-4' onMore={() => navigate('/priorities/priorityList')} />
       </SmallLayout>
     </div>
   );

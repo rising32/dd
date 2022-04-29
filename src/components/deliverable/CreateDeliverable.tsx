@@ -3,9 +3,9 @@ import SmallLayout from '../../container/common/SmallLayout';
 import { ClientState } from '../../modules/client';
 import { ProjectState } from '../../modules/project';
 import { TaskState } from '../../modules/task';
-import ShowClientList from '../items/ShowClientList';
-import ShowProjectList from '../items/ShowProjectList';
-import ShowTaskList from '../items/ShowTaskList';
+import SelectClient from '../items/SelectClient';
+import SelectProject from '../items/SelectProject';
+import SelectTask from '../items/SelectTask';
 import PlusButton from '../common/PlusButton';
 import DeliverableTab from './DeliverableTab';
 import useRequest from '../../lib/hooks/useRequest';
@@ -16,6 +16,7 @@ import { RootState } from '../../store';
 import { toast } from 'react-toastify';
 import { format } from 'date-fns';
 import { PriorityState } from '../../modules/weekPriority';
+import LoadingModal from '../common/LoadingModal';
 
 interface Props {
   selectedDate: Date;
@@ -32,6 +33,7 @@ function CreateDeliverable({ selectedDate, selectedDeliverable, selectedPriority
   const [selectedDeliverableTab, setSelectedDeliverableTab] = useState<string>('');
   const [deliverableInfo, setDeliverableInfo] = useState<DeliverableInfoState | null>(null);
   const [disabled, setDisabled] = useState(false);
+  const [loaded, setLoaded] = useState<string | null>(null);
 
   const [_sendCreateDeliverable, , sendCreateDeliverableRes] = useRequest(sendCreateDeliverable);
   const [_sendDeliverableInfo, , sendDeliverableInfoRes] = useRequest(sendDeliverableInfo);
@@ -40,6 +42,7 @@ function CreateDeliverable({ selectedDate, selectedDeliverable, selectedPriority
 
   React.useEffect(() => {
     if (selectedDeliverable) {
+      setLoaded('start');
       const deliverable_id = selectedDeliverable.deliverable_id;
       _sendDeliverableInfo(deliverable_id);
       setSelectedDeliverableTab('Details');
@@ -65,6 +68,7 @@ function CreateDeliverable({ selectedDate, selectedDeliverable, selectedPriority
     if (sendDeliverableInfoRes) {
       setDeliverableInfo(sendDeliverableInfoRes.data);
       setDeliverableValue(sendDeliverableInfoRes.data.deliverable_name);
+      setLoaded('end');
     }
   }, [sendDeliverableInfoRes]);
   const onSelectClient = (client: ClientState | null) => {
@@ -72,8 +76,8 @@ function CreateDeliverable({ selectedDate, selectedDeliverable, selectedPriority
     setSelectedProject(null);
     setSelectedTask(null);
   };
-  const onSelectProject = (project: ProjectState) => {
-    if (selectedProject?.project_id === project.project_id) {
+  const onSelectProject = (project: ProjectState | null) => {
+    if (selectedProject?.project_id === project?.project_id) {
       setSelectedProject(null);
     } else {
       setSelectedProject(project);
@@ -96,14 +100,16 @@ function CreateDeliverable({ selectedDate, selectedDeliverable, selectedPriority
     }
 
     if (userInfo && selectedTask && selectedTask.task_id) {
-      if (deliverableInfo?.task_id === selectedTask?.task_id) {
+      setLoaded('start');
+      if (deliverableInfo && deliverableInfo.task_id === selectedTask?.task_id) {
         _sendUpdateDeliverable({
           ...deliverableInfo,
           task_id: selectedTask.task_id,
           planned_end_date: format(selectedDate, 'yyyy-MM-dd'),
           deliverable_name: deliverableValue,
         });
-      } else {
+      }
+      if (!deliverableInfo) {
         const deliverable: DeliverableState = {
           deliverable_id: null,
           deliverable_name: deliverableValue,
@@ -126,6 +132,7 @@ function CreateDeliverable({ selectedDate, selectedDeliverable, selectedPriority
       setSelectedTask(null);
       setDeliverableValue('');
       addDeliverable(sendCreateDeliverableRes);
+      setLoaded('end');
     }
   }, [sendCreateDeliverableRes]);
   React.useEffect(() => {
@@ -135,6 +142,7 @@ function CreateDeliverable({ selectedDate, selectedDeliverable, selectedPriority
       setSelectedTask(null);
       setDeliverableValue('');
       updateDeliverable(sendUpdateDeliverableRes);
+      setLoaded('end');
     }
   }, [sendUpdateDeliverableRes]);
   const onSelectDeliverableTab = (tab: string) => {
@@ -147,29 +155,29 @@ function CreateDeliverable({ selectedDate, selectedDeliverable, selectedPriority
         <span className='text-base'>At least 2 deliverable per day</span>
       </div>
       <SmallLayout className='p-4 bg-card-gray border-rouge-blue border-4 text-white relative'>
-        <ShowClientList selectedClient={selectedClient} onSelectClient={onSelectClient} deliverableInfo={deliverableInfo} />
-        <ShowProjectList
+        <SelectClient selectedClient={selectedClient} onSelectClient={onSelectClient} deliverableInfo={deliverableInfo} />
+        <SelectProject
           selectedClient={selectedClient}
           selectedProject={selectedProject}
           onSelectProject={onSelectProject}
           deliverableInfo={deliverableInfo}
         />
-        <ShowTaskList
+        <SelectTask
           selectedTask={selectedTask}
           selectedProject={selectedProject}
           onSelectTask={onSelectTask}
           deliverableInfo={deliverableInfo}
         />
 
-        <label className='block mt-4 w-full'>
-          <span className="after:content-['*'] after:ml-0.5 after:text-rouge-blue block font-bold">Deliverable</span>
+        <label className='w-full flex items-center'>
+          <span className='font-bold'>Deliverable :</span>
           <input
             type='text'
             name='priority'
-            disabled={disabled}
+            autoComplete='off'
             value={deliverableValue}
             onChange={changeDeliverableValue}
-            className='mt-1 px-3 py-2 bg-transparent border shadow-sm border-dark-gray focus:outline-none focus:border-rouge-blue block w-full rounded-md sm:text-sm focus:ring-1'
+            className='ml-2 px-3 py-2 bg-transparent border-none focus:outline-none focus:border-none'
             placeholder='Enter Deliverable Name'
           />
         </label>
@@ -180,6 +188,7 @@ function CreateDeliverable({ selectedDate, selectedDeliverable, selectedPriority
         />
         <PlusButton className='flex items-center justify-end my-4' onPlus={onCreateDeliverable} />
       </SmallLayout>
+      <LoadingModal loaded={loaded} />
     </div>
   );
 }

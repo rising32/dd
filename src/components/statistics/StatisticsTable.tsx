@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useRef, useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { Column } from 'react-table';
 import { sendMonthStaticsticsData, sendWeekStaticsticsData } from '../../lib/api';
@@ -106,11 +106,15 @@ function StatisticsTable({ statisticType }: Props): JSX.Element {
         deltaItem = tableDataItem['available'] - totaItem;
 
         if (i === 0) {
-          tableDataItem['delta'] = delta;
-          tableDataItem['total'] = total;
+          if (total !== 0) {
+            tableDataItem['delta'] = delta;
+            tableDataItem['total'] = total;
+          }
         } else {
-          tableDataItem['delta'] = deltaItem;
-          tableDataItem['total'] = totaItem;
+          if (total !== 0) {
+            tableDataItem['delta'] = deltaItem;
+            tableDataItem['total'] = totaItem;
+          }
         }
 
         newData.push(tableDataItem);

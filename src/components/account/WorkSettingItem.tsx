@@ -39,7 +39,6 @@ const WorkSettingItem = ({ displayWorkSetting, onChange }: Props) => {
     { value: 7, label: 7 },
   ];
   const onSelectDays = (newValue: SingleValue<any>) => {
-    console.log(newValue);
     setWorkOnWeek(newValue.value);
   };
   const onChangeItem = () => {

@@ -2,27 +2,25 @@ import React, { useState } from 'react';
 import { useSelector } from 'react-redux';
 import SmallLayout from '../../container/common/SmallLayout';
 import useRequest from '../../lib/hooks/useRequest';
-import { sendUserAll, sendAddMember, sendTeamMembers } from '../../lib/api';
-import { ClientState } from '../../modules/client';
+import { sendUserAll, sendTeamMembers } from '../../lib/api';
 import { RootState } from '../../store';
 import HeaderWithTitle from '../base/HeaderWithTitle';
-import ReactModal from 'react-modal';
 import { UserInfoState } from '../../modules/user';
 import { DefaultUserSvg } from '../../assets/svg';
 import { toast } from 'react-toastify';
 import TeamMemberSetting from './TeamMemberSetting';
+import UserType from '../common/UserType';
+import LazyImage from '../common/LazyImage';
 
 function TeamsList() {
   const [myTeamMemberList, setMyTeamMemberList] = useState<UserInfoState[]>([]);
   const [selectedMember, setSelectedMember] = useState<UserInfoState | null>(null);
-  const [selectableTeam, setSelectableTeam] = useState<UserInfoState | null>(null);
   const [showModal, setShowModal] = useState(false);
   const [allUsers, setAllUsers] = useState<UserInfoState[]>([]);
   const [filterUserList, setFilterUserList] = useState<UserInfoState[]>([]);
 
   const { userInfo } = useSelector((state: RootState) => state.user);
   const [_sendUserAll, , sendUserAllRes] = useRequest(sendUserAll);
-  const [_sendAddMember, , sendAddMemberRes] = useRequest(sendAddMember);
   const [_sendTeamMembers, , sendTeamMembersRes] = useRequest(sendTeamMembers);
 
   React.useEffect(() => {
@@ -119,12 +117,19 @@ function TeamsList() {
           {myTeamMemberList.map(member => (
             <li key={member.user_id} className='py-1 first:pt-0 last:pb-0'>
               <div className='flex rounded-md p-2 items-center' onClick={() => onSelectMember(member)}>
-                <DefaultUserSvg className='w-6 h-6 rounded-full mr-2' />
+                <LazyImage
+                  className='w-8 h-8 rounded-full'
+                  placeholderImg='https://via.placeholder.com/400x200.png?text=This+Will+Be+Shown+Before+Load'
+                  src='https://www.gravatar.com/avatar/205e460b479e2e5b48aec07710c08d50'
+                />
                 <div
-                  className={`flex flex-1 text-lg capitalize truncate ${member.user_id === selectedMember?.user_id && 'text-rouge-blue'}`}
+                  className={`flex flex-1 text-lg ml-2 capitalize truncate ${
+                    member.user_id === selectedMember?.user_id && 'text-rouge-blue'
+                  }`}
                 >
                   {member.display_name}
                 </div>
+                <UserType user={member} />
               </div>
               {selectedMember && selectedMember.user_id === member.user_id && (
                 <TeamMemberSetting

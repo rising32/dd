@@ -1,10 +1,13 @@
 import React from 'react';
-import { ToastContainer, Flip } from 'react-toastify';
+import { ToastContainer } from 'react-toastify';
 import { injectStyle } from 'react-toastify/dist/inject-style';
+import ReactModal from 'react-modal';
 
 if (typeof window !== 'undefined') {
   injectStyle();
 }
+
+ReactModal.setAppElement('#root');
 const Core = () => {
   return (
     <>

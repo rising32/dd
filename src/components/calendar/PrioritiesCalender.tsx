@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { getWeek, addWeeks, subWeeks } from 'date-fns';
 import { CalenderSvg } from '../../assets/svg';
-import { NextSvg, PreviousSvg } from '../../assets/svg';
+import { LeftArrowSvg, RightArrowSvg } from '../../assets/svg';
 
 interface Props {
   onSelectWeek: (currentWeek: number) => void;
@@ -26,7 +26,7 @@ const PrioritiesCalender = ({ onSelectWeek }: Props) => {
   return (
     <div className='w-full flex flex-row justify-between items-center bg-white py-3 px-4 rounded-md'>
       <div className='flex items-center justify-center' onClick={() => changeWeekHandle('prev')}>
-        <PreviousSvg stroke='white' strokeWidth={4} />
+        <LeftArrowSvg stroke='#5B8EAB' strokeWidth={2} />
         <div className='text-lg font-bold text-rouge-blue pl-2'>{currentWeek - 1}</div>
       </div>
       <div className='flex flex-1 flex-row items-center justify-between pr-2 text-black'>
@@ -36,7 +36,7 @@ const PrioritiesCalender = ({ onSelectWeek }: Props) => {
       </div>
       <div className='flex items-center justify-center' onClick={() => changeWeekHandle('next')}>
         <div className='text-lg font-bold text-rouge-blue pr-2'>{currentWeek + 1}</div>
-        <NextSvg stroke='white' strokeWidth={4} />
+        <RightArrowSvg stroke='#5B8EAB' strokeWidth={2} />
       </div>
     </div>
   );

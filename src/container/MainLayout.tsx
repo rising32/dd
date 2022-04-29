@@ -4,7 +4,7 @@ import Navigation from '../components/nav/Navigation';
 
 function MainLayout(): JSX.Element {
   return (
-    <div className='flex flex-col bg-background h-screen'>
+    <div className='flex flex-col bg-background h-screen text-sm'>
       <Outlet />
       <Navigation />
     </div>

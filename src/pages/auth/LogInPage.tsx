@@ -5,10 +5,11 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
 import { toast } from 'react-toastify';
 import { validateEmail } from '../../lib/utils';
-import { useDispatch, useSelector } from 'react-redux';
-import { onLogin } from '../../store/features/userSlice';
+import { getAccountSetting, onLogin } from '../../store/features/userSlice';
 import { PenSvg } from '../../assets/svg';
 import { logoThumbnail } from '../../assets/images';
+import { useAppDispatch } from '../../store';
+import { getCompanyInfo } from '../../store/features/companySlice';
 
 interface IFormInputs {
   email: string;
@@ -25,7 +26,7 @@ const LoginSchema = yup
 const LogInPage = () => {
   const navigate = useNavigate();
   const location: any = useLocation();
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
 
   const from = location.state?.from?.pathname || '/tasks';
 
@@ -37,7 +38,7 @@ const LogInPage = () => {
     resolver: yupResolver(LoginSchema),
   });
 
-  const onLoginSubmit: SubmitHandler<IFormInputs> = async data => {
+  const onLoginSubmit: SubmitHandler<IFormInputs> = data => {
     if (!validateEmail(data.email)) {
       toast.error('wrong email format!');
       return;
@@ -46,12 +47,16 @@ const LogInPage = () => {
       email: data.email,
       password: data.password,
     };
-    try {
-      await dispatch(onLogin(params));
-      navigate(from, { replace: true });
-    } catch (err) {
-      console.log('error', `Fetch failed: `);
-    }
+    dispatch(onLogin(params))
+      .unwrap()
+      .then(res => {
+        dispatch(getAccountSetting({ user_id: res.user.user_id }));
+        dispatch(getCompanyInfo({ member_id: res.user.user_id }));
+        navigate(from, { replace: true });
+      })
+      .catch(err => {
+        console.log(err);
+      });
   };
 
   return (
@@ -69,6 +74,7 @@ const LogInPage = () => {
             {/* <img src={person} alt='Crayon' className='h-auto w-4 sm:w-6 lg:w-8' /> */}
           </span>
           <input
+            autoComplete='off'
             className='w-full bg-input px-12 py-2 rounded-full text-center text-white placeholder:text-white'
             placeholder='Enter Email'
             {...register('email', { required: true, maxLength: 20 })}
@@ -80,6 +86,7 @@ const LogInPage = () => {
             {/* <img src={password} alt='Crayon' className='h-auto w-4 sm:w-6 lg:w-8' /> */}
           </span>
           <input
+            autoComplete='off'
             className='w-full bg-input px-4 py-2 rounded-full text-center text-white placeholder:text-white'
             placeholder='Enter Password'
             type={'password'}

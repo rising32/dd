@@ -3,7 +3,7 @@ import { Routes, Route, Link } from 'react-router-dom';
 import LogInPage from './pages/auth/LogInPage';
 import AuthenticatedRoute from './AuthenticatedRoute';
 import MainLayout from './container/MainLayout';
-import TasksPage from './pages/tasks/TasksPage';
+import TaskHomePage from './pages/tasks/TaskHomePage';
 import PrioritiesPage from './pages/priorities/PrioritiesPage';
 import DeliverablesPage from './pages/deliverables/DeliverablesPage';
 import StatisticsPage from './pages/statistics/StatisticsPage';
@@ -17,6 +17,10 @@ import TaskManagePage from './pages/tasks/TaskManagePage';
 import TeamManagePage from './pages/team/TeamManagePage';
 import AgendaPage from './pages/agenda/AgendaPage';
 import FileManagerPage from './pages/file/FileManagerPage';
+import SignUpPage from './pages/auth/SignUpPage';
+import TermsPage from './pages/other/TermsPage';
+import TaskListPage from './pages/tasks/TaskListPage';
+import PriorityListPage from './pages/priorities/PriorityListPage';
 
 function App() {
   return (
@@ -24,12 +28,21 @@ function App() {
       <Routes>
         <Route index element={<LogInPage />} />
         <Route path='login' element={<LogInPage />} />
+        <Route path='signup' element={<SignUpPage />} />
         <Route element={<MainLayout />}>
           <Route
             path='tasks'
             element={
               <AuthenticatedRoute>
-                <TasksPage />
+                <TaskHomePage />
+              </AuthenticatedRoute>
+            }
+          />
+          <Route
+            path='tasks/taskList'
+            element={
+              <AuthenticatedRoute>
+                <TaskListPage />
               </AuthenticatedRoute>
             }
           />
@@ -38,6 +51,14 @@ function App() {
             element={
               <AuthenticatedRoute>
                 <PrioritiesPage />
+              </AuthenticatedRoute>
+            }
+          />
+          <Route
+            path='priorities/priorityList'
+            element={
+              <AuthenticatedRoute>
+                <PriorityListPage />
               </AuthenticatedRoute>
             }
           />
@@ -126,6 +147,14 @@ function App() {
             element={
               <AuthenticatedRoute>
                 <TeamManagePage />
+              </AuthenticatedRoute>
+            }
+          />
+          <Route
+            path='account/terms'
+            element={
+              <AuthenticatedRoute>
+                <TermsPage />
               </AuthenticatedRoute>
             }
           />

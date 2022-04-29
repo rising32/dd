@@ -1,81 +1,31 @@
 import React, { useState } from 'react';
-import { sendDateTimeCurrencyCreate, sendDateTimeCurrencyUpdate, sendDateTimeCurrency } from '../../lib/api';
-import useRequest from '../../lib/hooks/useRequest';
-import { toast } from 'react-toastify';
-
-import {
-  currencyOptions,
-  dateFormatOptions,
-  DateTimeCurrencyType,
-  decimalSeparatorOptions,
-  KeyValueState,
-  timeFormatOptions,
-} from '../../modules/dateTimeCurrency';
 import { ClickArrowSvg, DollarSvg, DownSvg, EuroSvg, SettingSvg } from '../../assets/svg';
 import { useSelector } from 'react-redux';
-import { RootState } from '../../store';
+import { RootState, useAppDispatch } from '../../store';
 import AnimatedView from '../common/AnimatedView';
 import { redDocumentThumbnail } from '../../assets/images';
 import ItemLayout from '../common/ItemLayout';
+import ReactModal from 'react-modal';
+import { currencyFormatOptions, dateFormatOptions, decimalSeparatorOptions, timeFormatOptions } from '../../modules/setting';
+import { AccountSettingState, createAccountSetting, updateAccountSetting } from '../../store/features/userSlice';
 
-interface Props {
-  currency: number;
-}
-const AccountSetting = ({ currency }: Props) => {
+const AccountSetting = () => {
+  const { userInfo, accountSetting } = useSelector((state: RootState) => state.user);
+  const dispatch = useAppDispatch();
   const [isEdit, setIsEdit] = useState(false);
   const [showDateFormat, setShowDateFormat] = useState(false);
-  const [selectedDateFormat, setSelectedDateFormat] = useState<KeyValueState | null>(null);
   const [showCurrency, setShowCurrency] = useState(false);
-  const [selectedCurrency, setSelectedCurrency] = useState<KeyValueState | null>(null);
-  const [selectedTimeFormat, setSelectedTimeFormat] = useState<KeyValueState | null>(null);
-  const [selectedDecimalSeparator, setSelectedDecimalSeparator] = useState<KeyValueState | null>(null);
-  const [dtcData, setDTCData] = useState<DateTimeCurrencyType | null>(null);
+  const [selectedDateFormat, setSelectedDateFormat] = useState(accountSetting.date_format);
+  const [selectedTimeFormat, setSelectedTimeFormat] = useState(accountSetting.time_format);
+  const [selectedCurrency, setSelectedCurrency] = useState(accountSetting.currency);
+  const [selectedDecimal, setSelectedDecimal] = useState(accountSetting.decimal_seperator);
 
-  const { userInfo } = useSelector((state: RootState) => state.user);
-
-  const [_sendDateTimeCurrencyCreate, , dateTimeCurrencyCreateRes] = useRequest(sendDateTimeCurrencyCreate);
-  const [_sendDateTimeCurrencyUpdate, , dateTimeCurrencyUpdateRes] = useRequest(sendDateTimeCurrencyUpdate);
-  const [_sendDateTimeCurrency, , sendDateTimeCurrencyRes] = useRequest(sendDateTimeCurrency);
-
-  React.useEffect(() => {
-    const user_id = userInfo?.user_id;
-    user_id && _sendDateTimeCurrency(user_id);
-  }, []);
-  React.useEffect(() => {
-    if (sendDateTimeCurrencyRes) {
-      setDTCData(sendDateTimeCurrencyRes);
-      dateFormatOptions.map(item => {
-        if (item.value === sendDateTimeCurrencyRes.date_format) {
-          setSelectedDateFormat(item);
-        }
-      });
-      currencyOptions.map(item => {
-        if (item.key === sendDateTimeCurrencyRes.currency) {
-          setSelectedCurrency(item);
-        }
-      });
-      timeFormatOptions.map(item => {
-        if (item.value === sendDateTimeCurrencyRes.time_format) {
-          setSelectedTimeFormat(item);
-        }
-      });
-      decimalSeparatorOptions.map(item => {
-        if (item.key === sendDateTimeCurrencyRes.decimal_seperator) {
-          setSelectedDecimalSeparator(item);
-        }
-      });
-    }
-  }, [sendDateTimeCurrencyRes]);
   const onShowDateFormat = () => {
     if (showDateFormat) {
       setShowDateFormat(false);
     } else {
       setShowDateFormat(true);
     }
-  };
-  const onSelectedDateFormat = (item: KeyValueState) => {
-    setSelectedDateFormat(item);
-    onShowDateFormat();
   };
   const onShowCurrency = () => {
     if (showCurrency) {
@@ -84,53 +34,7 @@ const AccountSetting = ({ currency }: Props) => {
       setShowCurrency(true);
     }
   };
-  const onSelectedCurrency = (item: KeyValueState) => {
-    setSelectedCurrency(item);
-    onShowCurrency();
-  };
-  const onSelectedTimeFormat = (item: KeyValueState) => {
-    setSelectedTimeFormat(item);
-  };
-  const onSelectedDecimalSeparator = (item: KeyValueState) => {
-    setSelectedDecimalSeparator(item);
-  };
-  const onDateTimeCurrencyUpdate = () => {
-    if (userInfo && selectedDateFormat && selectedTimeFormat && selectedCurrency && selectedDecimalSeparator) {
-      if (dtcData) {
-        const dateTimeCurrency: DateTimeCurrencyType = {
-          dtc_id: dtcData?.dtc_id,
-          user_id: dtcData.user_id,
-          date_format: selectedDateFormat?.value,
-          time_format: selectedTimeFormat?.value,
-          currency: selectedCurrency?.key,
-          decimal_seperator: selectedDecimalSeparator?.key,
-        };
-        _sendDateTimeCurrencyUpdate(dateTimeCurrency);
-      } else {
-        const dateTimeCurrency: DateTimeCurrencyType = {
-          dtc_id: null,
-          user_id: userInfo?.user_id,
-          date_format: selectedDateFormat?.value,
-          time_format: selectedTimeFormat?.value,
-          currency: selectedCurrency?.key,
-          decimal_seperator: selectedDecimalSeparator?.key,
-        };
-        _sendDateTimeCurrencyCreate(dateTimeCurrency);
-      }
-    }
-  };
-  React.useEffect(() => {
-    if (dateTimeCurrencyCreateRes) {
-      toast.success('Date, Time, Currency created!');
-      onEdit();
-    }
-  }, [dateTimeCurrencyCreateRes]);
-  React.useEffect(() => {
-    if (dateTimeCurrencyUpdateRes) {
-      toast.success('Date, Time, Currency updated!');
-      onEdit();
-    }
-  }, [dateTimeCurrencyUpdateRes]);
+
   const onEdit = () => {
     if (isEdit) {
       setIsEdit(false);
@@ -138,6 +42,60 @@ const AccountSetting = ({ currency }: Props) => {
       setIsEdit(true);
     }
   };
+  const onSelectDateFormate = (index: number) => {
+    setSelectedDateFormat(index);
+    onShowDateFormat();
+  };
+  const onSelectCurrencyFormate = (index: number) => {
+    setSelectedCurrency(index);
+    onShowCurrency();
+  };
+  const onSelectTimeFormate = (index: number) => {
+    setSelectedTimeFormat(index);
+  };
+  const onSelectDecimal = (index: number) => {
+    setSelectedDecimal(index);
+  };
+  const createAndUpdate = () => {
+    if (userInfo) {
+      if (accountSetting.as_id) {
+        const setting: AccountSettingState = {
+          as_id: accountSetting.as_id,
+          date_format: selectedDateFormat,
+          time_format: selectedTimeFormat,
+          currency: selectedCurrency,
+          decimal_seperator: selectedDecimal,
+        };
+        const user_id = userInfo.user_id;
+        dispatch(updateAccountSetting({ ...setting, user_id }))
+          .unwrap()
+          .then(() => {
+            onEdit();
+          })
+          .catch(err => {
+            console.log(err);
+          });
+      } else {
+        const setting: AccountSettingState = {
+          as_id: null,
+          date_format: selectedDateFormat,
+          time_format: selectedTimeFormat,
+          currency: selectedCurrency,
+          decimal_seperator: selectedDecimal,
+        };
+        const user_id = userInfo.user_id;
+        dispatch(createAccountSetting({ ...setting, user_id }))
+          .unwrap()
+          .then(() => {
+            onEdit();
+          })
+          .catch(err => {
+            console.log(err);
+          });
+      }
+    }
+  };
+
   return (
     <>
       <ItemLayout className='mt-2' onClick={onEdit}>
@@ -147,99 +105,117 @@ const AccountSetting = ({ currency }: Props) => {
         <div className='flex flex-1 items-center justify-between'>
           <div className='pr-2 truncate'>Date, time and currency</div>
           <img src={redDocumentThumbnail} className='h-4 w-auto' />
-          {currency === 0 && <EuroSvg className='w-6 h-6 fill-rouge-blue' />}
-          {currency === 1 && <DollarSvg className='w-6 h-6 fill-rouge-blue' />}
+          {accountSetting.currency === 0 && <EuroSvg className='w-6 h-6 fill-rouge-blue' />}
+          {accountSetting.currency === 1 && <DollarSvg className='w-6 h-6 fill-rouge-blue' />}
         </div>
         <ClickArrowSvg className='w-6 h-6' />
       </ItemLayout>
-      <AnimatedView show={isEdit} className='p-4 border-2 border-dark-gray'>
-        <div className='flex flex-row w-full p-4 items-center justify-between'>
-          <div className='text-sm text-black font-normal' onClick={onEdit}>
-            Cancel
-          </div>
-          <div className='text-lg text-black font-bold'>Account Setting</div>
-          <div className='text-sm text-black font-normal' onClick={onDateTimeCurrencyUpdate}>
-            Save
-          </div>
+      <AnimatedView show={isEdit} className='p-4 border-2 border-dark-gray text-black'>
+        <div className='flex p-4 items-center justify-between'>
+          <span onClick={onEdit}>Cancel</span>
+          <span className='text-lg font-bold'>Account Setting</span>
+          <span onClick={createAndUpdate}>{accountSetting.as_id ? 'Save' : 'Create'}</span>
         </div>
-        <div className='my-4 flex flex-row'>
-          <div className='w-1/2 pr-4 flex flex-col justify-between'>
-            <div className='relative'>
-              <div className='text-sm text-black font-bold text-center'>DATE FORMAT</div>
-              <div
-                className='bg-light-gray flex flex-row items-center justify-between px-2 py-1 rounded-md my-4'
-                onClick={onShowDateFormat}
-              >
-                <div className='truncate'>{selectedDateFormat && selectedDateFormat.value ? selectedDateFormat.value : 'Select ...'}</div>
-                <DownSvg strokeWidth={4} className='h-4 w-4 stroke-black rotate-90' />
-              </div>
-              {showDateFormat && (
-                <div className='absolute top-full bg-white w-full py-4 text-lg z-10 border-2 border-light-gray'>
-                  {dateFormatOptions.map(item => (
-                    <div key={item.key} onClick={() => onSelectedDateFormat(item)}>
-                      <div className='text-center truncate'>{item.value}</div>
-                    </div>
-                  ))}
-                </div>
-              )}
+        <div>
+          <div className='relative mt-2'>
+            <div className='font-bold'>DATE FORMAT</div>
+            <div className='bg-light-gray flex items-center justify-between p-2 mt-1 rounded-md' onClick={onShowDateFormat}>
+              <div className='truncate'>{dateFormatOptions[selectedDateFormat]}</div>
+              <DownSvg strokeWidth={4} className='h-4 w-4 stroke-black rotate-90' />
             </div>
-            <div>
-              <div className='text-sm text-black font-bold text-center'>CURRENCY</div>
-              <div className='relative'>
-                <div
-                  className='bg-light-gray flex flex-row items-center justify-between px-2 py-1 rounded-md my-4'
-                  onClick={onShowCurrency}
-                >
-                  <div className='truncate'>{selectedCurrency && selectedCurrency.value ? selectedCurrency.value : 'Select ...'}</div>
-                  <DownSvg strokeWidth={4} className='h-4 w-4 stroke-black rotate-90' />
-                </div>
-                {showCurrency && (
-                  <div className='absolute bottom-full bg-white w-full py-4 text-lg z-10 border-2 border-light-gray'>
-                    {currencyOptions.map(item => (
-                      <div key={item.key} onClick={() => onSelectedCurrency(item)}>
-                        <div className='text-center truncate'>{item.value}</div>
-                      </div>
-                    ))}
-                  </div>
-                )}
-              </div>
-            </div>
+            <ReactModal
+              isOpen={showDateFormat}
+              onRequestClose={onShowDateFormat}
+              className='w-4/5 max-h-96 bg-white p-4 overflow-auto rounded-sm flex flex-col items-center justify-center'
+              style={{
+                overlay: {
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  background: 'rgba(0, 0, 0, 0.5)',
+                },
+              }}
+            >
+              <div className='text-center font-bold'>DATE FORMAT</div>
+              <ul role='list' className='p-4 z-10'>
+                {dateFormatOptions.map((item, index) => (
+                  <li
+                    key={item}
+                    onClick={() => onSelectDateFormate(index)}
+                    className={`flex py-1 first:pt-0 last:pb-0 ${selectedDateFormat === index && 'text-rouge-blue'}`}
+                  >
+                    {item}
+                  </li>
+                ))}
+              </ul>
+            </ReactModal>
           </div>
-          <div className='w-1/2'>
-            <div className='text-sm text-black font-bold truncate text-center'>TIME FORMAT</div>
-            <div className='w-full py-4 text-lg'>
-              {timeFormatOptions.map(item => (
-                <div key={item.key} className='flex flex-row items-center pl-4' onClick={() => onSelectedTimeFormat(item)}>
+          <div className='relative mt-4'>
+            <div className='font-bold'>CURRENCY</div>
+            <div className='bg-light-gray flex items-center justify-between p-2 mt-1 rounded-md' onClick={onShowCurrency}>
+              <div className='truncate'>{currencyFormatOptions[selectedCurrency]}</div>
+              <DownSvg strokeWidth={4} className='h-4 w-4 stroke-black rotate-90' />
+            </div>
+            <ReactModal
+              isOpen={showCurrency}
+              onRequestClose={onShowCurrency}
+              className='w-4/5 max-h-96 bg-white p-4 overflow-auto rounded-sm flex flex-col items-center justify-center'
+              style={{
+                overlay: {
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  background: 'rgba(0, 0, 0, 0.5)',
+                },
+              }}
+            >
+              <div className='text-center font-bold'>CURRENCY</div>
+              <ul role='list' className='p-4 z-10'>
+                {currencyFormatOptions.map((item, index) => (
+                  <li
+                    key={item}
+                    onClick={() => onSelectCurrencyFormate(index)}
+                    className={`flex py-1 first:pt-0 last:pb-0 ${selectedCurrency === index && 'text-rouge-blue'}`}
+                  >
+                    {item}
+                  </li>
+                ))}
+              </ul>
+            </ReactModal>
+          </div>
+          <div className='mt-4'>
+            <div className='font-bold'>TIME FORMAT</div>
+            <ul role='list'>
+              {timeFormatOptions.map((item, index) => (
+                <li key={item} className='flex items-center pl-4 py-1 first:pt-0 last:pb-0' onClick={() => onSelectTimeFormate(index)}>
                   <div
                     className={`w-6 h-6 rounded-full mr-3 flex items-center justify-center ${
-                      selectedTimeFormat && selectedTimeFormat.key === item.key ? 'bg-rouge-blue' : 'bg-card-gray'
+                      selectedTimeFormat === index ? 'bg-rouge-blue' : 'bg-card-gray'
                     }`}
                   >
-                    {selectedTimeFormat && selectedTimeFormat.key === item.key && (
-                      <DownSvg stroke='white' strokeWidth={3} className='w-4 h-4 rotate-90' />
-                    )}
+                    {selectedTimeFormat === index && <DownSvg stroke='white' strokeWidth={3} className='w-4 h-4 rotate-90' />}
                   </div>
-                  <div className='text-center truncate'>{item.value}</div>
-                </div>
+                  <div className='text-center truncate'>{item}</div>
+                </li>
               ))}
-            </div>
-            <div className='text-sm text-black font-bold truncate text-center'>DECIMAL SEPARATOR</div>
-            <div className='w-full py-4 text-lg'>
-              {decimalSeparatorOptions.map(item => (
-                <div key={item.key} className='flex flex-row items-center pl-4' onClick={() => onSelectedDecimalSeparator(item)}>
+            </ul>
+          </div>
+          <div className='relative mt-4'>
+            <div className='font-bold'>TIME FORMAT</div>
+            <ul role='list'>
+              {decimalSeparatorOptions.map((item, index) => (
+                <li key={item} className='flex items-center pl-4 py-1 first:pt-0 last:pb-0' onClick={() => onSelectDecimal(index)}>
                   <div
                     className={`w-6 h-6 rounded-full mr-3 flex items-center justify-center ${
-                      selectedDecimalSeparator && selectedDecimalSeparator.key === item.key ? 'bg-button-blue' : 'bg-card-gray'
+                      selectedDecimal === index ? 'bg-button-blue' : 'bg-card-gray'
                     }`}
                   >
-                    {selectedDecimalSeparator && selectedDecimalSeparator.key === item.key && (
-                      <DownSvg stroke='white' strokeWidth={3} className='w-4 h-4 rotate-90' />
-                    )}
+                    {selectedDecimal === index && <DownSvg stroke='white' strokeWidth={3} className='w-4 h-4 rotate-90' />}
                   </div>
-                  <div className='text-center truncate'>{item.value}</div>
-                </div>
+                  <div className='text-center truncate'>{item}</div>
+                </li>
               ))}
-            </div>
+            </ul>
           </div>
         </div>
       </AnimatedView>

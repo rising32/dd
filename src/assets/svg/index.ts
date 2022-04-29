@@ -42,3 +42,6 @@ export { ReactComponent as TaskSvg } from './task.svg';
 export { ReactComponent as CompleteSvg } from './complete.svg';
 export { ReactComponent as DefaultUserSvg } from './defaultUser.svg';
 export { ReactComponent as DollarSvg } from './dollar.svg';
+export { ReactComponent as AdminSvg } from './admin.svg';
+export { ReactComponent as ManagerSvg } from './manager.svg';
+export { ReactComponent as UserSvg } from './user.svg';

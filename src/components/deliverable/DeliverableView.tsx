@@ -10,6 +10,8 @@ import { PriorityState } from '../../modules/weekPriority';
 import ReactModal from 'react-modal';
 import useRequest from '../../lib/hooks/useRequest';
 import { sendUpdatePriority } from '../../lib/api';
+import { format } from 'date-fns';
+import LoadingModal from '../common/LoadingModal';
 
 function DeliverableView() {
   const [selectedDate, setSelectedDate] = useState(new Date());
@@ -20,6 +22,7 @@ function DeliverableView() {
   const [updatedDeliverable, setUpdatedDeliverable] = useState<DeliverableState | null>(null);
   const [updatedPriority, setUpdatededPriority] = useState<PriorityState | null>(null);
   const [isDeliverableFromPriority, setIsDeliverableFromPriority] = useState(false);
+  const [loaded, setLoaded] = useState<string | null>(null);
 
   const { userInfo } = useSelector((state: RootState) => state.user);
   const [_sendUpdatePriority, , sendUpdatePriorityRes] = useRequest(sendUpdatePriority);
@@ -47,7 +50,18 @@ function DeliverableView() {
   const addDeliverable = (deliverable: DeliverableState) => {
     setNewCreatedDeliverable(deliverable);
     if (selectedPriority) {
-      _sendUpdatePriority({ ...selectedPriority, is_completed: 1 });
+      setLoaded('start');
+      _sendUpdatePriority({
+        wp_id: selectedPriority?.wp_id,
+        user_id: selectedPriority?.user_id,
+        week: selectedPriority?.week,
+        priority: selectedPriority?.priority,
+        goal: selectedPriority?.goal,
+        detail: selectedPriority?.detail,
+        is_completed: 1,
+        is_weekly: selectedPriority?.is_weekly,
+        end_date: format(new Date(), 'yyyy-MM-dd'),
+      });
     } else {
       setSelectedPriority(null);
       setSelectedDeliverable(null);
@@ -58,6 +72,7 @@ function DeliverableView() {
       setSelectedPriority(null);
       setSelectedDeliverable(null);
       setUpdatededPriority(sendUpdatePriorityRes);
+      setLoaded('end');
     }
   }, [sendUpdatePriorityRes]);
   const updateDeliverable = (deliverable: DeliverableState) => {
@@ -123,6 +138,7 @@ function DeliverableView() {
           </div>
         </div>
       </ReactModal>
+      <LoadingModal loaded={loaded} />
     </>
   );
 }

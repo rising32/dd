@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import { sendAddMember } from '../../lib/api';
 import useRequest from '../../lib/hooks/useRequest';
-import { DownSvg } from '../../assets/svg';
 import { TeamMemberState } from '../../modules/team';
 import { UserInfoState } from '../../modules/user';
 import { useSelector } from 'react-redux';
-import { RootState } from '../../store';
+import { RootState, useAppDispatch } from '../../store';
 import AnimatedView from '../common/AnimatedView';
+import { changeMemberCount } from '../../store/features/companySlice';
 
 interface Props {
   selectedMember: UserInfoState | null;
@@ -17,11 +17,11 @@ interface Props {
 const TeamMemberSetting = ({ selectedMember, filterUserList, onCancel, onSuccess }: Props) => {
   const [memberName, setMemberName] = useState(selectedMember ? selectedMember.display_name : '');
   const [memberEmail, setMemberEmail] = useState(selectedMember ? selectedMember.email : '');
-  const [isManager, setIsManager] = useState(selectedMember ? selectedMember.role_id : 3);
   const [hasFocus, setFocus] = useState(false);
   const [selectedUser, setSelectedUser] = useState<UserInfoState | null>(null);
 
   const { userInfo } = useSelector((state: RootState) => state.user);
+  const dispatch = useAppDispatch();
   const [_sendAddMember, , sendAddMemberRes] = useRequest(sendAddMember);
 
   const onChangeMemberName = (event: React.FormEvent<HTMLInputElement>) => {
@@ -63,6 +63,7 @@ const TeamMemberSetting = ({ selectedMember, filterUserList, onCancel, onSuccess
   useEffect(() => {
     if (sendAddMemberRes && selectedUser) {
       onSuccess(selectedUser);
+      dispatch(changeMemberCount());
     }
   }, [sendAddMemberRes]);
 
@@ -73,6 +74,7 @@ const TeamMemberSetting = ({ selectedMember, filterUserList, onCancel, onSuccess
         <input
           type='text'
           name='memberName'
+          autoComplete='off'
           disabled={selectedMember !== null}
           value={memberName}
           onChange={onChangeMemberName}
@@ -82,7 +84,7 @@ const TeamMemberSetting = ({ selectedMember, filterUserList, onCancel, onSuccess
           placeholder='Enter Name'
         />
       </label>
-      <AnimatedView show={hasFocus} className='max-h-32'>
+      <AnimatedView show={hasFocus} className='max-h-32 overflow-scroll'>
         {filterUserList.map(user => (
           <div key={user.user_id} onClick={() => onSelectUser(user)}>
             {user.display_name} - {user.email}
@@ -94,6 +96,7 @@ const TeamMemberSetting = ({ selectedMember, filterUserList, onCancel, onSuccess
         <input
           type='email'
           name='memberEmail'
+          autoComplete='off'
           value={memberEmail}
           disabled={selectedMember !== null}
           onChange={onChangeMemberEmail}

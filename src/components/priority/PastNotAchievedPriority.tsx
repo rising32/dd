@@ -1,10 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
 import SmallLayout from '../../container/common/SmallLayout';
 import { sendPastNotAchievedPriorities } from '../../lib/api';
 import useRequest from '../../lib/hooks/useRequest';
 import { PriorityState } from '../../modules/weekPriority';
 import { RootState } from '../../store';
+import MoreButton from '../common/MoreButton';
 
 interface Props {
   selectedWeek: number;
@@ -13,6 +15,7 @@ function PastNotAchievedPriority({ selectedWeek }: Props) {
   const [pastNotAchievedPriorities, setPastNotAchievedPriorities] = useState<PriorityState[]>([]);
 
   const { userInfo } = useSelector((state: RootState) => state.user);
+  const navigate = useNavigate();
 
   const [_sendPastNotAchievedPriorities, , sendPastNotAchievedPrioritiesRes] = useRequest(sendPastNotAchievedPriorities);
 
@@ -29,13 +32,13 @@ function PastNotAchievedPriority({ selectedWeek }: Props) {
   return (
     <div className='text-white mt-4'>
       <div className='flex justify-center'>
-        <span className='text-base'>Past priorities not achieved</span>
+        <span className='text-center'>Past priorities not achieved</span>
       </div>
-      <SmallLayout className='w-full bg-card-gray rounded-md flex'>
-        <ul role='list' className='p-4'>
+      <SmallLayout className='w-full bg-card-gray rounded-md py-4'>
+        <ul role='list' className='px-4'>
           {pastNotAchievedPriorities.length > 0 ? (
             pastNotAchievedPriorities.map((priority, index) => (
-              <li key={priority.wp_id} className='flex items-center pb-2 first:pt-0 last:pb-0'>
+              <li key={priority.wp_id} className='flex items-center py-1 truncate'>
                 <div className='flex flex-1 overflow-hidden'>{'W' + priority.week + ' : ' + priority.priority}</div>
               </li>
             ))
@@ -43,6 +46,7 @@ function PastNotAchievedPriority({ selectedWeek }: Props) {
             <div>Weekly priority is empty</div>
           )}
         </ul>
+        <MoreButton className='flex items-center justify-end mr-4' onMore={() => navigate('/priorities/priorityList')} />
       </SmallLayout>
     </div>
   );

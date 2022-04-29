@@ -91,6 +91,7 @@ function UserNameAndEmail() {
             <input
               type='text'
               name='name'
+              autoComplete='off'
               value={userName}
               onChange={handleUserNameChange}
               className='mt-1 px-3 py-2 bg-transparent border shadow-sm border-dark-gray focus:outline-none focus:border-rouge-blue block w-full rounded-md sm:text-sm focus:ring-1'
@@ -102,6 +103,7 @@ function UserNameAndEmail() {
             <input
               type='email'
               name='email'
+              autoComplete='off'
               value={userEmail}
               onChange={handleEmailChange}
               className='mt-1 px-3 py-2 bg-transparent border shadow-sm border-dark-gray focus:outline-none focus:border-rouge-blue block w-full rounded-md sm:text-sm focus:ring-1'

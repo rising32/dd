@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useSelector } from 'react-redux';
 import SmallLayout from '../../container/common/SmallLayout';
 import useRequest from '../../lib/hooks/useRequest';
-import { RootState } from '../../store';
+import { RootState, useAppDispatch } from '../../store';
 import HeaderWithTitle from '../base/HeaderWithTitle';
 import { ProjectState } from '../../modules/project';
 import ReactModal from 'react-modal';
@@ -10,6 +10,7 @@ import SelectedAndCompltedIcon from '../common/SelectedAndCompltedIcon';
 import { sendProjectOfCreater, sendCreateProject } from '../../lib/api';
 import { toast } from 'react-toastify';
 import ProjectSetting from './ProjectSetting';
+import { changeProjectCount } from '../../store/features/companySlice';
 
 function ProjectsView() {
   const [myProjectList, setMyProjectList] = useState<ProjectState[]>([]);
@@ -19,6 +20,8 @@ function ProjectsView() {
   const { userInfo } = useSelector((state: RootState) => state.user);
   const [_sendProjectOfCreater, , sendProjectOfCreaterRes] = useRequest(sendProjectOfCreater);
   const [_sendCreateProject, , sendCreateProjectRes] = useRequest(sendCreateProject);
+
+  const dispatch = useAppDispatch();
 
   React.useEffect(() => {
     const creator_id = userInfo?.user_id;
@@ -38,17 +41,12 @@ function ProjectsView() {
   };
   const onCreateProject = () => {
     if (userInfo) {
-      const newProject: ProjectState = {
+      const params = {
         project_id: null,
         creator_id: userInfo.user_id,
         project_name: 'New Project',
-        description: null,
-        planned_start_date: null,
-        planned_end_date: null,
-        actual_start_date: null,
-        actual_end_date: null,
       };
-      _sendCreateProject(newProject);
+      _sendCreateProject(params);
     }
   };
   React.useEffect(() => {
@@ -59,6 +57,7 @@ function ProjectsView() {
       toast.success('project created successfully!');
       setMyProjectList(newMyProjectList);
       onSelectProject(sendCreateProjectRes);
+      dispatch(changeProjectCount());
     }
   }, [sendCreateProjectRes]);
   const onUpdateSuccess = (project: ProjectState) => {
