@@ -51,7 +51,7 @@ function DetailPriority({ selectedPriorityTab, selectedPriority }: Props) {
           <SelectProject selectedClient={selectedClient} selectedProject={selectedProject} onSelectProject={onSelectProject} />
         </>
       )}
-      <PlusButton className='flex items-center justify-end my-4' onPlus={onCreateWeekPriority} />
+      <PlusButton className='flex items-center justify-end my-4' />
     </>
   );
 }

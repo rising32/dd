@@ -175,7 +175,7 @@ function TaskFilter({ selectedWeek }: Props) {
         </label>
         <ShowUserList selectedMember={selectedMember} onSelectMember={onSelectMember} />
         <ShowCalendar selectedWhen={selectWhen} onSelectWhen={onSelectWhen} />
-        <PlusButton className='flex items-center justify-end mt-4' onPlus={onPlus} />
+        <PlusButton className='flex items-center justify-end mt-4' />
       </SmallLayout>
       <div className='mt-4 text-center'>{'Tasks Week ' + selectedWeek}</div>
       <SmallLayout className='p-4 bg-card-gray text-white'>

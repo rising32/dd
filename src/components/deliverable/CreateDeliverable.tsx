@@ -17,7 +17,14 @@ import { toast } from 'react-toastify';
 import { format } from 'date-fns';
 import { PriorityState } from '../../modules/weekPriority';
 import LoadingModal from '../common/LoadingModal';
+import { Controller, useForm, NestedValue, SubmitHandler } from 'react-hook-form';
 
+interface IFormInput {
+  client: ClientState | null;
+  project: ProjectState | null;
+  task: TaskState | null;
+  deliverable: string;
+}
 interface Props {
   selectedDate: Date;
   addDeliverable: (deliverable: DeliverableState) => void;
@@ -34,6 +41,14 @@ function CreateDeliverable({ selectedDate, selectedDeliverable, selectedPriority
   const [deliverableInfo, setDeliverableInfo] = useState<DeliverableInfoState | null>(null);
   const [disabled, setDisabled] = useState(false);
   const [loaded, setLoaded] = useState<string | null>(null);
+  const { handleSubmit, control, setValue, getValues, formState } = useForm<IFormInput>({
+    defaultValues: {
+      client: null,
+      project: null,
+      task: null,
+      deliverable: '',
+    },
+  });
 
   const [_sendCreateDeliverable, , sendCreateDeliverableRes] = useRequest(sendCreateDeliverable);
   const [_sendDeliverableInfo, , sendDeliverableInfoRes] = useRequest(sendDeliverableInfo);
@@ -148,6 +163,27 @@ function CreateDeliverable({ selectedDate, selectedDeliverable, selectedPriority
   const onSelectDeliverableTab = (tab: string) => {
     setSelectedDeliverableTab(preSelectedProject => (preSelectedProject === tab ? '' : tab));
   };
+  const onSubmit: SubmitHandler<IFormInput> = data => {
+    console.log('======', data);
+    // if (!data.priority) {
+    //   toast.error('priority is not empty!');
+    //   return;
+    // }
+    // if (userInfo) {
+    //   const priority: PriorityState = {
+    //     wp_id: null,
+    //     user_id: userInfo?.user_id,
+    //     week: selectedWeek,
+    //     priority: data.priority,
+    //     goal: data.goal,
+    //     detail: '',
+    //     is_completed: 0,
+    //     is_weekly: 0,
+    //     end_date: null,
+    //   };
+    //   _sendCreatePriority(priority);
+    // }
+  };
 
   return (
     <div className='text-white mt-4'>
@@ -155,38 +191,68 @@ function CreateDeliverable({ selectedDate, selectedDeliverable, selectedPriority
         <span className='text-base'>At least 2 deliverable per day</span>
       </div>
       <SmallLayout className='p-4 bg-card-gray border-rouge-blue border-4 text-white relative'>
-        <SelectClient selectedClient={selectedClient} onSelectClient={onSelectClient} deliverableInfo={deliverableInfo} />
-        <SelectProject
-          selectedClient={selectedClient}
-          selectedProject={selectedProject}
-          onSelectProject={onSelectProject}
-          deliverableInfo={deliverableInfo}
-        />
-        <SelectTask
-          selectedTask={selectedTask}
-          selectedProject={selectedProject}
-          onSelectTask={onSelectTask}
-          deliverableInfo={deliverableInfo}
-        />
-
-        <label className='w-full flex items-center'>
-          <span className='font-bold'>Deliverable :</span>
-          <input
-            type='text'
-            name='priority'
-            autoComplete='off'
-            value={deliverableValue}
-            onChange={changeDeliverableValue}
-            className='ml-2 px-3 py-2 bg-transparent border-none focus:outline-none focus:border-none'
-            placeholder='Enter Deliverable Name'
+        <form onSubmit={handleSubmit(onSubmit)}>
+          <Controller
+            control={control}
+            name='client'
+            rules={{ required: true }}
+            render={({ field }) => (
+              <SelectClient selectedClient={selectedClient} onSelectClient={onSelectClient} deliverableInfo={deliverableInfo} {...field} />
+            )}
           />
-        </label>
-        <DeliverableTab
-          selectedDeliverableTab={selectedDeliverableTab}
-          selectedDeliverable={selectedDeliverable}
-          onSelectDeliverableTab={onSelectDeliverableTab}
-        />
-        <PlusButton className='flex items-center justify-end my-4' onPlus={onCreateDeliverable} />
+          <Controller
+            control={control}
+            name='project'
+            rules={{ required: true }}
+            render={({ field }) => (
+              <SelectProject
+                selectedClient={selectedClient}
+                selectedProject={selectedProject}
+                onSelectProject={onSelectProject}
+                deliverableInfo={deliverableInfo}
+                {...field}
+              />
+            )}
+          />
+          <Controller
+            control={control}
+            name='task'
+            rules={{ required: true }}
+            render={({ field }) => (
+              <SelectTask
+                selectedTask={selectedTask}
+                selectedProject={selectedProject}
+                onSelectTask={onSelectTask}
+                deliverableInfo={deliverableInfo}
+                {...field}
+              />
+            )}
+          />
+          <Controller
+            control={control}
+            name='deliverable'
+            rules={{ required: true }}
+            render={({ field }) => (
+              <label className='w-full flex items-center'>
+                <span className='font-bold'>Deliverable:</span>
+                <input
+                  type='text'
+                  autoComplete='off'
+                  className='ml-2 py-2 bg-transparent focus:outline-none focus:border-none flex border-none w-full'
+                  placeholder='Enter Deliverable Name'
+                  {...field}
+                />
+              </label>
+            )}
+          />
+
+          <DeliverableTab
+            selectedDeliverableTab={selectedDeliverableTab}
+            selectedDeliverable={selectedDeliverable}
+            onSelectDeliverableTab={onSelectDeliverableTab}
+          />
+          <PlusButton className='flex items-center justify-end my-4' />
+        </form>
       </SmallLayout>
       <LoadingModal loaded={loaded} />
     </div>

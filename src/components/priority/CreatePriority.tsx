@@ -6,27 +6,29 @@ import useRequest from '../../lib/hooks/useRequest';
 import { PriorityState } from '../../modules/weekPriority';
 import { RootState } from '../../store';
 import PlusButton from '../common/PlusButton';
-import { ReactSearchAutocomplete } from 'react-search-autocomplete';
+import { useForm, SubmitHandler } from 'react-hook-form';
+interface IFormInput {
+  priority: string;
+  goal: string;
+}
 
 interface Props {
   selectedWeek: number;
   addPriority: (priority: PriorityState) => void;
 }
 function CreatePriority({ selectedWeek, addPriority }: Props) {
-  const [priorityValue, setPriorityValue] = useState('');
-  const [goalValue, setGoalValue] = useState('');
+  const { register, reset, handleSubmit } = useForm<IFormInput>({
+    defaultValues: {
+      priority: '',
+      goal: '',
+    },
+  });
 
   const { userInfo } = useSelector((state: RootState) => state.user);
   const [_sendCreatePriority, , sendCreatePriorityRes] = useRequest(sendCreatePriority);
 
-  const changePriorityValue = (event: React.FormEvent<HTMLInputElement>) => {
-    setPriorityValue(event.currentTarget.value);
-  };
-  const changeGoalValue = (event: React.FormEvent<HTMLInputElement>) => {
-    setGoalValue(event.currentTarget.value);
-  };
-  const onCreateWeekPriority = () => {
-    if (!priorityValue) {
+  const onSubmit: SubmitHandler<IFormInput> = data => {
+    if (!data.priority) {
       toast.error('priority is not empty!');
       return;
     }
@@ -35,8 +37,8 @@ function CreatePriority({ selectedWeek, addPriority }: Props) {
         wp_id: null,
         user_id: userInfo?.user_id,
         week: selectedWeek,
-        priority: priorityValue,
-        goal: goalValue,
+        priority: data.priority,
+        goal: data.goal,
         detail: '',
         is_completed: 0,
         is_weekly: 0,
@@ -45,42 +47,42 @@ function CreatePriority({ selectedWeek, addPriority }: Props) {
       _sendCreatePriority(priority);
     }
   };
+
   React.useEffect(() => {
     if (sendCreatePriorityRes) {
       addPriority(sendCreatePriorityRes);
-      setPriorityValue('');
-      setGoalValue('');
+      reset({
+        priority: '',
+        goal: '',
+      });
     }
   }, [sendCreatePriorityRes]);
 
   return (
-    <>
+    <form onSubmit={handleSubmit(onSubmit)}>
       <label className='flex items-center mt-4 w-full'>
         <span className="after:content-['*'] after:ml-0.5 after:text-rouge-blue flex font-bold">Priority</span>
         <input
-          type='text'
-          name='priority'
           autoComplete='off'
-          value={priorityValue}
-          onChange={changePriorityValue}
           className='ml-2 py-2 bg-transparent focus:outline-none focus:border-none flex border-none w-full'
           placeholder='Enter Priority Name'
+          enterKeyHint='next'
+          {...register('priority', { required: true })}
         />
       </label>
       <label className='flex items-center w-full'>
         <span className='block font-bold'>Goal</span>
         <input
-          type='text'
-          name='goal'
           autoComplete='off'
-          value={goalValue}
-          onChange={changeGoalValue}
-          className='ml-2 py-2 bg-transparent border-none focus:outline-none focus:border-none w-full'
+          className='ml-2 py-2 bg-transparent focus:outline-none focus:border-none flex border-none w-full'
           placeholder='Enter Goal'
+          enterKeyHint='done'
+          {...register('goal')}
         />
       </label>
-      <PlusButton className='flex items-center justify-end my-4' onPlus={onCreateWeekPriority} />
-    </>
+
+      <PlusButton className='flex items-center justify-end my-4' />
+    </form>
   );
 }
 
