@@ -7,7 +7,7 @@ import { RootState } from '../../../store';
 import Select from 'react-select';
 import { OnChangeValue, StylesConfig } from 'react-select';
 import { ControllerRenderProps } from 'react-hook-form';
-import { ITaskFilterFormInput } from '../TaskFilter';
+import { ITasksControlFormInput } from '../TasksControl';
 
 const memeberStyles: StylesConfig<UserInfoState> = {
   container: styles => ({ ...styles, width: '100%' }),
@@ -26,7 +26,7 @@ const memeberStyles: StylesConfig<UserInfoState> = {
   singleValue: styles => ({ ...styles, color: '#DD0000', textAlign: 'end' }),
 };
 interface Props {
-  field: ControllerRenderProps<ITaskFilterFormInput, 'member'>;
+  field: ControllerRenderProps<ITasksControlFormInput, 'member'>;
 }
 function Member({ field }: Props) {
   const [teamMemberList, setTeamMemberList] = React.useState<UserInfoState[]>([]);

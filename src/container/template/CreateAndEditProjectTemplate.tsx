@@ -26,6 +26,7 @@ function CreateAndEditProjectTemplate({ isEdit, value, selectedProject, onCancel
   const [selectedDate, setSelectedDate] = useState<Date>(new Date());
   const [showCalendar, setShowCalendar] = useState(false);
   const [calendarType, setCalendarType] = useState(0);
+  const [loaded, setLoaded] = useState<string | null>(null);
 
   const { userInfo } = useSelector((state: RootState) => state.user);
   const dispatch = useAppDispatch();
@@ -92,6 +93,7 @@ function CreateAndEditProjectTemplate({ isEdit, value, selectedProject, onCancel
     }
   };
   const onOk = () => {
+    setLoaded('start');
     if (isEdit) {
       //
     } else {
@@ -109,6 +111,7 @@ function CreateAndEditProjectTemplate({ isEdit, value, selectedProject, onCancel
     if (sendCreateProjectRes) {
       onSuccess(sendCreateProjectRes);
       dispatch(changeProjectCount());
+      setLoaded('end');
     }
   }, [sendCreateProjectRes]);
   return (

@@ -17,6 +17,7 @@ interface Props {
 function CreateAndEditClientTemplate({ isEdit, value, selectedClient, onCancel, onSuccess }: Props) {
   const [clientName, setClientName] = useState('');
   const [selectableClient, setSelectableClient] = useState<ClientState | null>(null);
+  const [loaded, setLoaded] = useState<string | null>(null);
 
   const { userInfo } = useSelector((state: RootState) => state.user);
   const dispatch = useAppDispatch();
@@ -37,6 +38,7 @@ function CreateAndEditClientTemplate({ isEdit, value, selectedClient, onCancel, 
     setClientName(event.currentTarget.value);
   };
   const onOk = () => {
+    setLoaded('start');
     if (isEdit) {
       //
     } else {
@@ -58,6 +60,7 @@ function CreateAndEditClientTemplate({ isEdit, value, selectedClient, onCancel, 
     if (sendRegisterMyClientRes && selectableClient) {
       onSuccess(selectableClient);
       dispatch(changeClientCount());
+      setLoaded('end');
     }
   }, [sendRegisterMyClientRes]);
 

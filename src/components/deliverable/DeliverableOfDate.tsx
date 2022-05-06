@@ -7,7 +7,6 @@ import { sendDeliverablesWithPlanedDate, sendUpdateDeliverable } from '../../lib
 import useRequest from '../../lib/hooks/useRequest';
 import { DeliverableState } from '../../modules/deliverable';
 import { RootState } from '../../store';
-import LoadingModal from '../common/LoadingModal';
 import Tag from '../common/Tag';
 
 interface Props {
@@ -123,7 +122,6 @@ function DeliverableOfDate({ selectedDate, selectedDeliverable, newCreatedDelive
           )}
         </ul>
       </SmallLayout>
-      <LoadingModal loaded={loaded} />
     </div>
   );
 }

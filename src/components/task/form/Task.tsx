@@ -11,7 +11,7 @@ import CreatableSelect from 'react-select/creatable';
 import { DeliverableInfoState } from '../../../modules/deliverable';
 import CreateAndEidtTaskTempleate from '../../../container/template/CreateAndEidtTaskTempleate';
 import { Control, ControllerRenderProps, useWatch } from 'react-hook-form';
-import { ITaskFilterFormInput } from '../TaskFilter';
+import { ITasksControlFormInput } from '../TasksControl';
 
 const projectStyles: StylesConfig<TaskState> = {
   container: styles => ({ ...styles, width: '100%' }),
@@ -30,9 +30,9 @@ const projectStyles: StylesConfig<TaskState> = {
   singleValue: (styles, { data }) => ({ ...styles, color: '#DD0000', textAlign: 'end' }),
 };
 interface Props {
-  control: Control<ITaskFilterFormInput>;
+  control: Control<ITasksControlFormInput>;
   deliverableInfo?: DeliverableInfoState | null;
-  field: ControllerRenderProps<ITaskFilterFormInput, 'task'>;
+  field: ControllerRenderProps<ITasksControlFormInput, 'task'>;
 }
 function Task({ control, deliverableInfo, field }: Props) {
   const [taskList, setTaskList] = useState<TaskState[]>([]);

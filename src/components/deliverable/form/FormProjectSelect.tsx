@@ -11,7 +11,6 @@ import CreatableSelect from 'react-select/creatable';
 import CreateAndEditProjectTemplate from '../../../container/template/CreateAndEditProjectTemplate';
 import { Control, ControllerRenderProps, useWatch } from 'react-hook-form';
 import { IDeliverableFormInput } from '../../deliverable/CreateDeliverable';
-import { ITaskFilterFormInput } from '../../task/TaskFilter';
 
 const projectStyles: StylesConfig<ProjectState> = {
   container: styles => ({ ...styles, width: '100%' }),
@@ -30,9 +29,9 @@ const projectStyles: StylesConfig<ProjectState> = {
   singleValue: (styles, { data }) => ({ ...styles, color: '#DD0000', textAlign: 'end' }),
 };
 interface Props {
-  control: Control<IDeliverableFormInput | ITaskFilterFormInput>;
+  control: Control<IDeliverableFormInput>;
   deliverableInfo?: DeliverableInfoState | null;
-  field: ControllerRenderProps<IDeliverableFormInput, 'project'> | ControllerRenderProps<ITaskFilterFormInput, 'project'>;
+  field: ControllerRenderProps<IDeliverableFormInput, 'project'>;
 }
 function FormProjectSelect({ control, deliverableInfo, field }: Props) {
   const [projectList, setProjectList] = useState<ProjectState[]>([]);

@@ -5,8 +5,8 @@ import SmallLayout from '../../container/common/SmallLayout';
 import { sendPriorityByWeek } from '../../lib/api';
 import useRequest from '../../lib/hooks/useRequest';
 import { PriorityState } from '../../modules/weekPriority';
-import { RootState } from '../../store';
-import LoadingModal from '../common/LoadingModal';
+import { RootState, useAppDispatch } from '../../store';
+import { removeLoading, showLoading } from '../../store/features/coreSlice';
 import SelectedAndCompltedIcon from '../common/SelectedAndCompltedIcon';
 
 interface Props {
@@ -17,9 +17,9 @@ interface Props {
 }
 function WeeklyPriorities({ selectedWeek, selectedPriority, newCreatedWeekPriority, onSelectPriority }: Props) {
   const [weeklyPriorities, setWeeklyPriorities] = useState<PriorityState[]>([]);
-  const [loaded, setLoaded] = useState<string | null>(null);
 
   const { userInfo } = useSelector((state: RootState) => state.user);
+  const dispatch = useAppDispatch();
 
   const [_sendPriorityByWeek, , sendPriorityByWeekRes] = useRequest(sendPriorityByWeek);
 
@@ -29,7 +29,7 @@ function WeeklyPriorities({ selectedWeek, selectedPriority, newCreatedWeekPriori
     }
   }, [newCreatedWeekPriority]);
   useEffect(() => {
-    setLoaded('start');
+    dispatch(showLoading());
     const user_id = userInfo?.user_id;
     const week = selectedWeek;
     _sendPriorityByWeek(user_id, week);
@@ -37,7 +37,7 @@ function WeeklyPriorities({ selectedWeek, selectedPriority, newCreatedWeekPriori
   React.useEffect(() => {
     if (sendPriorityByWeekRes) {
       setWeeklyPriorities(sendPriorityByWeekRes.priority);
-      setLoaded('end');
+      dispatch(removeLoading());
     }
   }, [sendPriorityByWeekRes]);
   return (
@@ -70,7 +70,6 @@ function WeeklyPriorities({ selectedWeek, selectedPriority, newCreatedWeekPriori
           )}
         </ul>
       </SmallLayout>
-      <LoadingModal loaded={loaded} />
     </div>
   );
 }

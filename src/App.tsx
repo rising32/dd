@@ -1,9 +1,9 @@
 import React from 'react';
-import { Routes, Route, Link } from 'react-router-dom';
+import { Routes, Route } from 'react-router-dom';
 import LogInPage from './pages/auth/LogInPage';
 import AuthenticatedRoute from './AuthenticatedRoute';
 import MainLayout from './container/MainLayout';
-import TaskHomePage from './pages/tasks/TaskHomePage';
+import MainTasks from './pages/tasks/MainTasks';
 import PrioritiesPage from './pages/priorities/PrioritiesPage';
 import DeliverablesPage from './pages/deliverables/DeliverablesPage';
 import StatisticsPage from './pages/statistics/StatisticsPage';
@@ -34,7 +34,7 @@ function App() {
             path='tasks'
             element={
               <AuthenticatedRoute>
-                <TaskHomePage />
+                <MainTasks />
               </AuthenticatedRoute>
             }
           />

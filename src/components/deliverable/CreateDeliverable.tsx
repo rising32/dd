@@ -12,7 +12,6 @@ import { useSelector } from 'react-redux';
 import { RootState } from '../../store';
 import { format } from 'date-fns';
 import { PriorityState } from '../../modules/weekPriority';
-import LoadingModal from '../common/LoadingModal';
 import { Controller, useForm, SubmitHandler } from 'react-hook-form';
 import FormClientSelect from './form/FormClientSelect';
 import FormProjectSelect from './form/FormProjectSelect';
@@ -168,7 +167,6 @@ function CreateDeliverable({ selectedDate, selectedDeliverable, selectedPriority
           <PlusButton className='flex items-center justify-end my-4' />
         </form>
       </SmallLayout>
-      <LoadingModal loaded={loaded} />
     </div>
   );
 }

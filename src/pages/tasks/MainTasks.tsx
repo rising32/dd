@@ -1,13 +1,13 @@
 import React from 'react';
-import Task from '../../components/task/Task';
 import MainResponsive from '../../container/MainResponsive';
+import TasksContainer from '../../container/tasks/TasksContainer';
 
-function TaskHomePage() {
+function MainTasks() {
   return (
     <MainResponsive>
-      <Task />
+      <TasksContainer />
     </MainResponsive>
   );
 }
 
-export default TaskHomePage;
+export default MainTasks;

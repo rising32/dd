@@ -1,24 +1,17 @@
 import React, { useEffect, useState } from 'react';
 import { RotatingLines } from 'react-loader-spinner';
 import ReactModal from 'react-modal';
-import { HomeSvg } from '../../assets/svg';
+import { useSelector } from 'react-redux';
+import { RootState } from '../../store';
 
-interface Props {
-  loaded: string | null;
-}
+ReactModal.setAppElement('#root');
 
-function LoadingModal({ loaded }: Props): JSX.Element {
-  const [showModal, setShowModal] = useState(false);
-  useEffect(() => {
-    if (loaded === 'start') {
-      setShowModal(true);
-    } else {
-      setShowModal(false);
-    }
-  }, [loaded]);
+function LoaderSpinner(): JSX.Element {
+  const { loading } = useSelector((state: RootState) => state.core);
+
   return (
     <ReactModal
-      isOpen={showModal}
+      isOpen={loading}
       className='w-full h-full flex items-center justify-center'
       style={{
         overlay: {
@@ -29,9 +22,9 @@ function LoadingModal({ loaded }: Props): JSX.Element {
         },
       }}
     >
-      <RotatingLines width='50' />
+      <RotatingLines width='50' strokeColor='white' />
     </ReactModal>
   );
 }
 
-export default LoadingModal;
+export default LoaderSpinner;

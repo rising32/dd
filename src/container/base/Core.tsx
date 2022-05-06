@@ -1,16 +1,16 @@
 import React from 'react';
 import { ToastContainer } from 'react-toastify';
 import { injectStyle } from 'react-toastify/dist/inject-style';
-import ReactModal from 'react-modal';
+import LoaderSpinner from './LoaderSpinner';
 
 if (typeof window !== 'undefined') {
   injectStyle();
 }
 
-ReactModal.setAppElement('#root');
 const Core = () => {
   return (
     <>
+      <LoaderSpinner />
       <ToastContainer
         position='top-right'
         autoClose={2000}

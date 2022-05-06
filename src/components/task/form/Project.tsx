@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import ReactModal from 'react-modal';
 import { useSelector } from 'react-redux';
 import { sendProjectWithClientId, sendSetClient } from '../../../lib/api';
 import useRequest from '../../../lib/hooks/useRequest';
@@ -10,7 +9,8 @@ import { OnChangeValue, StylesConfig } from 'react-select';
 import CreatableSelect from 'react-select/creatable';
 import CreateAndEditProjectTemplate from '../../../container/template/CreateAndEditProjectTemplate';
 import { Control, ControllerRenderProps, useWatch } from 'react-hook-form';
-import { ITaskFilterFormInput } from '../TaskFilter';
+import ModalView from '../../base/ModalView';
+import { ITasksControlFormInput } from '../TasksControl';
 
 const projectStyles: StylesConfig<ProjectState> = {
   container: styles => ({ ...styles, width: '100%' }),
@@ -29,11 +29,10 @@ const projectStyles: StylesConfig<ProjectState> = {
   singleValue: (styles, { data }) => ({ ...styles, color: '#DD0000', textAlign: 'end' }),
 };
 interface Props {
-  control: Control<ITaskFilterFormInput>;
-  deliverableInfo?: DeliverableInfoState | null;
-  field: ControllerRenderProps<ITaskFilterFormInput, 'project'>;
+  control: Control<ITasksControlFormInput>;
+  field: ControllerRenderProps<ITasksControlFormInput, 'project'>;
 }
-function Project({ control, deliverableInfo, field }: Props) {
+function Project({ control, field }: Props) {
   const [projectList, setProjectList] = useState<ProjectState[]>([]);
   const [selectableProject, setSelectableProject] = useState<ProjectState | null>(null);
   const [showProjectModal, setShowProjectModal] = useState(false);
@@ -51,6 +50,7 @@ function Project({ control, deliverableInfo, field }: Props) {
   const [_sendSetClient, , sendSetClientRes] = useRequest(sendSetClient);
 
   React.useEffect(() => {
+    field.onChange(null);
     if (client) {
       setIsLoading(true);
       const creator_id = userInfo?.user_id;
@@ -59,21 +59,12 @@ function Project({ control, deliverableInfo, field }: Props) {
     } else {
       setProjectList([]);
       setIsLoading(false);
-      field.onChange(null);
     }
   }, [client]);
 
   React.useEffect(() => {
     if (sendProjectWithClientIdRes) {
       setProjectList(sendProjectWithClientIdRes.project);
-
-      if (deliverableInfo) {
-        sendProjectWithClientIdRes.project.map(project => {
-          if (project.project_id === deliverableInfo.project_id) {
-            field.onChange(project);
-          }
-        });
-      }
       setIsLoading(false);
     }
   }, [sendProjectWithClientIdRes]);
@@ -159,7 +150,7 @@ function Project({ control, deliverableInfo, field }: Props) {
         getOptionLabel={option => option.project_name}
         styles={projectStyles}
         onChange={handleChange}
-        getNewOptionData={(inputValue, optionLabel) => ({
+        getNewOptionData={inputValue => ({
           project_id: 0,
           creator_id: 0,
           project_name: `Create new project "${inputValue}"`,
@@ -172,18 +163,7 @@ function Project({ control, deliverableInfo, field }: Props) {
         })}
         onCreateOption={handleCreate}
       />
-      <ReactModal
-        isOpen={showProjectModal}
-        className='w-4/5 max-h-96 bg-white p-4 overflow-auto rounded-sm flex flex-col items-center justify-center'
-        style={{
-          overlay: {
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            background: 'rgba(0, 0, 0, 0.5)',
-          },
-        }}
-      >
+      <ModalView isOpen={showProjectModal}>
         <div className='text-center'>Do you want to link this project with client</div>
         <div className='flex flex-row'>
           <div className='font-bold pr-2'>Client:</div>
@@ -201,22 +181,10 @@ function Project({ control, deliverableInfo, field }: Props) {
             Yes
           </div>
         </div>
-      </ReactModal>
-      <ReactModal
-        isOpen={isCreate}
-        onRequestClose={() => setIsCreate(false)}
-        className='w-4/5 max-h-screen bg-white p-4 overflow-auto rounded-sm flex flex-col items-center justify-center'
-        style={{
-          overlay: {
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            background: 'rgba(0, 0, 0, 0.5)',
-          },
-        }}
-      >
+      </ModalView>
+      <ModalView isOpen={isCreate} onClose={() => setIsCreate(false)}>
         <CreateAndEditProjectTemplate value={inputValue} onCancel={onCancel} onSuccess={onSuccess} />
-      </ReactModal>
+      </ModalView>
     </div>
   );
 }

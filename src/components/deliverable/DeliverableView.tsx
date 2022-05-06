@@ -11,7 +11,6 @@ import ReactModal from 'react-modal';
 import useRequest from '../../lib/hooks/useRequest';
 import { sendUpdatePriority } from '../../lib/api';
 import { format } from 'date-fns';
-import LoadingModal from '../common/LoadingModal';
 
 function DeliverableView() {
   const [selectedDate, setSelectedDate] = useState(new Date());
@@ -138,7 +137,6 @@ function DeliverableView() {
           </div>
         </div>
       </ReactModal>
-      <LoadingModal loaded={loaded} />
     </>
   );
 }

@@ -11,7 +11,6 @@ import ReactModal from 'react-modal';
 import CreateAndEditClientTemplate from '../../../container/template/CreateAndEditClientTemplate';
 import { ControllerRenderProps } from 'react-hook-form';
 import { IDeliverableFormInput } from '../../deliverable/CreateDeliverable';
-import { ITaskFilterFormInput } from '../../task/TaskFilter';
 
 const clientStyles: StylesConfig<ClientState> = {
   container: styles => ({ ...styles, width: '100%' }),
@@ -32,7 +31,7 @@ const clientStyles: StylesConfig<ClientState> = {
 
 interface Props {
   deliverableInfo?: DeliverableInfoState | null;
-  field: ControllerRenderProps<IDeliverableFormInput, 'client'> | ControllerRenderProps<ITaskFilterFormInput, 'client'>;
+  field: ControllerRenderProps<IDeliverableFormInput, 'client'>;
 }
 function FormClientSelect({ deliverableInfo, field }: Props) {
   const [clientList, setClientList] = useState<ClientState[]>([]);

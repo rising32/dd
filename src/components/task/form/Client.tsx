@@ -3,14 +3,13 @@ import { useSelector } from 'react-redux';
 import { sendGetMyClients } from '../../../lib/api';
 import useRequest from '../../../lib/hooks/useRequest';
 import { ClientState } from '../../../modules/client';
-import { DeliverableInfoState } from '../../../modules/deliverable';
 import { RootState } from '../../../store';
 import CreatableSelect from 'react-select/creatable';
 import { OnChangeValue, StylesConfig } from 'react-select';
-import ReactModal from 'react-modal';
 import CreateAndEditClientTemplate from '../../../container/template/CreateAndEditClientTemplate';
 import { ControllerRenderProps } from 'react-hook-form';
-import { ITaskFilterFormInput } from '../TaskFilter';
+import ModalView from '../../base/ModalView';
+import { ITasksControlFormInput } from '../TasksControl';
 
 const clientStyles: StylesConfig<ClientState> = {
   container: styles => ({ ...styles, width: '100%' }),
@@ -30,10 +29,9 @@ const clientStyles: StylesConfig<ClientState> = {
 };
 
 interface Props {
-  deliverableInfo?: DeliverableInfoState | null;
-  field: ControllerRenderProps<ITaskFilterFormInput, 'client'>;
+  field: ControllerRenderProps<ITasksControlFormInput, 'client'>;
 }
-function Client({ deliverableInfo, field }: Props) {
+function Client({ field }: Props) {
   const [clientList, setClientList] = useState<ClientState[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [isCreate, setIsCreate] = useState(false);
@@ -43,37 +41,23 @@ function Client({ deliverableInfo, field }: Props) {
   const [_sendGetMyClients, , getMyClientsRes] = useRequest(sendGetMyClients);
 
   React.useEffect(() => {
-    if (deliverableInfo) {
-      setIsLoading(true);
-      getMyClients();
-    }
-  }, [deliverableInfo]);
-  React.useEffect(() => {
     setIsLoading(true);
-    getMyClients();
-  }, []);
-  const getMyClients = () => {
     const user_id = userInfo?.user_id;
     _sendGetMyClients(user_id);
-  };
+  }, []);
+
   React.useEffect(() => {
     if (getMyClientsRes) {
       setClientList(getMyClientsRes.clients);
-      if (deliverableInfo) {
-        getMyClientsRes.clients.map(client => {
-          if (client.client_id === deliverableInfo.client_id) {
-            field.onChange(client);
-          }
-        });
-      }
       setIsLoading(false);
     }
   }, [getMyClientsRes]);
+
   const handleChange = (newValue: OnChangeValue<ClientState, false>) => {
     field.onChange(newValue);
   };
+
   const handleCreate = (value: string) => {
-    console.log(value);
     setIsCreate(true);
     setIsLoading(true);
     setInputValue(value);
@@ -111,7 +95,7 @@ function Client({ deliverableInfo, field }: Props) {
         getOptionLabel={option => option.client_name}
         styles={clientStyles}
         onChange={handleChange}
-        getNewOptionData={(inputValue, optionLabel) => ({
+        getNewOptionData={inputValue => ({
           client_id: 0,
           client_name: `Create new client "${inputValue}"`,
           is_active: 1,
@@ -121,21 +105,9 @@ function Client({ deliverableInfo, field }: Props) {
         })}
         onCreateOption={handleCreate}
       />
-      <ReactModal
-        isOpen={isCreate}
-        onRequestClose={() => setIsCreate(false)}
-        className='w-4/5 max-h-96 bg-white p-4 overflow-auto rounded-sm flex flex-col items-center justify-center'
-        style={{
-          overlay: {
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            background: 'rgba(0, 0, 0, 0.5)',
-          },
-        }}
-      >
+      <ModalView isOpen={isCreate} onClose={() => setIsCreate(false)}>
         <CreateAndEditClientTemplate value={inputValue} onCancel={onCancel} onSuccess={onSuccess} />
-      </ReactModal>
+      </ModalView>
     </div>
   );
 }

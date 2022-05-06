@@ -15,7 +15,6 @@ import { format } from 'date-fns';
 import { DeliverableState } from '../../modules/deliverable';
 import MoreButton from '../common/MoreButton';
 import { useNavigate } from 'react-router-dom';
-import LoadingModal from '../common/LoadingModal';
 import { Controller, useForm, SubmitHandler } from 'react-hook-form';
 import Client from './form/Client';
 import Project from './form/Project';
@@ -23,7 +22,7 @@ import Task from './form/Task';
 import Member from './form/Member';
 import When from './form/When';
 
-export interface ITaskFilterFormInput {
+export interface ITasksControlFormInput {
   client: ClientState | null;
   project: ProjectState | null;
   task: TaskState | null;
@@ -34,11 +33,11 @@ export interface ITaskFilterFormInput {
 interface Props {
   selectedWeek: number;
 }
-function TaskFilter({ selectedWeek }: Props) {
+function TasksControl({ selectedWeek }: Props) {
   const [weekTasks, setWeekTask] = useState<CPMDState[]>([]);
   const [loaded, setLoaded] = useState<string | null>(null);
 
-  const { handleSubmit, control, reset, setValue, getValues, watch } = useForm<ITaskFilterFormInput>({
+  const { handleSubmit, control, reset, getValues, watch } = useForm<ITasksControlFormInput>({
     defaultValues: {
       client: null,
       project: null,
@@ -59,7 +58,6 @@ function TaskFilter({ selectedWeek }: Props) {
   }, []);
   React.useEffect(() => {
     const subscription = watch((value, { name, type }) => {
-      console.log(value, name, type);
       const params = {
         user_id: userInfo?.user_id,
         member_id: value.member?.user_id,
@@ -112,7 +110,7 @@ function TaskFilter({ selectedWeek }: Props) {
       setLoaded('end');
     }
   }, [sendCreateDeliverableRes]);
-  const onSubmit: SubmitHandler<ITaskFilterFormInput> = data => {
+  const onSubmit: SubmitHandler<ITasksControlFormInput> = data => {
     console.log(data);
     if (userInfo && data.task?.task_id) {
       setLoaded('start');
@@ -180,9 +178,8 @@ function TaskFilter({ selectedWeek }: Props) {
         ))}
         <MoreButton className='flex items-center justify-end mt-4' onMore={() => navigate('/tasks/taskList')} />
       </SmallLayout>
-      <LoadingModal loaded={loaded} />
     </>
   );
 }
 
-export default TaskFilter;
+export default TasksControl;

@@ -3,11 +3,10 @@ import { CalenderSvg } from '../../../assets/svg';
 import FullCalendar from '../../calendar/FullCalendar';
 import AnimatedView from '../../common/AnimatedView';
 import { ControllerRenderProps } from 'react-hook-form';
-import { IDeliverableFormInput } from '../../deliverable/CreateDeliverable';
-import { ITaskFilterFormInput } from '../TaskFilter';
+import { ITasksControlFormInput } from '../TasksControl';
 
 interface Props {
-  field: ControllerRenderProps<ITaskFilterFormInput, 'when'>;
+  field: ControllerRenderProps<ITasksControlFormInput, 'when'>;
 }
 function When({ field }: Props) {
   const [showCalendar, setShowCalendar] = useState(false);

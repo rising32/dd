@@ -12,7 +12,6 @@ import { DeliverableInfoState } from '../../../modules/deliverable';
 import CreateAndEidtTaskTempleate from '../../../container/template/CreateAndEidtTaskTempleate';
 import { Control, ControllerRenderProps, useWatch } from 'react-hook-form';
 import { IDeliverableFormInput } from '../../deliverable/CreateDeliverable';
-import { ITaskFilterFormInput } from '../../task/TaskFilter';
 
 const projectStyles: StylesConfig<TaskState> = {
   container: styles => ({ ...styles, width: '100%' }),
@@ -31,9 +30,9 @@ const projectStyles: StylesConfig<TaskState> = {
   singleValue: (styles, { data }) => ({ ...styles, color: '#DD0000', textAlign: 'end' }),
 };
 interface Props {
-  control: Control<IDeliverableFormInput | ITaskFilterFormInput>;
+  control: Control<IDeliverableFormInput>;
   deliverableInfo?: DeliverableInfoState | null;
-  field: ControllerRenderProps<IDeliverableFormInput, 'task'> | ControllerRenderProps<ITaskFilterFormInput, 'task'>;
+  field: ControllerRenderProps<IDeliverableFormInput, 'task'>;
 }
 function FormTaskSelect({ control, deliverableInfo, field }: Props) {
   const [taskList, setTaskList] = useState<TaskState[]>([]);
@@ -43,7 +42,7 @@ function FormTaskSelect({ control, deliverableInfo, field }: Props) {
   const [isCreate, setIsCreate] = useState(false);
   const [inputValue, setInputValue] = useState('');
 
-  const project = useWatch<IDeliverableFormInput | ITaskFilterFormInput, 'project'>({
+  const project = useWatch<IDeliverableFormInput, 'project'>({
     control,
     name: 'project',
   });
