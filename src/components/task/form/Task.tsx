@@ -34,7 +34,7 @@ interface Props {
   deliverableInfo?: DeliverableInfoState | null;
   field: ControllerRenderProps<ITaskFilterFormInput, 'task'>;
 }
-function FormTaskSelect({ control, deliverableInfo, field }: Props) {
+function Task({ control, deliverableInfo, field }: Props) {
   const [taskList, setTaskList] = useState<TaskState[]>([]);
   const [showTaskModal, setShowTaskModal] = useState(false);
   const [selectableTask, setSelectableTask] = useState<TaskState | null>(null);
@@ -243,4 +243,4 @@ function FormTaskSelect({ control, deliverableInfo, field }: Props) {
   );
 }
 
-export default FormTaskSelect;
+export default Task;

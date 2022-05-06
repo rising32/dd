@@ -1,73 +1,76 @@
 import React, { useState } from 'react';
 import ReactModal from 'react-modal';
 import { useSelector } from 'react-redux';
-import { sendProjectWithClientId, sendSetClient } from '../../lib/api';
-import useRequest from '../../lib/hooks/useRequest';
-import { ClientState } from '../../modules/client';
-import { DeliverableInfoState } from '../../modules/deliverable';
-import { ProjectState } from '../../modules/project';
-import { RootState } from '../../store';
-import { SingleValue } from 'react-select';
-import { SelectOpionState } from '../../modules/common';
-import { colourStyles } from '../../lib/utils/style';
+import { sendProjectWithClientId, sendSetClient } from '../../../lib/api';
+import useRequest from '../../../lib/hooks/useRequest';
+import { DeliverableInfoState } from '../../../modules/deliverable';
+import { ProjectState } from '../../../modules/project';
+import { RootState } from '../../../store';
+import { OnChangeValue, StylesConfig } from 'react-select';
 import CreatableSelect from 'react-select/creatable';
-import CreateAndEditProjectTemplate from '../../container/template/CreateAndEditProjectTemplate';
-import { toast } from 'react-toastify';
+import CreateAndEditProjectTemplate from '../../../container/template/CreateAndEditProjectTemplate';
+import { Control, ControllerRenderProps, useWatch } from 'react-hook-form';
+import { ITaskFilterFormInput } from '../TaskFilter';
+
+const projectStyles: StylesConfig<ProjectState> = {
+  container: styles => ({ ...styles, width: '100%' }),
+  control: styles => ({ ...styles, backgroundColor: 'transparent', width: '100%', border: 'none', boxShadow: 'none' }),
+  option: (styles, { data, isDisabled, isFocused, isSelected }) => {
+    return {
+      ...styles,
+      backgroundColor: isSelected ? '#DD0000' : undefined,
+      color: data.client_id === null ? 'blue' : isSelected ? 'white' : 'black',
+      cursor: isDisabled ? 'not-allowed' : 'default',
+    };
+  },
+  input: styles => ({ ...styles, color: 'white' }),
+  menuList: styles => ({ ...styles, padding: 0, margin: 0, borderRadius: '4px' }),
+  placeholder: styles => ({ ...styles, color: 'white' }),
+  singleValue: (styles, { data }) => ({ ...styles, color: '#DD0000', textAlign: 'end' }),
+};
 interface Props {
-  selectedClient: ClientState | null;
-  selectedProject: ProjectState | null;
-  onSelectProject: (project: ProjectState | null) => void;
+  control: Control<ITaskFilterFormInput>;
   deliverableInfo?: DeliverableInfoState | null;
+  field: ControllerRenderProps<ITaskFilterFormInput, 'project'>;
 }
-function SelectProject({ selectedClient, selectedProject, deliverableInfo, onSelectProject }: Props) {
+function Project({ control, deliverableInfo, field }: Props) {
   const [projectList, setProjectList] = useState<ProjectState[]>([]);
   const [selectableProject, setSelectableProject] = useState<ProjectState | null>(null);
   const [showProjectModal, setShowProjectModal] = useState(false);
-  const [selectOptions, setSelectOptions] = useState<SelectOpionState[]>([]);
-  const [selectedOption, setSelectedOption] = useState<SelectOpionState | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [isCreate, setIsCreate] = useState(false);
   const [inputValue, setInputValue] = useState('');
+
+  const client = useWatch({
+    control,
+    name: 'client',
+  });
 
   const { userInfo } = useSelector((state: RootState) => state.user);
   const [_sendProjectWithClientId, , sendProjectWithClientIdRes] = useRequest(sendProjectWithClientId);
   const [_sendSetClient, , sendSetClientRes] = useRequest(sendSetClient);
 
   React.useEffect(() => {
-    if (selectedProject) {
-      setSelectedOption({ label: selectedProject.project_name, value: selectedProject.project_id });
-    } else {
-      setSelectedOption(null);
-    }
-  }, [selectedProject]);
-  React.useEffect(() => {
-    if (selectedClient) {
+    if (client) {
       setIsLoading(true);
       const creator_id = userInfo?.user_id;
-      const client_id = selectedClient.client_id;
+      const client_id = client.client_id;
       _sendProjectWithClientId(creator_id, client_id);
     } else {
       setProjectList([]);
       setIsLoading(false);
-      setSelectOptions([]);
+      field.onChange(null);
     }
-  }, [selectedClient]);
+  }, [client]);
 
   React.useEffect(() => {
     if (sendProjectWithClientIdRes) {
       setProjectList(sendProjectWithClientIdRes.project);
 
-      const options: SelectOpionState[] = sendProjectWithClientIdRes.project.map(project => ({
-        value: project.project_id,
-        label: project.project_name,
-        isLinked: project.client_id,
-      }));
-      setSelectOptions(options);
-
       if (deliverableInfo) {
         sendProjectWithClientIdRes.project.map(project => {
           if (project.project_id === deliverableInfo.project_id) {
-            onSelectProject(project);
+            field.onChange(project);
           }
         });
       }
@@ -76,11 +79,14 @@ function SelectProject({ selectedClient, selectedProject, deliverableInfo, onSel
   }, [sendProjectWithClientIdRes]);
   const onCancelProjectWithClient = () => {
     setShowProjectModal(false);
+    setIsLoading(false);
   };
   const onLinkProjectWithClient = () => {
-    const client_id = selectedClient?.client_id;
-    const project_id = selectableProject?.project_id;
-    _sendSetClient(client_id, project_id);
+    if (client && selectableProject) {
+      const client_id = client.client_id;
+      const project_id = selectableProject.project_id;
+      _sendSetClient(client_id, project_id);
+    }
   };
   React.useEffect(() => {
     if (sendSetClientRes) {
@@ -93,60 +99,34 @@ function SelectProject({ selectedClient, selectedProject, deliverableInfo, onSel
         return project;
       });
       setProjectList(newProjectList);
-
-      const options: SelectOpionState[] = newProjectList.map(project => ({
-        value: project.project_id,
-        label: project.project_name,
-        isLinked: project.client_id,
-      }));
-      setSelectOptions(options);
-
       setShowProjectModal(false);
       setIsLoading(false);
-      onSelectProject(newProject);
+      field.onChange(newProject);
     }
   }, [sendSetClientRes]);
-  const handleChange = (option: SingleValue<SelectOpionState>) => {
-    if (option) {
-      if (option.isLinked) {
-        projectList.map(project => {
-          if (project.project_id === option?.value) {
-            onSelectProject(project);
-          }
-        });
+  const handleChange = (newValue: OnChangeValue<ProjectState, false>) => {
+    if (newValue) {
+      if (newValue.client_id) {
+        field.onChange(newValue);
       } else {
         setIsLoading(true);
-        projectList.map(project => {
-          if (project.project_id === option?.value) {
-            setSelectableProject(project);
-          }
-        });
+        setSelectableProject(newValue);
         setShowProjectModal(true);
       }
     } else {
-      onSelectProject(null);
+      field.onChange(newValue);
     }
   };
   const handleCreate = (value: string) => {
-    if (selectedClient) {
-      setIsCreate(true);
-      setInputValue(value);
-    } else {
-      toast.error('Select Client first');
-    }
+    setIsCreate(true);
+    setIsLoading(true);
+    setInputValue(value);
   };
   const onSuccess = (newProject: ProjectState) => {
     if (isCreate) {
       const newProjectList = projectList;
       newProjectList.unshift(newProject);
       setProjectList(newProjectList);
-
-      const options = selectOptions;
-      options.unshift({
-        value: newProject.project_id,
-        label: newProject.project_name,
-      });
-      setSelectOptions(options);
 
       setIsCreate(false);
 
@@ -159,18 +139,37 @@ function SelectProject({ selectedClient, selectedProject, deliverableInfo, onSel
       setShowProjectModal(true);
     }
   };
+  const onCancel = () => {
+    setIsCreate(false);
+    setIsLoading(false);
+  };
 
   return (
     <div className='flex justify-between items-center py-1, text-white'>
       <span className='font-bold'>Projects:</span>
-      <CreatableSelect<SelectOpionState>
+      <CreatableSelect<ProjectState>
         isClearable
+        name={field.name}
+        ref={field.ref}
         isLoading={isLoading}
-        options={selectOptions}
+        options={projectList}
         placeholder=''
-        value={selectedOption}
-        styles={colourStyles}
+        value={field.value}
+        getOptionValue={option => option.project_id.toString()}
+        getOptionLabel={option => option.project_name}
+        styles={projectStyles}
         onChange={handleChange}
+        getNewOptionData={(inputValue, optionLabel) => ({
+          project_id: 0,
+          creator_id: 0,
+          project_name: `Create new project "${inputValue}"`,
+          planned_start_date: null,
+          planned_end_date: null,
+          actual_start_date: null,
+          actual_end_date: null,
+          description: null,
+          __isNew__: true,
+        })}
         onCreateOption={handleCreate}
       />
       <ReactModal
@@ -188,7 +187,7 @@ function SelectProject({ selectedClient, selectedProject, deliverableInfo, onSel
         <div className='text-center'>Do you want to link this project with client</div>
         <div className='flex flex-row'>
           <div className='font-bold pr-2'>Client:</div>
-          <div className='font-bold'>{selectedClient?.client_name}</div>
+          <div className='font-bold'>{client?.client_name}</div>
         </div>
         <div className='flex flex-row'>
           <div className='font-bold pr-2'>Project:</div>
@@ -216,10 +215,10 @@ function SelectProject({ selectedClient, selectedProject, deliverableInfo, onSel
           },
         }}
       >
-        <CreateAndEditProjectTemplate value={inputValue} onCancel={() => setIsCreate(false)} onSuccess={onSuccess} />
+        <CreateAndEditProjectTemplate value={inputValue} onCancel={onCancel} onSuccess={onSuccess} />
       </ReactModal>
     </div>
   );
 }
 
-export default SelectProject;
+export default Project;

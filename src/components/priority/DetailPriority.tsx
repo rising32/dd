@@ -3,8 +3,8 @@ import { ClientState } from '../../modules/client';
 import { ProjectState } from '../../modules/project';
 import { PriorityState } from '../../modules/weekPriority';
 import PlusButton from '../common/PlusButton';
-import SelectClient from '../items/SelectClient';
-import SelectProject from '../items/SelectProject';
+// import SelectClient from '../items/SelectClient';
+// import SelectProject from '../items/SelectProject';
 
 interface Props {
   selectedPriorityTab: string;
@@ -47,8 +47,8 @@ function DetailPriority({ selectedPriorityTab, selectedPriority }: Props) {
       </div>
       {selectedPriorityTab === 'Project' && (
         <>
-          <SelectClient selectedClient={selectedClient} onSelectClient={onSelectClient} />
-          <SelectProject selectedClient={selectedClient} selectedProject={selectedProject} onSelectProject={onSelectProject} />
+          {/* <SelectClient selectedClient={selectedClient} onSelectClient={onSelectClient} />
+          <SelectProject selectedClient={selectedClient} selectedProject={selectedProject} onSelectProject={onSelectProject} /> */}
         </>
       )}
       <PlusButton className='flex items-center justify-end my-4' />

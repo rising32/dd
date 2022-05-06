@@ -17,10 +17,10 @@ import MoreButton from '../common/MoreButton';
 import { useNavigate } from 'react-router-dom';
 import LoadingModal from '../common/LoadingModal';
 import { Controller, useForm, SubmitHandler } from 'react-hook-form';
-import FormClientSelect from './form/FormClientSelect';
-import FormProjectSelect from './form/FormProjectSelect';
-import FormTaskSelect from './form/FormTaskSelect';
-import FormMemberSelect from './form/FormMemberSelect';
+import Client from './form/Client';
+import Project from './form/Project';
+import Task from './form/Task';
+import Member from './form/Member';
 import When from './form/When';
 
 export interface ITaskFilterFormInput {
@@ -113,6 +113,7 @@ function TaskFilter({ selectedWeek }: Props) {
     }
   }, [sendCreateDeliverableRes]);
   const onSubmit: SubmitHandler<ITaskFilterFormInput> = data => {
+    console.log(data);
     if (userInfo && data.task?.task_id) {
       setLoaded('start');
       const newAssign: TaskAssignState = {
@@ -129,28 +130,23 @@ function TaskFilter({ selectedWeek }: Props) {
     <>
       <SmallLayout className='p-4 bg-card-gray border-rouge-blue border-4 text-white'>
         <form onSubmit={handleSubmit(onSubmit)}>
-          <Controller
-            control={control}
-            name='client'
-            rules={{ required: true }}
-            render={({ field }) => <FormClientSelect field={field} />}
-          />
+          <Controller control={control} name='client' rules={{ required: true }} render={({ field }) => <Client field={field} />} />
           <Controller
             control={control}
             name='project'
             rules={{ required: true }}
-            render={({ field }) => <FormProjectSelect control={control} field={field} />}
+            render={({ field }) => <Project control={control} field={field} />}
           />
           <Controller
             control={control}
             name='task'
             rules={{ required: true }}
-            render={({ field }) => <FormTaskSelect control={control} field={field} />}
+            render={({ field }) => <Task control={control} field={field} />}
           />
           <Controller
             control={control}
             name='deliverable'
-            rules={{ required: true }}
+            rules={{ required: false }}
             render={({ field }) => (
               <label className='w-full flex items-center'>
                 <span className='font-bold'>Deliverable:</span>
@@ -164,13 +160,8 @@ function TaskFilter({ selectedWeek }: Props) {
               </label>
             )}
           />
-          <Controller
-            control={control}
-            name='member'
-            rules={{ required: true }}
-            render={({ field }) => <FormMemberSelect field={field} />}
-          />
-          <Controller control={control} name='when' rules={{ required: true }} render={({ field }) => <When field={field} />} />
+          <Controller control={control} name='member' rules={{ required: false }} render={({ field }) => <Member field={field} />} />
+          <Controller control={control} name='when' rules={{ required: false }} render={({ field }) => <When field={field} />} />
           <PlusButton className='flex items-center justify-end my-4' />
         </form>
       </SmallLayout>

@@ -28,7 +28,7 @@ const memeberStyles: StylesConfig<UserInfoState> = {
 interface Props {
   field: ControllerRenderProps<ITaskFilterFormInput, 'member'>;
 }
-function FormMemberSelect({ field }: Props) {
+function Member({ field }: Props) {
   const [teamMemberList, setTeamMemberList] = React.useState<UserInfoState[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
@@ -71,4 +71,4 @@ function FormMemberSelect({ field }: Props) {
   );
 }
 
-export default FormMemberSelect;
+export default Member;

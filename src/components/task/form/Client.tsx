@@ -33,7 +33,7 @@ interface Props {
   deliverableInfo?: DeliverableInfoState | null;
   field: ControllerRenderProps<ITaskFilterFormInput, 'client'>;
 }
-function FormClientSelect({ deliverableInfo, field }: Props) {
+function Client({ deliverableInfo, field }: Props) {
   const [clientList, setClientList] = useState<ClientState[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [isCreate, setIsCreate] = useState(false);
@@ -140,4 +140,4 @@ function FormClientSelect({ deliverableInfo, field }: Props) {
   );
 }
 
-export default FormClientSelect;
+export default Client;
