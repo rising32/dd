@@ -3,9 +3,6 @@ import SmallLayout from '../../container/common/SmallLayout';
 import { ClientState } from '../../modules/client';
 import { ProjectState } from '../../modules/project';
 import { TaskState } from '../../modules/task';
-import SelectClient from '../items/SelectClient';
-import SelectProject from '../items/SelectProject';
-import SelectTask from '../items/SelectTask';
 import PlusButton from '../common/PlusButton';
 import DeliverableTab from './DeliverableTab';
 import useRequest from '../../lib/hooks/useRequest';
@@ -13,13 +10,15 @@ import { sendCreateDeliverable, sendDeliverableInfo, sendUpdateDeliverable } fro
 import { DeliverableInfoState, DeliverableState } from '../../modules/deliverable';
 import { useSelector } from 'react-redux';
 import { RootState } from '../../store';
-import { toast } from 'react-toastify';
 import { format } from 'date-fns';
 import { PriorityState } from '../../modules/weekPriority';
 import LoadingModal from '../common/LoadingModal';
-import { Controller, useForm, NestedValue, SubmitHandler } from 'react-hook-form';
+import { Controller, useForm, SubmitHandler } from 'react-hook-form';
+import FormClientSelect from './form/FormClientSelect';
+import FormProjectSelect from './form/FormProjectSelect';
+import FormTaskSelect from './form/FormTaskSelect';
 
-interface IFormInput {
+export interface IDeliverableFormInput {
   client: ClientState | null;
   project: ProjectState | null;
   task: TaskState | null;
@@ -33,15 +32,11 @@ interface Props {
   selectedDeliverable: DeliverableState | null;
 }
 function CreateDeliverable({ selectedDate, selectedDeliverable, selectedPriority, addDeliverable, updateDeliverable }: Props) {
-  const [selectedClient, setSelectedClient] = useState<ClientState | null>(null);
-  const [selectedProject, setSelectedProject] = useState<ProjectState | null>(null);
-  const [selectedTask, setSelectedTask] = useState<TaskState | null>(null);
-  const [deliverableValue, setDeliverableValue] = useState('');
   const [selectedDeliverableTab, setSelectedDeliverableTab] = useState<string>('');
   const [deliverableInfo, setDeliverableInfo] = useState<DeliverableInfoState | null>(null);
   const [disabled, setDisabled] = useState(false);
   const [loaded, setLoaded] = useState<string | null>(null);
-  const { handleSubmit, control, setValue, getValues, formState } = useForm<IFormInput>({
+  const { handleSubmit, control, reset, setValue, register } = useForm<IDeliverableFormInput>({
     defaultValues: {
       client: null,
       project: null,
@@ -62,74 +57,62 @@ function CreateDeliverable({ selectedDate, selectedDeliverable, selectedPriority
       _sendDeliverableInfo(deliverable_id);
       setSelectedDeliverableTab('Details');
     } else {
-      setSelectedClient(null);
-      setSelectedProject(null);
-      setSelectedTask(null);
-      setDeliverableValue('');
+      reset();
       setDeliverableInfo(null);
       setSelectedDeliverableTab('');
     }
   }, [selectedDeliverable]);
   React.useEffect(() => {
-    if (selectedPriority) {
-      setDeliverableValue(selectedPriority.priority);
-      setDisabled(true);
-    } else {
-      setDeliverableValue('');
-      setDisabled(false);
-    }
+    // if (selectedPriority) {
+    //   setDeliverableValue(selectedPriority.priority);
+    //   setDisabled(true);
+    // } else {
+    //   setDeliverableValue('');
+    //   setDisabled(false);
+    // }
   }, [selectedPriority]);
   React.useEffect(() => {
     if (sendDeliverableInfoRes) {
       setDeliverableInfo(sendDeliverableInfoRes.data);
-      setDeliverableValue(sendDeliverableInfoRes.data.deliverable_name);
+      setValue('deliverable', sendDeliverableInfoRes.data.deliverable_name);
       setLoaded('end');
     }
   }, [sendDeliverableInfoRes]);
-  const onSelectClient = (client: ClientState | null) => {
-    setSelectedClient(client);
-    setSelectedProject(null);
-    setSelectedTask(null);
-  };
-  const onSelectProject = (project: ProjectState | null) => {
-    if (selectedProject?.project_id === project?.project_id) {
-      setSelectedProject(null);
-    } else {
-      setSelectedProject(project);
-    }
-  };
-  const onSelectTask = (task: TaskState | null) => {
-    if (selectedTask?.task_id === task?.task_id) {
-      setSelectedTask(null);
-    } else {
-      setSelectedTask(task);
-    }
-  };
-  const changeDeliverableValue = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setDeliverableValue(event.target.value);
-  };
-  const onCreateDeliverable = () => {
-    if (!deliverableValue) {
-      toast.error('select deliverable!');
-      return;
-    }
 
-    if (userInfo && selectedTask && selectedTask.task_id) {
+  React.useEffect(() => {
+    if (sendCreateDeliverableRes) {
+      addDeliverable(sendCreateDeliverableRes);
+      reset();
+      setLoaded('end');
+    }
+  }, [sendCreateDeliverableRes]);
+  React.useEffect(() => {
+    if (sendUpdateDeliverableRes) {
+      reset();
+      updateDeliverable(sendUpdateDeliverableRes);
+      setLoaded('end');
+    }
+  }, [sendUpdateDeliverableRes]);
+  const onSelectDeliverableTab = (tab: string) => {
+    setSelectedDeliverableTab(preSelectedProject => (preSelectedProject === tab ? '' : tab));
+  };
+  const onSubmit: SubmitHandler<IDeliverableFormInput> = data => {
+    if (userInfo && data.task) {
       setLoaded('start');
-      if (deliverableInfo && deliverableInfo.task_id === selectedTask?.task_id) {
+      if (deliverableInfo && deliverableInfo.task_id === data.task.task_id) {
         _sendUpdateDeliverable({
           ...deliverableInfo,
-          task_id: selectedTask.task_id,
+          task_id: data.task.task_id,
           planned_end_date: format(selectedDate, 'yyyy-MM-dd'),
-          deliverable_name: deliverableValue,
+          deliverable_name: data.deliverable,
         });
       }
       if (!deliverableInfo) {
         const deliverable: DeliverableState = {
           deliverable_id: null,
-          deliverable_name: deliverableValue,
-          user_id: userInfo?.user_id,
-          task_id: selectedTask.task_id,
+          deliverable_name: data.deliverable,
+          user_id: userInfo.user_id,
+          task_id: data.task.task_id,
           periority_id: selectedPriority && selectedPriority.wp_id ? selectedPriority.wp_id : null,
           budget: 50,
           planned_end_date: format(selectedDate, 'yyyy-MM-dd'),
@@ -139,50 +122,6 @@ function CreateDeliverable({ selectedDate, selectedDeliverable, selectedPriority
         _sendCreateDeliverable(deliverable);
       }
     }
-  };
-  React.useEffect(() => {
-    if (sendCreateDeliverableRes) {
-      setSelectedClient(null);
-      setSelectedProject(null);
-      setSelectedTask(null);
-      setDeliverableValue('');
-      addDeliverable(sendCreateDeliverableRes);
-      setLoaded('end');
-    }
-  }, [sendCreateDeliverableRes]);
-  React.useEffect(() => {
-    if (sendUpdateDeliverableRes) {
-      setSelectedClient(null);
-      setSelectedProject(null);
-      setSelectedTask(null);
-      setDeliverableValue('');
-      updateDeliverable(sendUpdateDeliverableRes);
-      setLoaded('end');
-    }
-  }, [sendUpdateDeliverableRes]);
-  const onSelectDeliverableTab = (tab: string) => {
-    setSelectedDeliverableTab(preSelectedProject => (preSelectedProject === tab ? '' : tab));
-  };
-  const onSubmit: SubmitHandler<IFormInput> = data => {
-    console.log('======', data);
-    // if (!data.priority) {
-    //   toast.error('priority is not empty!');
-    //   return;
-    // }
-    // if (userInfo) {
-    //   const priority: PriorityState = {
-    //     wp_id: null,
-    //     user_id: userInfo?.user_id,
-    //     week: selectedWeek,
-    //     priority: data.priority,
-    //     goal: data.goal,
-    //     detail: '',
-    //     is_completed: 0,
-    //     is_weekly: 0,
-    //     end_date: null,
-    //   };
-    //   _sendCreatePriority(priority);
-    // }
   };
 
   return (
@@ -196,55 +135,30 @@ function CreateDeliverable({ selectedDate, selectedDeliverable, selectedPriority
             control={control}
             name='client'
             rules={{ required: true }}
-            render={({ field }) => (
-              <SelectClient selectedClient={selectedClient} onSelectClient={onSelectClient} deliverableInfo={deliverableInfo} {...field} />
-            )}
+            render={({ field }) => <FormClientSelect deliverableInfo={deliverableInfo} field={field} />}
           />
           <Controller
             control={control}
             name='project'
             rules={{ required: true }}
-            render={({ field }) => (
-              <SelectProject
-                selectedClient={selectedClient}
-                selectedProject={selectedProject}
-                onSelectProject={onSelectProject}
-                deliverableInfo={deliverableInfo}
-                {...field}
-              />
-            )}
+            render={({ field }) => <FormProjectSelect control={control} deliverableInfo={deliverableInfo} field={field} />}
           />
           <Controller
             control={control}
             name='task'
             rules={{ required: true }}
-            render={({ field }) => (
-              <SelectTask
-                selectedTask={selectedTask}
-                selectedProject={selectedProject}
-                onSelectTask={onSelectTask}
-                deliverableInfo={deliverableInfo}
-                {...field}
-              />
-            )}
+            render={({ field }) => <FormTaskSelect control={control} deliverableInfo={deliverableInfo} field={field} />}
           />
-          <Controller
-            control={control}
-            name='deliverable'
-            rules={{ required: true }}
-            render={({ field }) => (
-              <label className='w-full flex items-center'>
-                <span className='font-bold'>Deliverable:</span>
-                <input
-                  type='text'
-                  autoComplete='off'
-                  className='ml-2 py-2 bg-transparent focus:outline-none focus:border-none flex border-none w-full'
-                  placeholder='Enter Deliverable Name'
-                  {...field}
-                />
-              </label>
-            )}
-          />
+          <label className='w-full flex items-center'>
+            <span className='font-bold'>Deliverable:</span>
+            <input
+              type='text'
+              autoComplete='off'
+              className='ml-2 py-2 bg-transparent focus:outline-none focus:border-none flex border-none w-full'
+              placeholder='Enter Deliverable Name'
+              {...register('deliverable', { required: true })}
+            />
+          </label>
 
           <DeliverableTab
             selectedDeliverableTab={selectedDeliverableTab}
