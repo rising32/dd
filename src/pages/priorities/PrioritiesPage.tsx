@@ -1,13 +1,8 @@
 import React from 'react';
-import PriorityView from '../../components/priority/PriorityView';
-import MainResponsive from '../../container/MainResponsive';
+import PriorityContainer from '../../container/priority/PriorityContainer';
 
 function PrioritiesPage() {
-  return (
-    <MainResponsive>
-      <PriorityView />
-    </MainResponsive>
-  );
+  return <PriorityContainer />;
 }
 
 export default PrioritiesPage;

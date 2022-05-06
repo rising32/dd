@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useSelector } from 'react-redux';
-import WeekCalendar from '../../components/calendar/WeekCalendar';
+import TaskCalenar from '../calendar/TaskCalenar';
 import { DeliverableState } from '../../modules/deliverable';
 import { RootState } from '../../store';
 import CreateDeliverable from './CreateDeliverable';
@@ -90,7 +90,7 @@ function DeliverableView() {
 
   return (
     <>
-      <WeekCalendar selectedDate={selectedDate} onSelectDate={onSelectDate} />
+      <TaskCalenar selectedDate={selectedDate} onSelectDate={onSelectDate} />
       <DeliverableOfDate
         selectedDate={selectedDate}
         selectedDeliverable={selectedDeliverable}

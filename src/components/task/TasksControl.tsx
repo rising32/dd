@@ -1,26 +1,25 @@
-import React, { useState } from 'react';
+import React from 'react';
 import SmallLayout from '../../container/common/SmallLayout';
 import { ClientState } from '../../modules/client';
 import { ProjectState } from '../../modules/project';
-import { CPMDState, TaskAssignState, TaskState } from '../../modules/task';
+import { TaskAssignState, TaskState } from '../../modules/task';
 import { UserInfoState } from '../../modules/user';
 import PlusButton from '../common/PlusButton';
 import useRequest from '../../lib/hooks/useRequest';
-import { sendTasksWithCPMD, sendDeveloperToTask, sendCreateDeliverable } from '../../lib/api';
+import { sendDeveloperToTask, sendCreateDeliverable } from '../../lib/api';
 import { useSelector } from 'react-redux';
-import { RootState } from '../../store';
-import SelectedAndCompltedIcon from '../common/SelectedAndCompltedIcon';
+import { RootState, useAppDispatch } from '../../store';
 import { toast } from 'react-toastify';
 import { format } from 'date-fns';
 import { DeliverableState } from '../../modules/deliverable';
-import MoreButton from '../common/MoreButton';
-import { useNavigate } from 'react-router-dom';
 import { Controller, useForm, SubmitHandler } from 'react-hook-form';
 import Client from './form/Client';
 import Project from './form/Project';
 import Task from './form/Task';
 import Member from './form/Member';
 import When from './form/When';
+import TasksWithClient from './TasksWithClient';
+import { removeLoading, showLoading } from '../../store/features/coreSlice';
 
 export interface ITasksControlFormInput {
   client: ClientState | null;
@@ -34,10 +33,7 @@ interface Props {
   selectedWeek: number;
 }
 function TasksControl({ selectedWeek }: Props) {
-  const [weekTasks, setWeekTask] = useState<CPMDState[]>([]);
-  const [loaded, setLoaded] = useState<string | null>(null);
-
-  const { handleSubmit, control, reset, getValues, watch } = useForm<ITasksControlFormInput>({
+  const { handleSubmit, control, reset, getValues } = useForm<ITasksControlFormInput>({
     defaultValues: {
       client: null,
       project: null,
@@ -47,34 +43,23 @@ function TasksControl({ selectedWeek }: Props) {
     },
   });
 
-  const [_sendTasksWithCPMD, , sendTasksWithCPMDRes] = useRequest(sendTasksWithCPMD);
   const [_sendDeveloperToTask, , sendDeveloperToTaskRes] = useRequest(sendDeveloperToTask);
   const [_sendCreateDeliverable, , sendCreateDeliverableRes] = useRequest(sendCreateDeliverable);
   const { userInfo } = useSelector((state: RootState) => state.user);
-  const navigate = useNavigate();
+  const dispatch = useAppDispatch();
 
-  React.useEffect(() => {
-    _sendTasksWithCPMD({ user_id: userInfo?.user_id });
-  }, []);
-  React.useEffect(() => {
-    const subscription = watch((value, { name, type }) => {
-      const params = {
-        user_id: userInfo?.user_id,
-        member_id: value.member?.user_id,
-        client_id: value.client?.client_id,
-        project_id: value.project?.project_id,
-        planned_end_date: value.when || new Date(),
+  const onSubmit: SubmitHandler<ITasksControlFormInput> = data => {
+    if (userInfo && data.task?.task_id) {
+      dispatch(showLoading());
+      const newAssign: TaskAssignState = {
+        assign_id: null,
+        task_id: data.task.task_id,
+        member_id: data.member?.user_id || userInfo.user_id,
+        role_id: 3,
       };
-      _sendTasksWithCPMD(params);
-    });
-    return () => subscription.unsubscribe();
-  }, [watch]);
-  React.useEffect(() => {
-    if (sendTasksWithCPMDRes) {
-      setWeekTask(sendTasksWithCPMDRes);
+      _sendDeveloperToTask(newAssign);
     }
-  }, [sendTasksWithCPMDRes]);
-
+  };
   React.useEffect(() => {
     if (sendDeveloperToTaskRes) {
       const deliverable = getValues('deliverable');
@@ -97,32 +82,19 @@ function TasksControl({ selectedWeek }: Props) {
           _sendCreateDeliverable(newDeliverable);
         }
       } else {
+        dispatch(removeLoading());
         reset();
         toast.success('new task created successfully');
-        setLoaded('end');
       }
     }
   }, [sendDeveloperToTaskRes]);
   React.useEffect(() => {
     if (sendCreateDeliverableRes) {
+      dispatch(removeLoading());
       reset();
       toast.success('new deliverable created successfully');
-      setLoaded('end');
     }
   }, [sendCreateDeliverableRes]);
-  const onSubmit: SubmitHandler<ITasksControlFormInput> = data => {
-    console.log(data);
-    if (userInfo && data.task?.task_id) {
-      setLoaded('start');
-      const newAssign: TaskAssignState = {
-        assign_id: null,
-        task_id: data.task.task_id,
-        member_id: data.member?.user_id || userInfo.user_id,
-        role_id: 3,
-      };
-      _sendDeveloperToTask(newAssign);
-    }
-  };
 
   return (
     <>
@@ -163,21 +135,7 @@ function TasksControl({ selectedWeek }: Props) {
           <PlusButton className='flex items-center justify-end my-4' />
         </form>
       </SmallLayout>
-      <div className='mt-4 text-center'>{'Tasks Week ' + selectedWeek}</div>
-      <SmallLayout className='p-4 bg-card-gray text-white'>
-        {weekTasks.map(item => (
-          <div key={item.client_id} className='flex flex-col mb-3'>
-            <span className='font-bold mb-2 text-center'>{item.client_name}</span>
-            {item.task.map(task => (
-              <div key={task.task_id} className='flex items-center'>
-                <SelectedAndCompltedIcon isSelected={false} isCompleted={false} />
-                <span className='pl-2 truncate'>{task.member_name + '-' + 'W' + selectedWeek + ' : ' + task.task_name}</span>
-              </div>
-            ))}
-          </div>
-        ))}
-        <MoreButton className='flex items-center justify-end mt-4' onMore={() => navigate('/tasks/taskList')} />
-      </SmallLayout>
+      <TasksWithClient control={control} selectedWeek={selectedWeek} />
     </>
   );
 }

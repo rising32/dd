@@ -1,13 +1,14 @@
-import { getWeek } from 'date-fns';
 import React, { useState } from 'react';
+import PriorityCalendar from '../../components/calendar/PriorityCalendar';
+import AchievedPriority from '../../components/priority/AchievedPriority';
+import PastNotAchievedPriority from '../../components/priority/PastNotAchievedPriority';
+import WeeklyPriorities from '../../components/priority/WeeklyPriorities';
+import { getWeekNumber } from '../../lib/utils';
 import { PriorityState } from '../../modules/weekPriority';
-import PrioritiesCalender from '../calendar/PrioritiesCalender';
-import AchievedPriority from './AchievedPriority';
-import PastNotAchievedPriority from './PastNotAchievedPriority';
-import WeeklyPriorities from './WeeklyPriorities';
+import MainResponsive from '../MainResponsive';
 
-function PriorityView() {
-  const [selectedWeek, setSelectedWeek] = useState(getWeek(new Date(), { weekStartsOn: 1, firstWeekContainsDate: 4 }));
+function PriorityContainer() {
+  const [selectedWeek, setSelectedWeek] = useState(getWeekNumber(new Date()));
   const [selectedPriority, setSelectedPriority] = useState<PriorityState | null>(null);
   const [newCreatedWeekPriority, setNewCreatedWeekPriority] = useState<PriorityState | null>(null);
 
@@ -26,8 +27,8 @@ function PriorityView() {
   };
 
   return (
-    <>
-      <PrioritiesCalender onSelectWeek={onSelectWeek} />
+    <MainResponsive>
+      <PriorityCalendar onSelectWeek={onSelectWeek} />
       <WeeklyPriorities
         selectedWeek={selectedWeek}
         selectedPriority={selectedPriority}
@@ -36,8 +37,8 @@ function PriorityView() {
       />
       <AchievedPriority selectedWeek={selectedWeek} selectedPriority={selectedPriority} addPriority={addPriority} />
       <PastNotAchievedPriority selectedWeek={selectedWeek} />
-    </>
+    </MainResponsive>
   );
 }
 
-export default PriorityView;
+export default PriorityContainer;
