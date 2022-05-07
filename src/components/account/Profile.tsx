@@ -11,7 +11,7 @@ import AccountSetting from '../items/AccountSetting';
 import Organization from '../items/Organization';
 import UserNameAndEmail from '../items/UserNameAndEmail';
 
-function UserProfile() {
+function Profile() {
   const { userInfo, accountSetting } = useSelector((state: RootState) => state.user);
   const { member_count } = useSelector((state: RootState) => state.companyInfo);
 
@@ -68,4 +68,4 @@ function UserProfile() {
   );
 }
 
-export default UserProfile;
+export default Profile;

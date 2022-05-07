@@ -1,13 +1,8 @@
 import React from 'react';
-import AccountView from '../../components/account/AccountView';
-import MainResponsive from '../../container/MainResponsive';
+import AccountContainer from '../../container/account/AccountContainer';
 
 function AccountPage() {
-  return (
-    <MainResponsive>
-      <AccountView />
-    </MainResponsive>
-  );
+  return <AccountContainer />;
 }
 
 export default AccountPage;

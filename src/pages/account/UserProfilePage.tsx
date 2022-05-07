@@ -1,13 +1,8 @@
 import React from 'react';
-import UserProfileView from '../../components/account/UserProfileView';
-import MainResponsive from '../../container/MainResponsive';
+import UserProfileContainer from '../../container/account/UserProfileContainer';
 
 function UserProfilePage() {
-  return (
-    <MainResponsive>
-      <UserProfileView />
-    </MainResponsive>
-  );
+  return <UserProfileContainer />;
 }
 
 export default UserProfilePage;
