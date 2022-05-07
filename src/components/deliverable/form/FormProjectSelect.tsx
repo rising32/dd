@@ -10,7 +10,7 @@ import { OnChangeValue, StylesConfig } from 'react-select';
 import CreatableSelect from 'react-select/creatable';
 import CreateAndEditProjectTemplate from '../../../container/template/CreateAndEditProjectTemplate';
 import { Control, ControllerRenderProps, useWatch } from 'react-hook-form';
-import { IDeliverableFormInput } from '../../deliverable/CreateDeliverable';
+import { IDeliverableFormInput } from '../../deliverable/DeliverablePanel';
 
 const projectStyles: StylesConfig<ProjectState> = {
   container: styles => ({ ...styles, width: '100%' }),

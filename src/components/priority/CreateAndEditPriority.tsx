@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import SmallLayout from '../../container/common/SmallLayout';
 import { PriorityState } from '../../modules/weekPriority';
-import AchievedPriorityTab from './AchievedPriorityTab';
+import PriorityTab from './PriorityTab';
 import CreatePriority from './CreatePriority';
 import DetailPriority from './DetailPriority';
 
@@ -10,7 +10,7 @@ interface Props {
   selectedPriority: PriorityState | null;
   addPriority: (priority: PriorityState) => void;
 }
-function AchievedPriority({ selectedWeek, selectedPriority, addPriority }: Props) {
+function CreateAndEditPriority({ selectedWeek, selectedPriority, addPriority }: Props) {
   const [selectedPriorityTab, setSelectedPriorityTab] = useState<string>('');
 
   React.useEffect(() => {
@@ -35,7 +35,7 @@ function AchievedPriority({ selectedWeek, selectedPriority, addPriority }: Props
         ) : (
           <CreatePriority selectedWeek={selectedWeek} addPriority={addPriority} />
         )}
-        <AchievedPriorityTab
+        <PriorityTab
           selectedPriorityTab={selectedPriorityTab}
           selectedPriority={selectedPriority}
           onSelectPriorityTab={onSelectPriorityTab}
@@ -45,4 +45,4 @@ function AchievedPriority({ selectedWeek, selectedPriority, addPriority }: Props
   );
 }
 
-export default AchievedPriority;
+export default CreateAndEditPriority;

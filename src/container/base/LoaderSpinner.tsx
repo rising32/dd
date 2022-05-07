@@ -22,7 +22,7 @@ function LoaderSpinner(): JSX.Element {
         },
       }}
     >
-      <RotatingLines width='50' strokeColor='white' />
+      <RotatingLines width='30' strokeColor='white' />
     </ReactModal>
   );
 }

@@ -1,27 +1,38 @@
 import { format } from 'date-fns';
 import React, { useEffect, useState } from 'react';
+import { UseFormReset } from 'react-hook-form';
 import { useSelector } from 'react-redux';
 import { CompleteSvg } from '../../assets/svg';
 import SmallLayout from '../../container/common/SmallLayout';
 import { sendDeliverablesWithPlanedDate, sendUpdateDeliverable } from '../../lib/api';
 import useRequest from '../../lib/hooks/useRequest';
 import { DeliverableState } from '../../modules/deliverable';
-import { RootState } from '../../store';
+import { RootState, useAppDispatch } from '../../store';
+import { removeLoading, showLoading } from '../../store/features/coreSlice';
 import Tag from '../common/Tag';
+import { IDeliverableFormInput } from './DeliverablePanel';
 
 interface Props {
   selectedDate: Date;
   selectedDeliverable: DeliverableState | null;
   newCreatedDeliverable: DeliverableState | null;
   updatedDeliverable: DeliverableState | null;
-  onSelectDeliverable: (deliverable: DeliverableState) => void;
+  onSelectDeliverable: (deliverable: DeliverableState | null) => void;
+  reset: UseFormReset<IDeliverableFormInput>;
 }
-function DeliverableOfDate({ selectedDate, selectedDeliverable, newCreatedDeliverable, updatedDeliverable, onSelectDeliverable }: Props) {
+function DeliverableOfDate({
+  selectedDate,
+  selectedDeliverable,
+  newCreatedDeliverable,
+  updatedDeliverable,
+  onSelectDeliverable,
+  reset,
+}: Props) {
   const [deliverables, setDeliverables] = useState<DeliverableState[]>([]);
   const [percentageValue, setPercentageValue] = useState(0);
-  const [loaded, setLoaded] = useState<string | null>(null);
 
   const { userInfo } = useSelector((state: RootState) => state.user);
+  const dispatch = useAppDispatch();
 
   const [_sendDeliverablesWithPlanedDate, , sendDeliverablesWithPlanedDateRes] = useRequest(sendDeliverablesWithPlanedDate);
   const [_sendUpdateDeliverable, , sendUpdateDeliverableRes] = useRequest(sendUpdateDeliverable);
@@ -29,6 +40,9 @@ function DeliverableOfDate({ selectedDate, selectedDeliverable, newCreatedDelive
   useEffect(() => {
     if (newCreatedDeliverable) {
       setDeliverables([...deliverables, newCreatedDeliverable]);
+      onSelectDeliverable(null);
+      reset();
+      dispatch(removeLoading());
     }
     if (updatedDeliverable) {
       const newDeliverables = deliverables.map(deliverable => {
@@ -39,10 +53,13 @@ function DeliverableOfDate({ selectedDate, selectedDeliverable, newCreatedDelive
         }
       });
       setDeliverables(newDeliverables);
+      onSelectDeliverable(null);
+      reset();
+      dispatch(removeLoading());
     }
   }, [newCreatedDeliverable, updatedDeliverable]);
   useEffect(() => {
-    setLoaded('start');
+    dispatch(showLoading());
     const user_id = userInfo?.user_id;
     const planned_end_date = format(selectedDate, 'yyyy-MM-dd');
     _sendDeliverablesWithPlanedDate(user_id, planned_end_date);
@@ -50,12 +67,12 @@ function DeliverableOfDate({ selectedDate, selectedDeliverable, newCreatedDelive
   React.useEffect(() => {
     if (sendDeliverablesWithPlanedDateRes) {
       setDeliverables(sendDeliverablesWithPlanedDateRes.deliverable);
-      setLoaded('end');
+      dispatch(removeLoading());
     }
   }, [sendDeliverablesWithPlanedDateRes]);
   const onComplete = (deliverable: DeliverableState) => {
     if (deliverable.is_completed === 0) {
-      setLoaded('start');
+      dispatch(showLoading());
       _sendUpdateDeliverable({
         ...deliverable,
         planned_end_date: format(selectedDate, 'yyyy-MM-dd'),
@@ -72,7 +89,7 @@ function DeliverableOfDate({ selectedDate, selectedDeliverable, newCreatedDelive
         return deliverable;
       });
       setDeliverables(newDeliverables);
-      setLoaded('end');
+      dispatch(removeLoading());
     }
   }, [sendUpdateDeliverableRes, deliverables]);
 

@@ -7,7 +7,7 @@ interface Props {
   selectedPriority: PriorityState | null;
   onSelectPriorityTab: (index: string) => void;
 }
-function AchievedPriorityTab({ selectedPriorityTab, selectedPriority, onSelectPriorityTab }: Props) {
+function PriorityTab({ selectedPriorityTab, selectedPriority, onSelectPriorityTab }: Props) {
   const navigate = useNavigate();
   const onSelectTab = (item: string) => {
     if (!selectedPriority) return;
@@ -34,4 +34,4 @@ function AchievedPriorityTab({ selectedPriorityTab, selectedPriority, onSelectPr
   );
 }
 
-export default AchievedPriorityTab;
+export default PriorityTab;

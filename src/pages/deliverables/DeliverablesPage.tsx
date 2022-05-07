@@ -1,13 +1,8 @@
 import React from 'react';
-import DeliverableView from '../../components/deliverable/DeliverableView';
-import MainResponsive from '../../container/MainResponsive';
+import DeliverableContainer from '../../container/deliverable/DeliverableContainer';
 
 function DeliverablesPage() {
-  return (
-    <MainResponsive>
-      <DeliverableView />
-    </MainResponsive>
-  );
+  return <DeliverableContainer />;
 }
 
 export default DeliverablesPage;

@@ -11,7 +11,7 @@ import CreatableSelect from 'react-select/creatable';
 import { DeliverableInfoState } from '../../../modules/deliverable';
 import CreateAndEidtTaskTempleate from '../../../container/template/CreateAndEidtTaskTempleate';
 import { Control, ControllerRenderProps, useWatch } from 'react-hook-form';
-import { IDeliverableFormInput } from '../../deliverable/CreateDeliverable';
+import { IDeliverableFormInput } from '../../deliverable/DeliverablePanel';
 
 const projectStyles: StylesConfig<TaskState> = {
   container: styles => ({ ...styles, width: '100%' }),

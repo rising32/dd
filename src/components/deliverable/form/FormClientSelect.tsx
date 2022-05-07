@@ -10,7 +10,7 @@ import { OnChangeValue, StylesConfig } from 'react-select';
 import ReactModal from 'react-modal';
 import CreateAndEditClientTemplate from '../../../container/template/CreateAndEditClientTemplate';
 import { ControllerRenderProps } from 'react-hook-form';
-import { IDeliverableFormInput } from '../../deliverable/CreateDeliverable';
+import { IDeliverableFormInput } from '../../deliverable/DeliverablePanel';
 
 const clientStyles: StylesConfig<ClientState> = {
   container: styles => ({ ...styles, width: '100%' }),

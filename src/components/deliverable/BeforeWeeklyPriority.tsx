@@ -1,10 +1,11 @@
-import { getWeek } from 'date-fns';
+import { format, getWeek } from 'date-fns';
 import React, { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import SmallLayout from '../../container/common/SmallLayout';
-import { sendMyBeforePriorities } from '../../lib/api';
+import { sendMyBeforePriorities, sendUpdatePriority } from '../../lib/api';
 import useRequest from '../../lib/hooks/useRequest';
+import { DeliverableState } from '../../modules/deliverable';
 import { PriorityState } from '../../modules/weekPriority';
 import { RootState } from '../../store';
 import MoreButton from '../common/MoreButton';
@@ -12,29 +13,46 @@ import SelectedAndCompltedIcon from '../common/SelectedAndCompltedIcon';
 
 interface Props {
   selectedDate: Date;
-  updatedPriority: PriorityState | null;
+  newCreatedDeliverable: DeliverableState | null;
   selectedPriority: PriorityState | null;
-  onSelectPriority: (priority: PriorityState) => void;
+  onSelectPriority: (priority: PriorityState | null) => void;
 }
-function BeforeWeeklyPriority({ selectedDate, selectedPriority, updatedPriority, onSelectPriority }: Props) {
+function BeforeWeeklyPriority({ selectedDate, selectedPriority, newCreatedDeliverable, onSelectPriority }: Props) {
   const [myWeeklyPriorities, setMyWeeklyPriorities] = useState<PriorityState[]>([]);
 
   const { userInfo } = useSelector((state: RootState) => state.user);
   const navigate = useNavigate();
   const [_sendMyBeforePriorities, , sendMyBeforePrioritiesRes] = useRequest(sendMyBeforePriorities);
+  const [_sendUpdatePriority, , sendUpdatePriorityRes] = useRequest(sendUpdatePriority);
 
   useEffect(() => {
-    if (updatedPriority) {
+    if (newCreatedDeliverable && selectedPriority) {
+      _sendUpdatePriority({
+        wp_id: selectedPriority.wp_id,
+        user_id: selectedPriority.user_id,
+        week: selectedPriority.week,
+        priority: selectedPriority.priority,
+        goal: selectedPriority.goal,
+        detail: selectedPriority.detail,
+        is_completed: 1,
+        is_weekly: selectedPriority.is_weekly,
+        end_date: format(new Date(), 'yyyy-MM-dd'),
+      });
+    }
+  }, [newCreatedDeliverable]);
+  React.useEffect(() => {
+    if (sendUpdatePriorityRes) {
       const newMyWeeklyPriorities = myWeeklyPriorities.map(priority => {
-        if (priority.wp_id === updatedPriority.wp_id) {
-          return updatedPriority;
+        if (priority.wp_id === sendUpdatePriorityRes.wp_id) {
+          return sendUpdatePriorityRes;
         } else {
           return priority;
         }
       });
       setMyWeeklyPriorities(newMyWeeklyPriorities);
+      onSelectPriority(null);
     }
-  }, [updatedPriority]);
+  }, [sendUpdatePriorityRes]);
   useEffect(() => {
     const user_id = userInfo?.user_id;
     const week = getWeek(selectedDate, { weekStartsOn: 1, firstWeekContainsDate: 4 });

@@ -1,9 +1,9 @@
-import { getWeek } from 'date-fns';
 import React, { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import SmallLayout from '../../container/common/SmallLayout';
 import { sendPriorityByWeek } from '../../lib/api';
 import useRequest from '../../lib/hooks/useRequest';
+import { getWeekNumber } from '../../lib/utils';
 import { PriorityState } from '../../modules/weekPriority';
 import { RootState, useAppDispatch } from '../../store';
 import { removeLoading, showLoading } from '../../store/features/coreSlice';
@@ -56,7 +56,7 @@ function WeeklyPriorities({ selectedWeek, selectedPriority, newCreatedWeekPriori
                 }`}
                 onClick={() => onSelectPriority(priority)}
               >
-                {selectedWeek !== getWeek(new Date(), { weekStartsOn: 1, firstWeekContainsDate: 4 }) && (
+                {selectedWeek !== getWeekNumber(new Date()) && (
                   <SelectedAndCompltedIcon
                     isSelected={selectedPriority?.wp_id === priority.wp_id}
                     isCompleted={priority.is_completed === 1}
