@@ -6,7 +6,7 @@ import { ClientState } from '../../../modules/client';
 import { RootState } from '../../../store';
 import CreatableSelect from 'react-select/creatable';
 import { OnChangeValue, StylesConfig } from 'react-select';
-import CreateAndEditClientTemplate from '../../../container/template/CreateAndEditClientTemplate';
+import CreateAndEditClientTemplate from '../../client/CreateAndEditClientTemplate';
 import { ControllerRenderProps } from 'react-hook-form';
 import ModalView from '../../base/ModalView';
 import { ITasksControlFormInput } from '../TasksControl';

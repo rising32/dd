@@ -1,24 +1,24 @@
 import React, { useState } from 'react';
 import { useSelector } from 'react-redux';
 import useRequest from '../../lib/hooks/useRequest';
-import { sendCreateProject } from '../../lib/api';
+import { sendCreateTask } from '../../lib/api';
 import { RootState, useAppDispatch } from '../../store';
-import { changeProjectCount } from '../../store/features/companySlice';
-import { ProjectState } from '../../modules/project';
-import FullCalendar from '../../components/calendar/FullCalendar';
+import { changeTaskCount } from '../../store/features/companySlice';
+import { TaskState } from '../../modules/task';
 import { addDays, format } from 'date-fns';
+import FullCalendar from '../calendar/FullCalendar';
 
 interface Props {
   isEdit?: boolean;
   value?: string;
-  selectedProject?: ProjectState;
+  selectedTask?: TaskState;
   onCancel: () => void;
-  onSuccess: (project: ProjectState) => void;
+  onSuccess: (task: TaskState) => void;
 }
 
-function CreateAndEditProjectTemplate({ isEdit, value, selectedProject, onCancel, onSuccess }: Props) {
-  const [projectName, setProjectName] = useState('');
-  const [projectDec, setProjectDec] = useState('');
+function CreateAndEidtTaskTempleate({ isEdit, value, selectedTask, onCancel, onSuccess }: Props) {
+  const [taskName, setTaskName] = useState('');
+  const [taskRate, setTaskRate] = useState(30);
   const [planStartDate, setPlanStartDate] = useState<Date>(new Date());
   const [planEndDate, setPlanEndDate] = useState<Date>(addDays(new Date(), 7));
   const [actualStartDate, setActualStartDate] = useState<Date>(new Date());
@@ -26,26 +26,25 @@ function CreateAndEditProjectTemplate({ isEdit, value, selectedProject, onCancel
   const [selectedDate, setSelectedDate] = useState<Date>(new Date());
   const [showCalendar, setShowCalendar] = useState(false);
   const [calendarType, setCalendarType] = useState(0);
-  const [loaded, setLoaded] = useState<string | null>(null);
 
   const { userInfo } = useSelector((state: RootState) => state.user);
   const dispatch = useAppDispatch();
 
-  const [_sendCreateProject, , sendCreateProjectRes] = useRequest(sendCreateProject);
+  const [_sendCreateTask, , createTaskRes] = useRequest(sendCreateTask);
 
   React.useEffect(() => {
     if (isEdit) {
-      setProjectName(selectedProject?.project_name || '');
+      setTaskName(selectedTask?.task_name || '');
     } else {
-      setProjectName(value || '');
+      setTaskName(value || '');
     }
   }, [isEdit, value]);
 
   const onChangeName = (event: React.FormEvent<HTMLInputElement>) => {
-    setProjectName(event.currentTarget.value);
+    setTaskName(event.currentTarget.value);
   };
-  const onChangeDec = (event: React.FormEvent<HTMLInputElement>) => {
-    setProjectDec(event.currentTarget.value);
+  const onChangeRate = (event: React.FormEvent<HTMLInputElement>) => {
+    setTaskRate(parseInt(event.currentTarget.value));
   };
   const onSelectDate = (date: Date) => {
     switch (calendarType) {
@@ -93,52 +92,59 @@ function CreateAndEditProjectTemplate({ isEdit, value, selectedProject, onCancel
     }
   };
   const onOk = () => {
-    setLoaded('start');
+    if (!userInfo) return;
     if (isEdit) {
       //
     } else {
-      if (userInfo) {
-        const params = {
-          project_id: null,
-          creator_id: userInfo.user_id,
-          project_name: projectName,
-        };
-        _sendCreateProject(params);
-      }
+      const newTask = {
+        task_id: null,
+        creator_id: userInfo.user_id,
+        project_id: null,
+        task_name: taskName,
+        description: '',
+        planned_start_date: format(planStartDate, 'yyyy-MM-dd'),
+        planned_end_date: format(planEndDate, 'yyyy-MM-dd'),
+        actual_start_date: format(actualStartDate, 'yyyy-MM-dd'),
+        actual_end_date: format(actualEndDate, 'yyyy-MM-dd'),
+        hourly_rate: taskRate,
+        is_add_all: false,
+        is_active: true,
+        is_deleted: 0,
+      };
+      _sendCreateTask(newTask);
     }
   };
   React.useEffect(() => {
-    if (sendCreateProjectRes) {
-      onSuccess(sendCreateProjectRes);
-      dispatch(changeProjectCount());
-      setLoaded('end');
+    if (createTaskRes) {
+      onSuccess(createTaskRes.task);
+      dispatch(changeTaskCount());
     }
-  }, [sendCreateProjectRes]);
+  }, [createTaskRes]);
   return (
     <div className='relative w-full space-y-4'>
-      <div className='text-center font-bold'>{isEdit ? 'Edit this project' : 'Create a new project'}</div>
+      <div className='text-center font-bold'>{isEdit ? 'Edit this task' : 'Create a new task'}</div>
       <label className='block'>
         <span className="after:content-['*'] after:ml-0.5 after:text-rouge-blue block text-sm font-medium">NAME</span>
         <input
           type='text'
-          name='projectName'
+          name='taskName'
+          value={taskName}
           autoComplete='off'
-          value={projectName}
           onChange={onChangeName}
           className='mt-1 px-3 py-2 bg-white border shadow-sm border-dark-gray placeholder-card-gray focus:outline-none focus:border-rouge-blue block w-full rounded-md sm:text-sm focus:ring-1'
           placeholder='Enter Name'
         />
       </label>
       <label className='block'>
-        <span className='block text-sm font-medium'>DESCRIPTION</span>
+        <span className="after:content-['*'] after:ml-0.5 after:text-rouge-blue block text-sm font-medium">HOURLY RATE</span>
         <input
           type='text'
-          name='projectDec'
+          name='taskRate'
           autoComplete='off'
-          value={projectDec || ''}
-          onChange={onChangeDec}
+          value={taskRate}
+          onChange={onChangeRate}
           className='mt-1 px-3 py-2 bg-white border shadow-sm border-dark-gray placeholder-card-gray focus:outline-none focus:border-rouge-blue block w-full rounded-md sm:text-sm focus:ring-1'
-          placeholder='Enter Description'
+          placeholder='Enter Rate'
         />
       </label>
       <label className='block'>
@@ -180,4 +186,4 @@ function CreateAndEditProjectTemplate({ isEdit, value, selectedProject, onCancel
   );
 }
 
-export default CreateAndEditProjectTemplate;
+export default CreateAndEidtTaskTempleate;

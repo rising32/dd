@@ -8,7 +8,7 @@ import { ProjectState } from '../../../modules/project';
 import { RootState } from '../../../store';
 import { OnChangeValue, StylesConfig } from 'react-select';
 import CreatableSelect from 'react-select/creatable';
-import CreateAndEditProjectTemplate from '../../../container/template/CreateAndEditProjectTemplate';
+import CreateAndEditProjectTemplate from '../../project/CreateAndEditProjectTemplate';
 import { Control, ControllerRenderProps, useWatch } from 'react-hook-form';
 import { IDeliverableFormInput } from '../../deliverable/DeliverablePanel';
 

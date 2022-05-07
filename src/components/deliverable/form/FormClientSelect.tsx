@@ -8,7 +8,7 @@ import { RootState } from '../../../store';
 import CreatableSelect from 'react-select/creatable';
 import { OnChangeValue, StylesConfig } from 'react-select';
 import ReactModal from 'react-modal';
-import CreateAndEditClientTemplate from '../../../container/template/CreateAndEditClientTemplate';
+import CreateAndEditClientTemplate from '../../client/CreateAndEditClientTemplate';
 import { ControllerRenderProps } from 'react-hook-form';
 import { IDeliverableFormInput } from '../../deliverable/DeliverablePanel';
 

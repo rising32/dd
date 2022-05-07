@@ -9,7 +9,7 @@ import { RootState } from '../../../store';
 import { OnChangeValue, StylesConfig } from 'react-select';
 import CreatableSelect from 'react-select/creatable';
 import { DeliverableInfoState } from '../../../modules/deliverable';
-import CreateAndEidtTaskTempleate from '../../../container/template/CreateAndEidtTaskTempleate';
+import CreateAndEidtTaskTempleate from '../../task/CreateAndEidtTaskTempleate';
 import { Control, ControllerRenderProps, useWatch } from 'react-hook-form';
 import { IDeliverableFormInput } from '../../deliverable/DeliverablePanel';
 

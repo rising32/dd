@@ -3,14 +3,13 @@ import { useSelector } from 'react-redux';
 import SmallLayout from '../../container/common/SmallLayout';
 import useRequest from '../../lib/hooks/useRequest';
 import { RootState, useAppDispatch } from '../../store';
-import HeaderWithTitle from '../base/HeaderWithTitle';
 import { ProjectState } from '../../modules/project';
-import ReactModal from 'react-modal';
 import SelectedAndCompltedIcon from '../common/SelectedAndCompltedIcon';
 import { sendProjectOfCreater, sendCreateProject } from '../../lib/api';
-import { toast } from 'react-toastify';
-import ProjectSetting from './ProjectSetting';
-import { changeProjectCount } from '../../store/features/companySlice';
+import { PenSvg } from '../../assets/svg';
+import { removeLoading } from '../../store/features/coreSlice';
+import ModalView from '../base/ModalView';
+import CreateAndEditProjectTemplate from './CreateAndEditProjectTemplate';
 
 function ProjectsView() {
   const [myProjectList, setMyProjectList] = useState<ProjectState[]>([]);
@@ -37,91 +36,73 @@ function ProjectsView() {
       setSelectedProject(null);
     } else {
       setSelectedProject(project);
+      setShowModal(true);
     }
+  };
+  const onSuccess = (project: ProjectState) => {
+    // if (selectedClient) {
+    //   const newMyClientList = myClientList.map(item => {
+    //     if (item.client_id === client.client_id) {
+    //       return client;
+    //     } else {
+    //       return item;
+    //     }
+    //   });
+    //   setMyClientList(newMyClientList);
+    //   setSelectedClient(null);
+    //   onClose();
+    // } else {
+    //   const newClientList = myClientList;
+    //   newClientList.unshift(client);
+    //   setMyClientList(newClientList);
+    //   setSelectedClient(null);
+    //   onClose();
+    // }
+    dispatch(removeLoading());
+  };
+
+  const onClose = () => {
+    setShowModal(false);
+    setSelectedProject(null);
   };
   const onCreateProject = () => {
-    if (userInfo) {
-      const params = {
-        project_id: null,
-        creator_id: userInfo.user_id,
-        project_name: 'New Project',
-      };
-      _sendCreateProject(params);
-    }
-  };
-  React.useEffect(() => {
-    if (sendCreateProjectRes) {
-      const newMyProjectList = myProjectList;
-      newMyProjectList.unshift(sendCreateProjectRes);
-      setShowModal(false);
-      toast.success('project created successfully!');
-      setMyProjectList(newMyProjectList);
-      onSelectProject(sendCreateProjectRes);
-      dispatch(changeProjectCount());
-    }
-  }, [sendCreateProjectRes]);
-  const onUpdateSuccess = (project: ProjectState) => {
-    const newMyProjectList = myProjectList.map(item => {
-      if (item.project_id === project.project_id) {
-        return project;
-      } else {
-        return item;
-      }
-    });
-    setMyProjectList(newMyProjectList);
+    setShowModal(true);
     setSelectedProject(null);
   };
 
   return (
     <>
-      <HeaderWithTitle title='Manage Projects' />
       <SmallLayout className='flex flex-1 flex-col bg-white py-4 mt-4 text-black'>
         <div className='flex flex-row px-4 items-center justify-between pb-2'>
           <div className='text-lg text-black font-bold'>Projects</div>
-          <div className='text-base text-blue' onClick={() => setShowModal(true)}>
+          <div className='text-base text-blue' onClick={onCreateProject}>
             Create
           </div>
         </div>
         <ul role='list' className='p-4'>
           {myProjectList.map(project => (
             <li key={project.project_id} className='py-1 first:pt-0 last:pb-0'>
-              <div className='flex' onClick={() => onSelectProject(project)}>
+              <div className='flex'>
                 <SelectedAndCompltedIcon isSelected={project.project_id === selectedProject?.project_id} />
                 <div
-                  className={`ml-2 overflow-hidden ${project.project_id === selectedProject?.project_id && 'text-rouge-blue rounded-full'}`}
+                  className={`ml-2 flex-1 overflow-hidden ${
+                    project.project_id === selectedProject?.project_id && 'text-rouge-blue rounded-full'
+                  }`}
                 >
                   {project.project_name}
                 </div>
+                <PenSvg
+                  className={`w-6 h-6 ${project.project_id === selectedProject?.project_id && 'stroke-rouge-blue'}`}
+                  onClick={() => onSelectProject(project)}
+                />
               </div>
-              {selectedProject && selectedProject.project_id === project.project_id && (
-                <ProjectSetting selectedProject={selectedProject} onCancel={() => onSelectProject(project)} onSuccess={onUpdateSuccess} />
-              )}
             </li>
           ))}
         </ul>
       </SmallLayout>
-      <ReactModal
-        isOpen={showModal}
-        className='w-4/5 max-h-96 bg-white p-4 overflow-auto rounded-sm flex flex-col items-center justify-center'
-        style={{
-          overlay: {
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            background: 'rgba(0, 0, 0, 0.5)',
-          },
-        }}
-      >
-        <div className='text-center'>Do you want to create new Project?</div>
-        <div className='flex flex-row items-start justify-between w-full px-8 pt-4'>
-          <div className='text-lg font-bold' onClick={() => setShowModal(false)}>
-            No
-          </div>
-          <div className='text-lg font-bold text-rouge-blue' onClick={onCreateProject}>
-            Yes
-          </div>
-        </div>
-      </ReactModal>
+      <ModalView isOpen={showModal} onClose={onClose}>
+        <CreateAndEditProjectTemplate selectedProject={selectedProject} onCancel={onClose} onSuccess={onSuccess} />
+      </ModalView>
     </>
   );
 }
