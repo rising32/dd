@@ -5,9 +5,9 @@ import useRequest from '../../lib/hooks/useRequest';
 import { RootState, useAppDispatch } from '../../store';
 import { ProjectState } from '../../modules/project';
 import SelectedAndCompltedIcon from '../common/SelectedAndCompltedIcon';
-import { sendProjectOfCreater, sendCreateProject } from '../../lib/api';
+import { sendProjectOfCreater } from '../../lib/api';
 import { PenSvg } from '../../assets/svg';
-import { removeLoading } from '../../store/features/coreSlice';
+import { removeLoading, showLoading } from '../../store/features/coreSlice';
 import ModalView from '../base/ModalView';
 import CreateAndEditProjectTemplate from './CreateAndEditProjectTemplate';
 
@@ -18,17 +18,18 @@ function ProjectsView() {
 
   const { userInfo } = useSelector((state: RootState) => state.user);
   const [_sendProjectOfCreater, , sendProjectOfCreaterRes] = useRequest(sendProjectOfCreater);
-  const [_sendCreateProject, , sendCreateProjectRes] = useRequest(sendCreateProject);
 
   const dispatch = useAppDispatch();
 
   React.useEffect(() => {
+    dispatch(showLoading());
     const creator_id = userInfo?.user_id;
     _sendProjectOfCreater(creator_id);
   }, []);
   React.useEffect(() => {
     if (sendProjectOfCreaterRes) {
       setMyProjectList(sendProjectOfCreaterRes.project);
+      dispatch(removeLoading());
     }
   }, [sendProjectOfCreaterRes]);
   const onSelectProject = (project: ProjectState) => {
@@ -40,24 +41,24 @@ function ProjectsView() {
     }
   };
   const onSuccess = (project: ProjectState) => {
-    // if (selectedClient) {
-    //   const newMyClientList = myClientList.map(item => {
-    //     if (item.client_id === client.client_id) {
-    //       return client;
-    //     } else {
-    //       return item;
-    //     }
-    //   });
-    //   setMyClientList(newMyClientList);
-    //   setSelectedClient(null);
-    //   onClose();
-    // } else {
-    //   const newClientList = myClientList;
-    //   newClientList.unshift(client);
-    //   setMyClientList(newClientList);
-    //   setSelectedClient(null);
-    //   onClose();
-    // }
+    if (selectedProject) {
+      const newList = myProjectList.map(item => {
+        if (item.project_id === project.project_id) {
+          return project;
+        } else {
+          return item;
+        }
+      });
+      setMyProjectList(newList);
+      setSelectedProject(null);
+      onClose();
+    } else {
+      const newList = myProjectList;
+      newList.unshift(project);
+      setMyProjectList(newList);
+      setSelectedProject(null);
+      onClose();
+    }
     dispatch(removeLoading());
   };
 

@@ -13,7 +13,7 @@ import Core from './container/base/Core';
 import WorkSettingPage from './pages/account/WorkSettingPage';
 import ClientManagePage from './pages/account/ClientManagePage';
 import ProjectManagePage from './pages/account/ProjectManagePage';
-import TaskManagePage from './pages/tasks/TaskManagePage';
+import TaskManagePage from './pages/account/TaskManagePage';
 import TeamManagePage from './pages/team/TeamManagePage';
 import AgendaPage from './pages/agenda/AgendaPage';
 import FileManagerPage from './pages/file/FileManagerPage';

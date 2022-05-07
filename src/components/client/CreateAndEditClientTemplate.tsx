@@ -23,7 +23,7 @@ function CreateAndEditClientTemplate({ value, selectedClient, onCancel, onSucces
 
   const { handleSubmit, control } = useForm<IClientControlFormInput>({
     defaultValues: {
-      name: value || selectedClient?.client_name,
+      name: value || selectedClient?.client_name || '',
     },
   });
 

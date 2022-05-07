@@ -1,188 +1,136 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { useSelector } from 'react-redux';
 import useRequest from '../../lib/hooks/useRequest';
-import { sendCreateTask } from '../../lib/api';
+import { sendCreateTask, sendUpdateTask } from '../../lib/api';
 import { RootState, useAppDispatch } from '../../store';
-import { changeTaskCount } from '../../store/features/companySlice';
-import { TaskState } from '../../modules/task';
+import { changeProjectCount } from '../../store/features/companySlice';
 import { addDays, format } from 'date-fns';
-import FullCalendar from '../calendar/FullCalendar';
+import { Controller, SubmitHandler, useForm } from 'react-hook-form';
+import { showLoading } from '../../store/features/coreSlice';
+import { TaskState } from '../../modules/task';
 
+export interface IProjectControlFormInput {
+  name: string;
+  rate: number;
+  planStartDate: Date;
+  planEndDate: Date;
+  actualStartDate: Date;
+  actualEndDate: Date;
+}
 interface Props {
-  isEdit?: boolean;
   value?: string;
-  selectedTask?: TaskState;
+  selectedTask?: TaskState | null;
   onCancel: () => void;
   onSuccess: (task: TaskState) => void;
 }
 
-function CreateAndEidtTaskTempleate({ isEdit, value, selectedTask, onCancel, onSuccess }: Props) {
-  const [taskName, setTaskName] = useState('');
-  const [taskRate, setTaskRate] = useState(30);
-  const [planStartDate, setPlanStartDate] = useState<Date>(new Date());
-  const [planEndDate, setPlanEndDate] = useState<Date>(addDays(new Date(), 7));
-  const [actualStartDate, setActualStartDate] = useState<Date>(new Date());
-  const [actualEndDate, setActualEndDate] = useState<Date>(addDays(new Date(), 7));
-  const [selectedDate, setSelectedDate] = useState<Date>(new Date());
-  const [showCalendar, setShowCalendar] = useState(false);
-  const [calendarType, setCalendarType] = useState(0);
+function CreateAndEidtTaskTempleate({ value, selectedTask, onCancel, onSuccess }: Props) {
+  const { handleSubmit, control, register } = useForm<IProjectControlFormInput>({
+    defaultValues: {
+      name: value || selectedTask?.task_name || '',
+      rate: selectedTask?.hourly_rate || 30,
+      planStartDate: selectedTask && selectedTask.planned_start_date ? new Date(selectedTask.planned_start_date) : new Date(),
+      planEndDate: selectedTask && selectedTask.planned_end_date ? new Date(selectedTask.planned_end_date) : addDays(new Date(), 7),
+      actualStartDate: selectedTask && selectedTask.actual_start_date ? new Date(selectedTask.actual_start_date) : new Date(),
+      actualEndDate: selectedTask && selectedTask.actual_end_date ? new Date(selectedTask.actual_end_date) : addDays(new Date(), 7),
+    },
+  });
 
   const { userInfo } = useSelector((state: RootState) => state.user);
   const dispatch = useAppDispatch();
 
   const [_sendCreateTask, , createTaskRes] = useRequest(sendCreateTask);
+  const [_sendUpdateTask, , sendUpdateTaskRes] = useRequest(sendUpdateTask);
 
-  React.useEffect(() => {
-    if (isEdit) {
-      setTaskName(selectedTask?.task_name || '');
-    } else {
-      setTaskName(value || '');
-    }
-  }, [isEdit, value]);
-
-  const onChangeName = (event: React.FormEvent<HTMLInputElement>) => {
-    setTaskName(event.currentTarget.value);
-  };
-  const onChangeRate = (event: React.FormEvent<HTMLInputElement>) => {
-    setTaskRate(parseInt(event.currentTarget.value));
-  };
-  const onSelectDate = (date: Date) => {
-    switch (calendarType) {
-      case 1:
-        setPlanStartDate(date);
-        break;
-      case 2:
-        setPlanEndDate(date);
-        break;
-      case 3:
-        setActualStartDate(date);
-        break;
-      case 4:
-        setActualEndDate(date);
-        break;
-      default:
-        console.log('error');
-    }
-
-    setShowCalendar(false);
-  };
-  const onShowCalendar = (type: number) => {
-    if (showCalendar) {
-      setShowCalendar(false);
-    } else {
-      setCalendarType(type);
-
-      switch (type) {
-        case 1:
-          setSelectedDate(planStartDate);
-          break;
-        case 2:
-          setSelectedDate(planEndDate);
-          break;
-        case 3:
-          setSelectedDate(actualStartDate);
-          break;
-        case 4:
-          setSelectedDate(actualEndDate);
-          break;
-        default:
-          console.log('error');
-      }
-      setShowCalendar(true);
-    }
-  };
-  const onOk = () => {
-    if (!userInfo) return;
-    if (isEdit) {
-      //
-    } else {
-      const newTask = {
-        task_id: null,
-        creator_id: userInfo.user_id,
-        project_id: null,
-        task_name: taskName,
-        description: '',
-        planned_start_date: format(planStartDate, 'yyyy-MM-dd'),
-        planned_end_date: format(planEndDate, 'yyyy-MM-dd'),
-        actual_start_date: format(actualStartDate, 'yyyy-MM-dd'),
-        actual_end_date: format(actualEndDate, 'yyyy-MM-dd'),
-        hourly_rate: taskRate,
-        is_add_all: false,
-        is_active: true,
-        is_deleted: 0,
-      };
-      _sendCreateTask(newTask);
-    }
-  };
   React.useEffect(() => {
     if (createTaskRes) {
       onSuccess(createTaskRes.task);
-      dispatch(changeTaskCount());
+      dispatch(changeProjectCount());
     }
   }, [createTaskRes]);
+  React.useEffect(() => {
+    if (sendUpdateTaskRes) {
+      onSuccess(sendUpdateTaskRes);
+    }
+  }, [sendUpdateTaskRes]);
+
+  const onSubmit: SubmitHandler<IProjectControlFormInput> = data => {
+    if (userInfo) {
+      dispatch(showLoading());
+      if (selectedTask) {
+        const newTask = {
+          task_id: selectedTask.task_id,
+          creator_id: userInfo.user_id,
+          project_id: selectedTask.project_id,
+          task_name: data.name,
+          description: selectedTask.description,
+          planned_start_date: format(data.planStartDate, 'yyyy-MM-dd'),
+          planned_end_date: format(data.planEndDate, 'yyyy-MM-dd'),
+          actual_start_date: format(data.actualStartDate, 'yyyy-MM-dd'),
+          actual_end_date: format(data.actualEndDate, 'yyyy-MM-dd'),
+          hourly_rate: data.rate,
+          is_add_all: selectedTask.is_add_all,
+          is_active: selectedTask.is_active,
+          is_deleted: selectedTask.is_deleted,
+        };
+        _sendUpdateTask(newTask);
+      } else {
+        const newTask = {
+          task_id: null,
+          creator_id: userInfo.user_id,
+          project_id: null,
+          task_name: data.name,
+          description: '',
+          planned_start_date: format(data.planStartDate, 'yyyy-MM-dd'),
+          planned_end_date: format(data.planEndDate, 'yyyy-MM-dd'),
+          actual_start_date: format(data.actualStartDate, 'yyyy-MM-dd'),
+          actual_end_date: format(data.actualEndDate, 'yyyy-MM-dd'),
+          hourly_rate: data.rate,
+          is_add_all: false,
+          is_active: true,
+          is_deleted: 0,
+        };
+        _sendCreateTask(newTask);
+      }
+    }
+  };
   return (
-    <div className='relative w-full space-y-4'>
-      <div className='text-center font-bold'>{isEdit ? 'Edit this task' : 'Create a new task'}</div>
-      <label className='block'>
-        <span className="after:content-['*'] after:ml-0.5 after:text-rouge-blue block text-sm font-medium">NAME</span>
+    <form onSubmit={handleSubmit(onSubmit)} className='relative w-full space-y-4'>
+      <div className='text-center font-bold'>{selectedTask ? 'Edit this project' : 'Create a new project'}</div>
+      <Controller
+        control={control}
+        name='name'
+        rules={{ required: true }}
+        render={({ field }) => (
+          <label className='block w-full mt-4'>
+            <span className="after:content-['*'] after:ml-0.5 after:text-rouge-blue block text-sm font-medium">NAME</span>
+            <input
+              type='text'
+              autoComplete='off'
+              className='mt-1 px-3 py-2 bg-white border shadow-sm border-dark-gray placeholder-card-gray focus:outline-none focus:border-rouge-blue block w-full rounded-md sm:text-sm focus:ring-1'
+              placeholder='Enter client Name'
+              {...field}
+            />
+          </label>
+        )}
+      />
+      <label className='block w-full mt-4'>
+        <span className="after:content-['*'] after:ml-0.5 after:text-rouge-blue block text-sm font-medium">DESCRIPTION</span>
         <input
           type='text'
-          name='taskName'
-          value={taskName}
           autoComplete='off'
-          onChange={onChangeName}
           className='mt-1 px-3 py-2 bg-white border shadow-sm border-dark-gray placeholder-card-gray focus:outline-none focus:border-rouge-blue block w-full rounded-md sm:text-sm focus:ring-1'
-          placeholder='Enter Name'
+          placeholder='Enter client Name'
+          {...register('rate')}
         />
       </label>
-      <label className='block'>
-        <span className="after:content-['*'] after:ml-0.5 after:text-rouge-blue block text-sm font-medium">HOURLY RATE</span>
-        <input
-          type='text'
-          name='taskRate'
-          autoComplete='off'
-          value={taskRate}
-          onChange={onChangeRate}
-          className='mt-1 px-3 py-2 bg-white border shadow-sm border-dark-gray placeholder-card-gray focus:outline-none focus:border-rouge-blue block w-full rounded-md sm:text-sm focus:ring-1'
-          placeholder='Enter Rate'
-        />
-      </label>
-      <label className='block'>
-        <span className='block text-sm font-medium'>PLAN DATE</span>
-        <div className='flex mt-2'>
-          <div className='flex flex-1 justify-center bg-dark-gray rounded-md py-1 text-rouge-blue' onClick={() => onShowCalendar(1)}>
-            {format(planStartDate, 'yyyy-MM-dd')}
-          </div>
-          <div className='mx-2'>:</div>
-          <div className='flex flex-1 justify-center bg-dark-gray rounded-md py-1 text-rouge-blue' onClick={() => onShowCalendar(2)}>
-            {format(planEndDate, 'yyyy-MM-dd')}
-          </div>
-        </div>
-      </label>
-      <label className='block'>
-        <span className='block text-sm font-medium'>ACTUAL DATE</span>
-        <div className='flex mt-2'>
-          <div className='flex flex-1 justify-center bg-dark-gray rounded-md py-1 text-rouge-blue' onClick={() => onShowCalendar(3)}>
-            {format(actualStartDate, 'yyyy-MM-dd')}
-          </div>
-          <div className='mx-2'>:</div>
-          <div className='flex flex-1 justify-center bg-dark-gray rounded-md py-1 text-rouge-blue' onClick={() => onShowCalendar(4)}>
-            {format(actualEndDate, 'yyyy-MM-dd')}
-          </div>
-        </div>
-      </label>
-      {showCalendar && (
-        <div className='w-full bg-white absolute bottom-0 left-0 outline outline-1'>
-          <FullCalendar selectedDate={selectedDate} onSelectDate={onSelectDate} />
-        </div>
-      )}
       <div className='flex justify-between w-full px-8 text-lg font-bold'>
         <div onClick={onCancel}>No</div>
-        <div className='text-rouge-blue' onClick={onOk}>
+        <button type='submit' className='text-lg font-bold text-rouge-blue'>
           Yes
-        </div>
+        </button>
       </div>
-    </div>
+    </form>
   );
 }
 
