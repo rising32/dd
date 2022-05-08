@@ -1,8 +1,7 @@
 import React, { useState } from 'react';
 import PriorityCalendar from '../../components/calendar/PriorityCalendar';
-import PriorityControl from '../../components/priority/PriorityControl';
+import PriorityPanel from '../../components/priority/PriorityPanel';
 import { getWeekNumber } from '../../lib/utils';
-import { PriorityState } from '../../modules/weekPriority';
 import MainResponsive from '../MainResponsive';
 
 function PriorityContainer() {
@@ -15,7 +14,7 @@ function PriorityContainer() {
   return (
     <MainResponsive>
       <PriorityCalendar onSelectWeek={onSelectWeek} />
-      <PriorityControl selectedWeek={selectedWeek} />
+      <PriorityPanel selectedWeek={selectedWeek} />
     </MainResponsive>
   );
 }

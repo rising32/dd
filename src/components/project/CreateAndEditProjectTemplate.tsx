@@ -108,7 +108,7 @@ function CreateAndEditProjectTemplate({ value, selectedProject, onCancel, onSucc
           type='text'
           autoComplete='off'
           className='mt-1 px-3 py-2 bg-white border shadow-sm border-dark-gray placeholder-card-gray focus:outline-none focus:border-rouge-blue block w-full rounded-md sm:text-sm focus:ring-1'
-          placeholder='Enter client Name'
+          placeholder='Enter description'
           {...register('description')}
         />
       </label>

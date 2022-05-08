@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { UseFormReset } from 'react-hook-form';
 import { useSelector } from 'react-redux';
 import SmallLayout from '../../container/common/SmallLayout';
 import { sendPriorityByWeek } from '../../lib/api';
@@ -8,14 +9,17 @@ import { PriorityState } from '../../modules/weekPriority';
 import { RootState, useAppDispatch } from '../../store';
 import { removeLoading, showLoading } from '../../store/features/coreSlice';
 import SelectedAndCompltedIcon from '../common/SelectedAndCompltedIcon';
+import { IPriorityFormInput } from './PriorityPanel';
 
 interface Props {
   selectedWeek: number;
   selectedPriority: PriorityState | null;
   newCreatedWeekPriority: PriorityState | null;
-  onSelectPriority: (priority: PriorityState) => void;
+  updatedPriority: PriorityState | null;
+  onSelectPriority: (priority: PriorityState | null) => void;
+  reset: UseFormReset<IPriorityFormInput>;
 }
-function WeeklyPriorities({ selectedWeek, selectedPriority, newCreatedWeekPriority, onSelectPriority }: Props) {
+function WeeklyPriorities({ selectedWeek, selectedPriority, newCreatedWeekPriority, updatedPriority, reset, onSelectPriority }: Props) {
   const [weeklyPriorities, setWeeklyPriorities] = useState<PriorityState[]>([]);
 
   const { userInfo } = useSelector((state: RootState) => state.user);
@@ -26,8 +30,24 @@ function WeeklyPriorities({ selectedWeek, selectedPriority, newCreatedWeekPriori
   useEffect(() => {
     if (newCreatedWeekPriority) {
       setWeeklyPriorities([...weeklyPriorities, newCreatedWeekPriority]);
+      onSelectPriority(null);
+      reset();
+      dispatch(removeLoading());
     }
-  }, [newCreatedWeekPriority]);
+    if (updatedPriority) {
+      const newList = weeklyPriorities.map(priority => {
+        if (priority.wp_id === updatedPriority.wp_id) {
+          return updatedPriority;
+        } else {
+          return priority;
+        }
+      });
+      setWeeklyPriorities(newList);
+      onSelectPriority(null);
+      reset();
+      dispatch(removeLoading());
+    }
+  }, [newCreatedWeekPriority, updatedPriority]);
   useEffect(() => {
     dispatch(showLoading());
     const user_id = userInfo?.user_id;
