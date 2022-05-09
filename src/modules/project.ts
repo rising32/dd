@@ -1,4 +1,4 @@
-export type ProjectState = {
+export interface ProjectState {
   project_id: number;
   creator_id: number;
   client_id?: number;
@@ -8,7 +8,7 @@ export type ProjectState = {
   actual_start_date: string | null;
   actual_end_date: string | null;
   description: string | null;
-};
+}
 
 export interface WeekWorkDay {
   week: number;

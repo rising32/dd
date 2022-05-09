@@ -4,8 +4,7 @@ import { sendTeamMembers } from '../../../lib/api';
 import useRequest from '../../../lib/hooks/useRequest';
 import { UserInfoState } from '../../../modules/user';
 import { RootState } from '../../../store';
-import Select from 'react-select';
-import { OnChangeValue, StylesConfig } from 'react-select';
+import Select, { OnChangeValue, StylesConfig } from 'react-select';
 import { ControllerRenderProps } from 'react-hook-form';
 import { ITasksControlFormInput } from '../TasksControl';
 

@@ -55,6 +55,7 @@ function DeliverablePanel({ selectedDate }: Props) {
   const dispatch = useAppDispatch();
 
   const onSelectDeliverable = (deliverable: DeliverableState | null) => {
+    console.log(deliverable);
     if (deliverable && selectedDeliverable?.deliverable_id !== deliverable.deliverable_id) {
       setSelectedDeliverable(deliverable);
       setSelectedPriority(null);
