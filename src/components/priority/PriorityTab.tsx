@@ -17,7 +17,7 @@ function PriorityTab({ selectedPriorityTab, selectedPriority, onSelectPriorityTa
     onSelectPriorityTab(item);
   };
   return (
-    <div className='absolute -bottom-1 left-0 w-full flex flex-row justify-evenly items-center'>
+    <div className='absolute -bottom-1 left-0 w-full flex flex-row justify-evenly items-center text-xs'>
       {['Details', 'Agenda', 'Project', 'Support', '?'].map(item => (
         <div
           key={item}
@@ -25,9 +25,7 @@ function PriorityTab({ selectedPriorityTab, selectedPriority, onSelectPriorityTa
           onClick={() => onSelectTab(item)}
           style={{ background: selectedPriorityTab === item ? 'white' : '#365B9D' }}
         >
-          <span className='text-sm' style={{ color: selectedPriorityTab === item ? '#DD0000' : 'white' }}>
-            {item}
-          </span>
+          <span style={{ color: selectedPriorityTab === item ? '#DD0000' : 'white' }}>{item}</span>
         </div>
       ))}
     </div>

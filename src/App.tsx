@@ -21,6 +21,7 @@ import SignUpPage from './pages/auth/SignUpPage';
 import TermsPage from './pages/other/TermsPage';
 import TaskListPage from './pages/tasks/TaskListPage';
 import PriorityListPage from './pages/priorities/PriorityListPage';
+import CameraPage from './pages/deliverables/CameraPage';
 
 function App() {
   return (
@@ -83,6 +84,14 @@ function App() {
             element={
               <AuthenticatedRoute>
                 <FileManagerPage />
+              </AuthenticatedRoute>
+            }
+          />
+          <Route
+            path='deliverables/camera:client_id'
+            element={
+              <AuthenticatedRoute>
+                <CameraPage />
               </AuthenticatedRoute>
             }
           />

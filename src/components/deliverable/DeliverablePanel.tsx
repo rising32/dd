@@ -37,7 +37,6 @@ function DeliverablePanel({ selectedDate }: Props) {
   const [selectedDeliverableTab, setSelectedDeliverableTab] = useState<string>('');
   const [deliverableInfo, setDeliverableInfo] = useState<DeliverableInfoState | null>(null);
   const [selectablePriority, setSelectablePriority] = useState<PriorityState | null>(null);
-  const [updatedPriority, setUpdatededPriority] = useState<PriorityState | null>(null);
   const [disabled, setDisabled] = useState(false);
   const { handleSubmit, control, reset, setValue, register } = useForm<IDeliverableFormInput>({
     defaultValues: {
@@ -55,7 +54,6 @@ function DeliverablePanel({ selectedDate }: Props) {
   const dispatch = useAppDispatch();
 
   const onSelectDeliverable = (deliverable: DeliverableState | null) => {
-    console.log(deliverable);
     if (deliverable && selectedDeliverable?.deliverable_id !== deliverable.deliverable_id) {
       setSelectedDeliverable(deliverable);
       setSelectedPriority(null);
@@ -175,6 +173,7 @@ function DeliverablePanel({ selectedDate }: Props) {
               selectedDeliverableTab={selectedDeliverableTab}
               selectedDeliverable={selectedDeliverable}
               onSelectDeliverableTab={onSelectDeliverableTab}
+              control={control}
             />
             <PlusButton className='flex items-center justify-end my-4' />
           </form>

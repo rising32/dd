@@ -80,7 +80,6 @@ function PriorityPanel({ selectedWeek }: Props) {
           end_date: format(selectedPriority.end_date ? new Date(selectedPriority.end_date) : new Date(), 'yyyy-MM-dd'),
         });
       } else {
-        console.log(data);
         const priority: PriorityState = {
           wp_id: null,
           user_id: userInfo?.user_id,
