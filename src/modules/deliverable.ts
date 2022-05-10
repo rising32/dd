@@ -28,46 +28,55 @@ export interface DeliverableInfoState {
   project_id: number;
   project_name: string;
 }
+export interface ExpenseKindState {
+  value: string;
+  label: string;
+  icon: React.FunctionComponent<
+    React.SVGProps<SVGSVGElement> & {
+      title?: string | undefined;
+    }
+  >;
+}
 
-export const deliverablesExpenseKind = [
+export const deliverablesExpenseKind: ExpenseKindState[] = [
   {
-    key: 'car',
-    name: 'Car',
+    value: 'car',
+    label: 'Car',
     icon: CarSvg,
   },
   {
-    key: 'flight',
-    name: 'Flight',
+    value: 'flight',
+    label: 'Flight',
     icon: FlightSvg,
   },
   {
-    key: 'train',
-    name: 'Train',
+    value: 'train',
+    label: 'Train',
     icon: TrainSvg,
   },
   {
-    key: 'bus',
-    name: 'Bus',
+    value: 'bus',
+    label: 'Bus',
     icon: BusSvg,
   },
   {
-    key: 'meal',
-    name: 'Meal',
+    value: 'meal',
+    label: 'Meal',
     icon: MealSvg,
   },
   {
-    key: 'hotel',
-    name: 'Hotel',
+    value: 'hotel',
+    label: 'Hotel',
     icon: HotelSvg,
   },
   {
-    key: 'invitation',
-    name: 'Invitation',
+    value: 'invitation',
+    label: 'Invitation',
     icon: InvitationSvg,
   },
   {
-    key: 'other',
-    name: 'Other',
+    value: 'other',
+    label: 'Other',
     icon: OtherSvg,
   },
 ];

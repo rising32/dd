@@ -66,7 +66,7 @@ function BeforeWeeklyPriority({ selectedDate, selectedPriority, newCreatedDelive
   return (
     <div className='text-white mt-4'>
       <div className='flex justify-center'>
-        <span className='text-base'>Remember your weekly priorities</span>
+        <span>Remember your weekly priorities</span>
       </div>
       <SmallLayout className='w-full bg-card-gray rounded-md py-4'>
         <ul role='list' className='px-4'>

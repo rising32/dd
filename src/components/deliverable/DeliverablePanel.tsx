@@ -20,6 +20,8 @@ import DeliverableOfDate from './DeliverableOfDate';
 import { showLoading } from '../../store/features/coreSlice';
 import BeforeWeeklyPriority from './BeforeWeeklyPriority';
 import ModalView from '../base/ModalView';
+import { DollarSvg, EuroSvg } from '../../assets/svg';
+import ExpensiveWhat from './form/ExpensiveWhat';
 
 export interface IDeliverableFormInput {
   client: ClientState | null;
@@ -57,6 +59,7 @@ function DeliverablePanel({ selectedDate }: Props) {
   const [_sendDeliverableInfo, , sendDeliverableInfoRes] = useRequest(sendDeliverableInfo);
   const [_sendUpdateDeliverable, , sendUpdateDeliverableRes] = useRequest(sendUpdateDeliverable);
   const { userInfo } = useSelector((state: RootState) => state.user);
+  const { accountSetting } = useSelector((state: RootState) => state.user);
   const dispatch = useAppDispatch();
 
   const onSelectDeliverable = (deliverable: DeliverableState | null) => {
@@ -184,17 +187,50 @@ function DeliverablePanel({ selectedDate }: Props) {
 
             {selectedDeliverableTab === 'Expenses' && (
               <>
-                <label className='w-full flex items-center'>
-                  <span className='font-bold'>Expensives Cost:</span>
-                  <input
-                    type='text'
-                    autoComplete='off'
-                    disabled={disabled}
-                    className='ml-2 py-2 bg-transparent focus:outline-none focus:border-none flex border-none w-full'
-                    placeholder='Enter Deliverable Name'
-                    {...register('expensiveCost', { required: true })}
-                  />
-                </label>
+                <Controller
+                  control={control}
+                  name='expensiveCost'
+                  rules={{ required: true }}
+                  render={({ field }) => (
+                    <label className='w-full flex items-center'>
+                      <span className='text-rouge-blue'>Expensives Cost:</span>
+                      {accountSetting.currency === 0 && <EuroSvg className='w-4 h-4 fill-white' />}
+                      {accountSetting.currency === 1 && <DollarSvg className='w-4 h-4 fill-white' />}
+                      <input
+                        type='text'
+                        autoComplete='off'
+                        disabled={disabled}
+                        className='ml-2 bg-transparent focus:outline-none focus:border-none flex border-none'
+                        placeholder='Enter Cost'
+                        {...field}
+                      />
+                    </label>
+                  )}
+                />
+                <Controller
+                  control={control}
+                  name='expensiveWhat'
+                  rules={{ required: true }}
+                  render={({ field }) => <ExpensiveWhat field={field} />}
+                />
+                <Controller
+                  control={control}
+                  name='expensiveInfo'
+                  rules={{ required: true }}
+                  render={({ field }) => (
+                    <label className='w-full flex items-center'>
+                      <span className='text-rouge-blue'>Info:</span>
+                      <input
+                        type='text'
+                        autoComplete='off'
+                        disabled={disabled}
+                        className='ml-2 bg-transparent focus:outline-none focus:border-none flex border-none'
+                        placeholder='Enter Info'
+                        {...field}
+                      />
+                    </label>
+                  )}
+                />
               </>
             )}
 
