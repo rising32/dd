@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useSelector } from 'react-redux';
-import { sendTeamMembers } from '../../../lib/api';
+import { sendCompanyMembers } from '../../../lib/api';
 import useRequest from '../../../lib/hooks/useRequest';
 import { UserInfoState } from '../../../modules/user';
 import { RootState } from '../../../store';
@@ -16,22 +16,22 @@ interface Props {
 function Member({ field, selectedProject }: Props) {
   const { userInfo } = useSelector((state: RootState) => state.user);
 
-  const [teamMemberList, setTeamMemberList] = React.useState<UserInfoState[]>([]);
+  const [memberList, setMemberList] = React.useState<UserInfoState[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
-  const [_sendTeamMembers, , sendTeamMembersRes] = useRequest(sendTeamMembers);
+  const [_sendCompanyMembers, , sendCompanyMembersRes] = useRequest(sendCompanyMembers);
 
   React.useEffect(() => {
     setIsLoading(true);
     const owner_id = userInfo?.user_id;
-    _sendTeamMembers(owner_id);
+    _sendCompanyMembers(owner_id);
   }, []);
   React.useEffect(() => {
-    if (userInfo && sendTeamMembersRes) {
+    if (userInfo && sendCompanyMembersRes) {
       const newList = [];
       newList.push(userInfo);
-      const newMemberList = newList.concat(sendTeamMembersRes.member);
-      setTeamMemberList(newMemberList);
+      const newMemberList = newList.concat(sendCompanyMembersRes.member);
+      setMemberList(newMemberList);
 
       if (selectedProject) {
         const manager = newMemberList.find(member => member.user_id === selectedProject.creator_id);
@@ -40,7 +40,7 @@ function Member({ field, selectedProject }: Props) {
 
       setIsLoading(false);
     }
-  }, [sendTeamMembersRes]);
+  }, [sendCompanyMembersRes]);
   const handleChange = (newValue: OnChangeValue<UserInfoState, false>) => {
     field.onChange(newValue);
   };
@@ -53,8 +53,8 @@ function Member({ field, selectedProject }: Props) {
         name={field.name}
         ref={field.ref}
         isLoading={isLoading}
-        options={teamMemberList}
-        defaultValue={teamMemberList[0]}
+        options={memberList}
+        defaultValue={memberList[0]}
         placeholder='Enter Manager'
         value={field.value}
         getOptionValue={option => option.user_id.toString()}

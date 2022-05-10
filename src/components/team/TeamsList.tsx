@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useSelector } from 'react-redux';
 import SmallLayout from '../../container/common/SmallLayout';
 import useRequest from '../../lib/hooks/useRequest';
-import { sendUserAll, sendTeamMembers } from '../../lib/api';
+import { sendUserAll, sendCompanyMembers } from '../../lib/api';
 import { RootState } from '../../store';
 import HeaderWithTitle from '../base/HeaderWithTitle';
 import { UserInfoState } from '../../modules/user';
@@ -21,18 +21,18 @@ function TeamsList() {
 
   const { userInfo } = useSelector((state: RootState) => state.user);
   const [_sendUserAll, , sendUserAllRes] = useRequest(sendUserAll);
-  const [_sendTeamMembers, , sendTeamMembersRes] = useRequest(sendTeamMembers);
+  const [_sendCompanyMembers, , sendCompanyMembersRes] = useRequest(sendCompanyMembers);
 
   React.useEffect(() => {
     const owner_id = userInfo?.user_id;
-    _sendTeamMembers(owner_id);
+    _sendCompanyMembers(owner_id);
     _sendUserAll();
   }, []);
   React.useEffect(() => {
-    if (sendTeamMembersRes) {
-      setMyTeamMemberList(sendTeamMembersRes.member);
+    if (sendCompanyMembersRes) {
+      setMyTeamMemberList(sendCompanyMembersRes.member);
     }
-  }, [sendTeamMembersRes]);
+  }, [sendCompanyMembersRes]);
   React.useEffect(() => {
     if (sendUserAllRes) {
       setAllUsers(sendUserAllRes);

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useSelector } from 'react-redux';
-import { sendTeamMembers } from '../../../lib/api';
+import { sendCompanyMembers } from '../../../lib/api';
 import useRequest from '../../../lib/hooks/useRequest';
 import { UserInfoState } from '../../../modules/user';
 import { RootState } from '../../../store';
@@ -28,24 +28,24 @@ interface Props {
   field: ControllerRenderProps<ITasksControlFormInput, 'member'>;
 }
 function Member({ field }: Props) {
-  const [teamMemberList, setTeamMemberList] = React.useState<UserInfoState[]>([]);
+  const [memberList, setMemberList] = React.useState<UserInfoState[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
   const { userInfo } = useSelector((state: RootState) => state.user);
-  const [_sendTeamMembers, , sendTeamMembersRes] = useRequest(sendTeamMembers);
+  const [_sendCompanyMembers, , sendCompanyMembersRes] = useRequest(sendCompanyMembers);
 
   React.useEffect(() => {
     setIsLoading(true);
     const owner_id = userInfo?.user_id;
-    _sendTeamMembers(owner_id);
+    _sendCompanyMembers(owner_id);
   }, []);
   React.useEffect(() => {
-    if (sendTeamMembersRes) {
-      setTeamMemberList(sendTeamMembersRes.member);
+    if (sendCompanyMembersRes) {
+      setMemberList(sendCompanyMembersRes.member);
 
       setIsLoading(false);
     }
-  }, [sendTeamMembersRes]);
+  }, [sendCompanyMembersRes]);
   const handleChange = (newValue: OnChangeValue<UserInfoState, false>) => {
     field.onChange(newValue);
   };
@@ -58,7 +58,7 @@ function Member({ field }: Props) {
         name={field.name}
         ref={field.ref}
         isLoading={isLoading}
-        options={teamMemberList}
+        options={memberList}
         placeholder=''
         value={field.value}
         getOptionValue={option => option.user_id.toString()}

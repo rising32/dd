@@ -161,11 +161,11 @@ export const sendMonthStaticsticsData = (user_id: number) =>
 /////////////////////////////     Team         //////////////////////////
 export const sendAddMember = (params: TeamMemberState) => apiClient.post<TeamMemberState>(teamURL.addTeamMember, params);
 
-export const sendTeamMembers = (owner_id: number) =>
+///////////////////////////////    Company          ////////////////////////
+export const sendUpdateCompany = (params: CompanyState) => apiClient.post<CompanyState>(companyURL.updateCompany, params);
+
+export const sendCompanyMembers = (owner_id: number) =>
   apiClient.post<{
     owner_id: number;
     member: UserInfoState[];
-  }>(teamURL.getTeamMember, { owner_id });
-
-///////////////////////////////    Company          ////////////////////////
-export const sendUpdateCompany = (params: CompanyState) => apiClient.post<CompanyState>(companyURL.updateCompany, params);
+  }>(companyURL.getCompanyMembers, { owner_id });

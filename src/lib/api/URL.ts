@@ -12,6 +12,7 @@ export const userURL = {
 
 export const companyURL = {
   updateCompany: '/user/update_company',
+  getCompanyMembers: '/company/get_company_members',
 };
 
 export const clientURL = {
