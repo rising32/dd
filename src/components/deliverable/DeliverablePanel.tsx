@@ -26,6 +26,9 @@ export interface IDeliverableFormInput {
   project: ProjectState | null;
   task: TaskState | null;
   deliverable: string;
+  expensiveCost: number;
+  expensiveWhat: string;
+  expensiveInfo: string;
 }
 interface Props {
   selectedDate: Date;
@@ -44,6 +47,9 @@ function DeliverablePanel({ selectedDate }: Props) {
       project: null,
       task: null,
       deliverable: '',
+      expensiveCost: 0,
+      expensiveWhat: 'Car',
+      expensiveInfo: '',
     },
   });
 
@@ -157,17 +163,40 @@ function DeliverablePanel({ selectedDate }: Props) {
               rules={{ required: true }}
               render={({ field }) => <FormTaskSelect control={control} deliverableInfo={deliverableInfo} field={field} />}
             />
-            <label className='w-full flex items-center'>
-              <span className='font-bold'>Deliverable:</span>
-              <input
-                type='text'
-                autoComplete='off'
-                disabled={disabled}
-                className='ml-2 py-2 bg-transparent focus:outline-none focus:border-none flex border-none w-full'
-                placeholder='Enter Deliverable Name'
-                {...register('deliverable', { required: true })}
-              />
-            </label>
+            <Controller
+              control={control}
+              name='deliverable'
+              rules={{ required: true }}
+              render={({ field }) => (
+                <label className='w-full flex items-center'>
+                  <span className='font-bold'>Deliverable:</span>
+                  <input
+                    type='text'
+                    autoComplete='off'
+                    disabled={disabled}
+                    className='ml-2 py-2 bg-transparent focus:outline-none focus:border-none flex border-none w-full'
+                    placeholder='Enter Deliverable Name'
+                    {...field}
+                  />
+                </label>
+              )}
+            />
+
+            {selectedDeliverableTab === 'Expenses' && (
+              <>
+                <label className='w-full flex items-center'>
+                  <span className='font-bold'>Expensives Cost:</span>
+                  <input
+                    type='text'
+                    autoComplete='off'
+                    disabled={disabled}
+                    className='ml-2 py-2 bg-transparent focus:outline-none focus:border-none flex border-none w-full'
+                    placeholder='Enter Deliverable Name'
+                    {...register('expensiveCost', { required: true })}
+                  />
+                </label>
+              </>
+            )}
 
             <DeliverableTab
               selectedDeliverableTab={selectedDeliverableTab}

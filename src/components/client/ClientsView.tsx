@@ -16,12 +16,13 @@ function ClientsView() {
   const [showModal, setShowModal] = useState(false);
 
   const { userInfo } = useSelector((state: RootState) => state.user);
+  const { admin_info } = useSelector((state: RootState) => state.companyInfo);
   const [_sendGetMyClients, , getMyClientsRes] = useRequest(sendGetMyClients);
   const dispatch = useAppDispatch();
 
   React.useEffect(() => {
     dispatch(showLoading());
-    const user_id = userInfo?.user_id;
+    const user_id = admin_info?.user_id;
     _sendGetMyClients(user_id);
   }, []);
   React.useEffect(() => {

@@ -27,7 +27,7 @@ function DeliverableTab({ selectedDeliverableTab, selectedDeliverable, control, 
     onSelectDeliverableTab(item);
   };
   return (
-    <div className='absolute -bottom-1 left-0 w-full flex flex-row justify-evenly items-center'>
+    <div className='absolute -bottom-1 left-0 w-full flex flex-row justify-evenly items-center text-xs'>
       {['Details', 'File', 'Picture', 'Screenshot', 'Expenses'].map(item => (
         <div
           key={item}
@@ -35,9 +35,7 @@ function DeliverableTab({ selectedDeliverableTab, selectedDeliverable, control, 
           onClick={() => onSelectTab(item)}
           style={{ background: selectedDeliverableTab === item ? 'white' : '#365B9D' }}
         >
-          <span className='text-sm' style={{ color: selectedDeliverableTab === item ? '#DD0000' : 'white' }}>
-            {item}
-          </span>
+          <span style={{ color: selectedDeliverableTab === item ? '#DD0000' : 'white' }}>{item}</span>
         </div>
       ))}
     </div>
