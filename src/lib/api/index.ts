@@ -32,6 +32,12 @@ export const sendGetMyClients = (user_id: number) =>
     clients: ClientState[];
   }>(clientURL.getMyClients, { user_id });
 
+export const sendGetCompanyClients = (company_id: number) =>
+  apiClient.post<{
+    user_id: number;
+    clients: ClientState[];
+  }>(clientURL.getCompanyClients, { company_id });
+
 export const sendRegisterMyClient = (user_id: number, client_id: number, is_active: boolean) =>
   apiClient.post<UserClientState>(clientURL.registerMyClient, { user_id, client_id, is_active });
 
@@ -47,10 +53,10 @@ export const sendProjectOfCreater = (creator_id: number) =>
     project: ProjectState[];
   }>(projectURL.getUserProject, { creator_id });
 
-export const sendProjectWithClientId = (creator_id: number, client_id: number) =>
+export const sendProjectWithClientId = (company_id: number, client_id: number) =>
   apiClient.post<{
     project: ProjectState[];
-  }>(projectURL.getProjectWithClientId, { creator_id, client_id });
+  }>(projectURL.getProjectWithClientId, { company_id, client_id });
 
 ////////////////////////////////   Task  ///////////////////////////////////
 
@@ -72,8 +78,8 @@ export const sendCreateTask = (params: {
 
 export const getUserTasks = (creator_id: number) => apiClient.post<{ task: TaskState[] }>(taskURL.getUserTask, { creator_id });
 
-export const sendTaskWithProjectId = (creator_id: number, project_id: number) =>
-  apiClient.post<{ task: TaskState[] }>(taskURL.getTaskListWithProjectId, { creator_id, project_id });
+export const sendTaskWithProjectId = (company_id: number, project_id: number) =>
+  apiClient.post<{ task: TaskState[] }>(taskURL.getTaskListWithProjectId, { company_id, project_id });
 
 export const sendSetClient = (client_id: number, project_id: number) =>
   apiClient.post<ClientProjectState>(projectURL.setClient, { client_id, project_id });

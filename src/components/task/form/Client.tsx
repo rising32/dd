@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useSelector } from 'react-redux';
-import { sendGetMyClients } from '../../../lib/api';
+import { sendGetCompanyClients } from '../../../lib/api';
 import useRequest from '../../../lib/hooks/useRequest';
 import { ClientState } from '../../../modules/client';
 import { RootState } from '../../../store';
@@ -38,23 +38,22 @@ function Client({ field }: Props) {
   const [inputValue, setInputValue] = useState('');
 
   const { userInfo } = useSelector((state: RootState) => state.user);
-  const { admin_info } = useSelector((state: RootState) => state.companyInfo);
-  const [_sendGetMyClients, , getMyClientsRes] = useRequest(sendGetMyClients);
+  const { company_id } = useSelector((state: RootState) => state.companyInfo);
+  const [_sendGetCompanyClients, , sendGetCompanyClientsRes] = useRequest(sendGetCompanyClients);
 
   React.useEffect(() => {
-    if (admin_info.user_id) {
+    if (company_id) {
       setIsLoading(true);
-      const user_id = userInfo?.user_id;
-      _sendGetMyClients(user_id);
+      _sendGetCompanyClients(company_id);
     }
-  }, [userInfo]);
+  }, [company_id]);
 
   React.useEffect(() => {
-    if (getMyClientsRes) {
-      setClientList(getMyClientsRes.clients);
+    if (sendGetCompanyClientsRes) {
+      setClientList(sendGetCompanyClientsRes.clients);
       setIsLoading(false);
     }
-  }, [getMyClientsRes]);
+  }, [sendGetCompanyClientsRes]);
 
   const handleChange = (newValue: OnChangeValue<ClientState, false>) => {
     field.onChange(newValue);

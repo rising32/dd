@@ -49,6 +49,7 @@ function Task({ control, deliverableInfo, field }: Props) {
   });
 
   const { userInfo } = useSelector((state: RootState) => state.user);
+  const { company_id } = useSelector((state: RootState) => state.companyInfo);
   const dispatch = useAppDispatch();
   const [_sendTaskWithProjectId, , sendTaskWithProjectIdRes] = useRequest(sendTaskWithProjectId);
   const [_sendUpdateTask, , sendUpdateTaskRes] = useRequest(sendUpdateTask);
@@ -56,9 +57,8 @@ function Task({ control, deliverableInfo, field }: Props) {
   React.useEffect(() => {
     if (project) {
       setIsLoading(true);
-      const creator_id = userInfo?.user_id;
       const project_id = project.project_id;
-      _sendTaskWithProjectId(creator_id, project_id);
+      _sendTaskWithProjectId(company_id, project_id);
     } else {
       setTaskList([]);
       setIsLoading(false);

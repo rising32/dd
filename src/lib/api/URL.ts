@@ -17,6 +17,7 @@ export const companyURL = {
 
 export const clientURL = {
   getMyClients: '/admin/get_my_clients',
+  getCompanyClients: '/admin/get_company_clients',
   createClient: '/admin/create_client',
   registerMyClient: '/admin/regist_my_client',
   updateClient: '/admin/update_client',
@@ -27,6 +28,7 @@ export const projectURL = {
   updateProject: '/project/update',
   getUserProject: '/project/get_user_projects',
   getProjectWithClientId: '/project/get/client_no_assign',
+  getProjectWithCompanyID: '/project/get_company_projects',
   setClient: '/project/set_Client',
   getWeekStaticsticsData: '/project/get_real_workdays/week/client',
   getMonthStaticsticsData: '/project/get_real_workdays/month/client',
