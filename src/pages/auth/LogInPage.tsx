@@ -51,7 +51,7 @@ const LogInPage = () => {
       .unwrap()
       .then(res => {
         dispatch(getAccountSetting({ user_id: res.user.user_id }));
-        dispatch(getCompanyInfo({ member_id: res.user.user_id }));
+        dispatch(getCompanyInfo({ user_id: res.user.user_id }));
         navigate(from, { replace: true });
       })
       .catch(err => {

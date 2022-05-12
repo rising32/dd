@@ -62,7 +62,7 @@ function CompanyInfo() {
         <div className='flex flex-1 items-center justify-between'>
           <div className='pr-2'>
             {member_count}
-            {' Team member'}
+            {' Company Member'}
           </div>
         </div>
         <ClickArrowSvg className='w-6 h-6' />

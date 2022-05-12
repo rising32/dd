@@ -5,13 +5,14 @@ import { useSelector } from 'react-redux';
 import { sendTaskWithProjectId, sendUpdateTask } from '../../../lib/api';
 import useRequest from '../../../lib/hooks/useRequest';
 import { TaskState } from '../../../modules/task';
-import { RootState } from '../../../store';
+import { RootState, useAppDispatch } from '../../../store';
 import { OnChangeValue, StylesConfig } from 'react-select';
 import CreatableSelect from 'react-select/creatable';
 import { DeliverableInfoState } from '../../../modules/deliverable';
 import CreateAndEidtTaskTempleate from '../CreateAndEidtTaskTempleate';
 import { Control, ControllerRenderProps, useWatch } from 'react-hook-form';
 import { ITasksControlFormInput } from '../TasksControl';
+import { removeLoading } from '../../../store/features/coreSlice';
 
 const projectStyles: StylesConfig<TaskState> = {
   container: styles => ({ ...styles, width: '100%' }),
@@ -48,6 +49,7 @@ function Task({ control, deliverableInfo, field }: Props) {
   });
 
   const { userInfo } = useSelector((state: RootState) => state.user);
+  const dispatch = useAppDispatch();
   const [_sendTaskWithProjectId, , sendTaskWithProjectIdRes] = useRequest(sendTaskWithProjectId);
   const [_sendUpdateTask, , sendUpdateTaskRes] = useRequest(sendUpdateTask);
 
@@ -115,10 +117,10 @@ function Task({ control, deliverableInfo, field }: Props) {
         return task;
       });
       setTaskList(newTaskList);
-
       setShowTaskModal(false);
       setIsLoading(false);
       field.onChange(sendUpdateTaskRes);
+      dispatch(removeLoading());
     }
   }, [sendUpdateTaskRes]);
   const handleChange = (newValue: OnChangeValue<TaskState, false>) => {

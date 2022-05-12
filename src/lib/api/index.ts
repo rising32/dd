@@ -164,8 +164,8 @@ export const sendAddMember = (params: TeamMemberState) => apiClient.post<TeamMem
 ///////////////////////////////    Company          ////////////////////////
 export const sendUpdateCompany = (params: CompanyState) => apiClient.post<CompanyState>(companyURL.updateCompany, params);
 
-export const sendCompanyMembers = (owner_id: number) =>
+export const sendCompanyMembers = (user_id: number) =>
   apiClient.post<{
     owner_id: number;
     member: UserInfoState[];
-  }>(companyURL.getCompanyMembers, { owner_id });
+  }>(companyURL.getCompanyMembers, { user_id });

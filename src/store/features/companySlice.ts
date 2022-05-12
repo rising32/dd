@@ -14,7 +14,7 @@ const initialState: CompanyInfoState = {
   task_count: 0,
 };
 
-export const getCompanyInfo = createAsyncThunk('user/companyInfo', async (params: { member_id: number }) => {
+export const getCompanyInfo = createAsyncThunk('user/companyInfo', async (params: { user_id: number }) => {
   const response = await apiClient.post(userURL.companyProfile, params);
   return response.data as { company: CompanyInfoState };
 });

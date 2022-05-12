@@ -40,6 +40,7 @@ function FormClientSelect({ deliverableInfo, field }: Props) {
   const [inputValue, setInputValue] = useState('');
 
   const { userInfo } = useSelector((state: RootState) => state.user);
+  const { admin_info } = useSelector((state: RootState) => state.companyInfo);
   const [_sendGetMyClients, , getMyClientsRes] = useRequest(sendGetMyClients);
 
   React.useEffect(() => {
@@ -53,8 +54,10 @@ function FormClientSelect({ deliverableInfo, field }: Props) {
     getMyClients();
   }, []);
   const getMyClients = () => {
-    const user_id = userInfo?.user_id;
-    _sendGetMyClients(user_id);
+    if (admin_info.user_id) {
+      const user_id = admin_info?.user_id;
+      _sendGetMyClients(user_id);
+    }
   };
   React.useEffect(() => {
     if (getMyClientsRes) {

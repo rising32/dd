@@ -36,8 +36,8 @@ function Member({ field }: Props) {
 
   React.useEffect(() => {
     setIsLoading(true);
-    const owner_id = userInfo?.user_id;
-    _sendCompanyMembers(owner_id);
+    const user_id = userInfo?.user_id;
+    _sendCompanyMembers(user_id);
   }, []);
   React.useEffect(() => {
     if (sendCompanyMembersRes) {

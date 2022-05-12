@@ -44,10 +44,10 @@ function Client({ field }: Props) {
   React.useEffect(() => {
     if (admin_info.user_id) {
       setIsLoading(true);
-      const user_id = admin_info?.user_id;
+      const user_id = userInfo?.user_id;
       _sendGetMyClients(user_id);
     }
-  }, [admin_info]);
+  }, [userInfo]);
 
   React.useEffect(() => {
     if (getMyClientsRes) {

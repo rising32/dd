@@ -24,8 +24,8 @@ function TeamsList() {
   const [_sendCompanyMembers, , sendCompanyMembersRes] = useRequest(sendCompanyMembers);
 
   React.useEffect(() => {
-    const owner_id = userInfo?.user_id;
-    _sendCompanyMembers(owner_id);
+    const user_id = userInfo?.user_id;
+    _sendCompanyMembers(user_id);
     _sendUserAll();
   }, []);
   React.useEffect(() => {

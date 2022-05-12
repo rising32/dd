@@ -47,13 +47,14 @@ function FormProjectSelect({ control, deliverableInfo, field }: Props) {
   });
 
   const { userInfo } = useSelector((state: RootState) => state.user);
+  const { admin_info } = useSelector((state: RootState) => state.companyInfo);
   const [_sendProjectWithClientId, , sendProjectWithClientIdRes] = useRequest(sendProjectWithClientId);
   const [_sendSetClient, , sendSetClientRes] = useRequest(sendSetClient);
 
   React.useEffect(() => {
     if (client) {
       setIsLoading(true);
-      const creator_id = userInfo?.user_id;
+      const creator_id = admin_info?.user_id;
       const client_id = client.client_id;
       _sendProjectWithClientId(creator_id, client_id);
     } else {
