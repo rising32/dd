@@ -8,7 +8,7 @@ import { useNavigate } from 'react-router-dom';
 
 function UserInfo() {
   const { userInfo } = useSelector((state: RootState) => state.user);
-  const { client_count, project_count, task_count } = useSelector((state: RootState) => state.companyInfo);
+  const { client_count, project_count, task_count, admin_info } = useSelector((state: RootState) => state.companyInfo);
   const navigate = useNavigate();
 
   return (
@@ -21,17 +21,19 @@ function UserInfo() {
         <div className='font-bold pr-2'>{userInfo?.display_name}</div>
         <div className='flex flex-1 truncate'>{userInfo?.email}</div>
       </ItemLayout>
-      <ItemLayout className='mt-2' onClick={() => navigate('clients')}>
-        <div className='w-10 flex items-center justify-center'>
-          <HomeSvg className='w-6 h-6 fill-rouge-blue' />
-        </div>
-        <div className='flex flex-1'>
-          <div className='pr-2'>
-            {client_count}
-            {' Clients'}
+      {admin_info && (
+        <ItemLayout className='mt-2' onClick={() => navigate('clients')}>
+          <div className='w-10 flex items-center justify-center'>
+            <HomeSvg className='w-6 h-6 fill-rouge-blue' />
           </div>
-        </div>
-      </ItemLayout>
+          <div className='flex flex-1'>
+            <div className='pr-2'>
+              {client_count}
+              {' Clients'}
+            </div>
+          </div>
+        </ItemLayout>
+      )}
       <ItemLayout className='mt-2' onClick={() => navigate('projects')}>
         <div className='w-10 flex items-center justify-center'>
           <ProjectSvg className='w-6 h-6 fill-rouge-blue' />

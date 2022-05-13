@@ -4,7 +4,7 @@ import { CompanyInfoState, CompanyState } from '../../modules/company';
 import { DeliverableInfoState, DeliverableState } from '../../modules/deliverable';
 import { ClientProjectState, ProjectState, StatisticTableState } from '../../modules/project';
 import { CPMDState, TaskAssignState, TaskState } from '../../modules/task';
-import { TeamMemberState } from '../../modules/team';
+import { CompanyMemberState } from '../../modules/team';
 import { UserInfoState } from '../../modules/user';
 import { PriorityState } from '../../modules/weekPriority';
 import { clientURL, companyURL, deliverableURL, priorityURL, projectURL, taskURL, teamURL, userURL } from './URL';
@@ -164,14 +164,14 @@ export const sendWeekStaticsticsData = (user_id: number) =>
 export const sendMonthStaticsticsData = (user_id: number) =>
   apiClient.post<{ data: StatisticTableState[] }>(projectURL.getMonthStaticsticsData, { user_id });
 
-/////////////////////////////     Team         //////////////////////////
-export const sendAddMember = (params: TeamMemberState) => apiClient.post<TeamMemberState>(teamURL.addTeamMember, params);
-
 ///////////////////////////////    Company          ////////////////////////
 export const sendUpdateCompany = (params: CompanyState) => apiClient.post<CompanyState>(companyURL.updateCompany, params);
 
 export const sendCompanyMembers = (user_id: number) =>
   apiClient.post<{
     owner_id: number;
-    member: UserInfoState[];
+    member: CompanyMemberState[];
   }>(companyURL.getCompanyMembers, { user_id });
+
+export const sendAddMember = (params: CompanyMemberState) => apiClient.post<CompanyMemberState>(teamURL.addCompanyMember, params);
+export const sendUpdateMember = (params: CompanyMemberState) => apiClient.post<CompanyMemberState>(teamURL.updateCompanyMember, params);

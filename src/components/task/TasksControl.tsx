@@ -47,6 +47,7 @@ function TasksControl({ selectedWeek }: Props) {
   const [_sendDeveloperToTask, , sendDeveloperToTaskRes] = useRequest(sendDeveloperToTask);
   const [_sendCreateDeliverable, , sendCreateDeliverableRes] = useRequest(sendCreateDeliverable);
   const { userInfo } = useSelector((state: RootState) => state.user);
+  const { admin_info } = useSelector((state: RootState) => state.companyInfo);
   const dispatch = useAppDispatch();
 
   const onSubmit: SubmitHandler<ITasksControlFormInput> = data => {

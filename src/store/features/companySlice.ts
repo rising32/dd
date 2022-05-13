@@ -5,7 +5,7 @@ import { CompanyInfoState } from '../../modules/company';
 import { UserInfoState } from '../../modules/user';
 
 const initialState: CompanyInfoState = {
-  admin_info: {} as UserInfoState,
+  admin_info: null,
   client_count: 0,
   company_id: 0,
   company_name: '',
@@ -41,7 +41,7 @@ export const companySlice = createSlice({
   },
   extraReducers: builder => {
     builder.addCase(getCompanyInfo.fulfilled, (state, action) => {
-      state.admin_info = action.payload.company.admin_info || 0;
+      state.admin_info = action.payload.company.admin_info || null;
       state.client_count = action.payload.company.client_count || 0;
       state.company_id = action.payload.company.company_id || 0;
       state.company_name = action.payload.company.company_name || '';

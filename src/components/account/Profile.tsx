@@ -60,7 +60,7 @@ function Profile() {
           <GroupSvg className='w-6 h-6' />
         </div>
         <div className='flex flex-1 items-center justify-between'>
-          <div className='pr-2'>{member_count + ' Team member'}</div>
+          <div className='pr-2'>{member_count + ' Company Member'}</div>
         </div>
         <ClickArrowSvg className='w-6 h-6' />
       </ItemLayout>

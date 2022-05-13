@@ -1,15 +1,16 @@
 import React, { useEffect, useState } from 'react';
-import { sendAddMember } from '../../lib/api';
+import { sendAddMember, sendUpdateMember } from '../../lib/api';
 import useRequest from '../../lib/hooks/useRequest';
-import { TeamMemberState } from '../../modules/team';
+import { CompanyMemberState } from '../../modules/team';
 import { UserInfoState } from '../../modules/user';
 import { useSelector } from 'react-redux';
 import { RootState, useAppDispatch } from '../../store';
 import AnimatedView from '../common/AnimatedView';
 import { changeMemberCount } from '../../store/features/companySlice';
+import Checkbox from '../common/CheckBox';
 
 interface Props {
-  selectedMember: UserInfoState | null;
+  selectedMember: CompanyMemberState | null;
   filterUserList: UserInfoState[];
   onCancel: () => void;
   onSuccess: (member: UserInfoState) => void;
@@ -19,10 +20,13 @@ const TeamMemberSetting = ({ selectedMember, filterUserList, onCancel, onSuccess
   const [memberEmail, setMemberEmail] = useState(selectedMember ? selectedMember.email : '');
   const [hasFocus, setFocus] = useState(false);
   const [selectedUser, setSelectedUser] = useState<UserInfoState | null>(null);
+  const [isManager, setIsManager] = useState(selectedMember?.role_id === 3 ? false : true);
 
   const { userInfo } = useSelector((state: RootState) => state.user);
+  const { admin_info, company_id } = useSelector((state: RootState) => state.companyInfo);
   const dispatch = useAppDispatch();
   const [_sendAddMember, , sendAddMemberRes] = useRequest(sendAddMember);
+  const [_sendUpdateMember, , sendUpdateMemberRes] = useRequest(sendUpdateMember);
 
   const onChangeMemberName = (event: React.FormEvent<HTMLInputElement>) => {
     setMemberName(event.currentTarget.value);
@@ -38,23 +42,20 @@ const TeamMemberSetting = ({ selectedMember, filterUserList, onCancel, onSuccess
   };
 
   const onCreateOrEditClient = () => {
-    if (!userInfo) return;
+    if (!admin_info) return;
     if (selectedMember) {
-      // if (account && selectedUser) {
-      //   console.log(selectedUser);
-      //   const params: TeamMemberState = {
-      //     owner_id: account?.user.user_id,
-      //     member_id: selectedUser?.user_id,
-      //     role_id: 3,
-      //   };
-      //   _addMember(params);
-      // }
+      const params = {
+        ...selectedMember,
+        role_id: isManager ? 2 : 3,
+      };
+      _sendUpdateMember(params);
     } else {
       if (selectedUser) {
-        const params: TeamMemberState = {
-          owner_id: userInfo?.user_id,
-          member_id: selectedUser?.user_id,
-          role_id: 3,
+        const params = {
+          cm_id: null,
+          company_id,
+          member_id: selectedUser.user_id,
+          role_id: isManager ? 2 : 3,
         };
         _sendAddMember(params);
       }
@@ -66,6 +67,12 @@ const TeamMemberSetting = ({ selectedMember, filterUserList, onCancel, onSuccess
       dispatch(changeMemberCount());
     }
   }, [sendAddMemberRes]);
+  useEffect(() => {
+    if (sendUpdateMemberRes && selectedMember) {
+      console.log(sendUpdateMemberRes);
+      onSuccess({ ...selectedMember, role_id: sendUpdateMemberRes.role_id });
+    }
+  }, [sendUpdateMemberRes]);
 
   return (
     <div className='px-4 my-4 relative'>
@@ -104,6 +111,9 @@ const TeamMemberSetting = ({ selectedMember, filterUserList, onCancel, onSuccess
           placeholder='Enter Email'
         />
       </label>
+      <Checkbox checked={isManager} onChange={() => setIsManager(!isManager)} className='m-2'>
+        Administrator
+      </Checkbox>
       <div className='flex flex-row items-start justify-between w-full px-8 pt-4'>
         <div className='text-lg font-bold' onClick={onCancel}>
           Cancel

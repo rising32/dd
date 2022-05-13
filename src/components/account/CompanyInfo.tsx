@@ -12,6 +12,10 @@ function CompanyInfo() {
   const { admin_info, company_name, member_count } = useSelector((state: RootState) => state.companyInfo);
   const navigate = useNavigate();
 
+  if (admin_info === null) {
+    return <div />;
+  }
+
   return (
     <SmallLayout className='mt-4 px-1 py-4 bg-white text-black' onClick={() => navigate('/account/user')}>
       <div className='text-lg font-bold uppercase text-center'>company profile</div>
@@ -19,8 +23,8 @@ function CompanyInfo() {
         <div className='w-10 flex items-center justify-center'>
           <PersonSvg className='w-6 h-6 fill-card-gray' />
         </div>
-        <div className='font-bold pr-2'>{admin_info.display_name}</div>
-        <div className='flex flex-1 truncate'>{admin_info.email}</div>
+        <div className='font-bold pr-2'>{admin_info?.display_name}</div>
+        <div className='flex flex-1 truncate'>{admin_info?.email}</div>
       </ItemLayout>
       <ItemLayout className='mt-2'>
         <div className='w-10 flex items-center justify-center'>

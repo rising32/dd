@@ -44,7 +44,8 @@ export const taskURL = {
 };
 
 export const teamURL = {
-  addTeamMember: '/team/add_member',
+  addCompanyMember: '/company/add_member',
+  updateCompanyMember: '/company/update_by_member',
   getTeamMember: '/team/get_team_members',
 };
 

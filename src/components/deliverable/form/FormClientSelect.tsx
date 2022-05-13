@@ -35,7 +35,7 @@ interface Props {
 }
 function FormClientSelect({ deliverableInfo, field }: Props) {
   const [clientList, setClientList] = useState<ClientState[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
   const [isCreate, setIsCreate] = useState(false);
   const [inputValue, setInputValue] = useState('');
 
@@ -50,11 +50,11 @@ function FormClientSelect({ deliverableInfo, field }: Props) {
     }
   }, [deliverableInfo]);
   React.useEffect(() => {
-    setIsLoading(true);
     getMyClients();
   }, []);
   const getMyClients = () => {
-    if (admin_info.user_id) {
+    if (admin_info?.user_id) {
+      setIsLoading(true);
       const user_id = admin_info?.user_id;
       _sendGetMyClients(user_id);
     }

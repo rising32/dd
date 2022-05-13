@@ -11,10 +11,11 @@ import { toast } from 'react-toastify';
 import TeamMemberSetting from './TeamMemberSetting';
 import UserType from '../common/UserType';
 import LazyImage from '../common/LazyImage';
+import { CompanyMemberState } from '../../modules/team';
 
 function TeamsList() {
-  const [myTeamMemberList, setMyTeamMemberList] = useState<UserInfoState[]>([]);
-  const [selectedMember, setSelectedMember] = useState<UserInfoState | null>(null);
+  const [myTeamMemberList, setMyTeamMemberList] = useState<CompanyMemberState[]>([]);
+  const [selectedMember, setSelectedMember] = useState<CompanyMemberState | null>(null);
   const [showModal, setShowModal] = useState(false);
   const [allUsers, setAllUsers] = useState<UserInfoState[]>([]);
   const [filterUserList, setFilterUserList] = useState<UserInfoState[]>([]);
@@ -30,6 +31,7 @@ function TeamsList() {
   }, []);
   React.useEffect(() => {
     if (sendCompanyMembersRes) {
+      console.log(sendCompanyMembersRes);
       setMyTeamMemberList(sendCompanyMembersRes.member);
     }
   }, [sendCompanyMembersRes]);
@@ -66,7 +68,7 @@ function TeamsList() {
     }
     setSelectedMember(null);
   };
-  const onSelectMember = (member: UserInfoState) => {
+  const onSelectMember = (member: CompanyMemberState) => {
     if (selectedMember?.user_id === member.user_id) {
       setSelectedMember(null);
     } else {
@@ -78,17 +80,17 @@ function TeamsList() {
     if (selectedMember) {
       const newMyTeamMemberList = myTeamMemberList.map(item => {
         if (item.user_id === member.user_id) {
-          return member;
+          return member as CompanyMemberState;
         } else {
-          return item;
+          return item as CompanyMemberState;
         }
       });
       toast.success('member updated successfully!');
       setMyTeamMemberList(newMyTeamMemberList);
-      onSelectMember(member);
+      onSelectMember(member as CompanyMemberState);
     } else {
       const newMyTeamMemberList = myTeamMemberList;
-      newMyTeamMemberList.unshift(member);
+      newMyTeamMemberList.unshift(member as CompanyMemberState);
       toast.success('task created successfully!');
       setMyTeamMemberList(newMyTeamMemberList);
       onOpenAndCloseModal();

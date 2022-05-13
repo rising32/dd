@@ -34,7 +34,7 @@ interface Props {
 }
 function Client({ field }: Props) {
   const [clientList, setClientList] = useState<ClientState[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
   const [isCreate, setIsCreate] = useState(false);
   const [inputValue, setInputValue] = useState('');
 

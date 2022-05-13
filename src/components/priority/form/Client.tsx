@@ -42,7 +42,7 @@ function Client({ field }: Props) {
   const [_sendGetMyClients, , getMyClientsRes] = useRequest(sendGetMyClients);
 
   React.useEffect(() => {
-    if (admin_info.user_id) {
+    if (admin_info?.user_id) {
       setIsLoading(true);
       const user_id = admin_info?.user_id;
       _sendGetMyClients(user_id);

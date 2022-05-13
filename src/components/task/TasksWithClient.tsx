@@ -42,16 +42,18 @@ function TasksWithClient({ selectedWeek, control }: Props) {
   });
 
   useEffect(() => {
-    dispatch(showLoading());
-    const params = {
-      user_id: admin_info?.user_id,
-      member_id: member?.user_id || null,
-      client_id: client?.client_id || null,
-      project_id: project?.project_id || null,
-      planned_end_date: when || null,
-    };
-    _sendTasksWithCPMD(params);
-  }, [client, project, member, when]);
+    if (admin_info?.user_id) {
+      dispatch(showLoading());
+      const params = {
+        user_id: admin_info?.user_id,
+        member_id: member?.user_id || null,
+        client_id: client?.client_id || null,
+        project_id: project?.project_id || null,
+        planned_end_date: when || null,
+      };
+      _sendTasksWithCPMD(params);
+    }
+  }, [admin_info, client, project, member, when]);
   useEffect(() => {
     if (sendTasksWithCPMDRes) {
       setTaskList(sendTasksWithCPMDRes);
