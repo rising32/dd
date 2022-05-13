@@ -179,7 +179,7 @@ function Task({ control, deliverableInfo, field }: Props) {
         getOptionLabel={option => option.task_name}
         styles={projectStyles}
         onChange={handleChange}
-        getNewOptionData={(inputValue, optionLabel) => ({
+        getNewOptionData={inputValue => ({
           task_id: 0,
           task_name: `Create new project "${inputValue}"`,
           creator_id: 0,

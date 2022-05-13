@@ -10,6 +10,7 @@ import CreateAndEditClientTemplate from '../../client/CreateAndEditClientTemplat
 import { ControllerRenderProps } from 'react-hook-form';
 import ModalView from '../../base/ModalView';
 import { ITasksControlFormInput } from '../TasksControl';
+import { toast } from 'react-toastify';
 
 const clientStyles: StylesConfig<ClientState> = {
   container: styles => ({ ...styles, width: '100%' }),
@@ -60,9 +61,13 @@ function Client({ field }: Props) {
   };
 
   const handleCreate = (value: string) => {
-    setIsCreate(true);
-    setIsLoading(true);
-    setInputValue(value);
+    if (userInfo?.role_id === 1) {
+      setIsCreate(true);
+      setIsLoading(true);
+      setInputValue(value);
+    } else {
+      toast.error('Administrator only can created client!');
+    }
   };
 
   const onSuccess = (client: ClientState) => {

@@ -19,6 +19,7 @@ interface Props {
 function TasksWithClient({ selectedWeek, control }: Props) {
   const [taskList, setTaskList] = useState<CPMDState[]>([]);
   const { userInfo } = useSelector((state: RootState) => state.user);
+  const { admin_info } = useSelector((state: RootState) => state.companyInfo);
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
   const [_sendTasksWithCPMD, , sendTasksWithCPMDRes] = useRequest(sendTasksWithCPMD);
@@ -43,11 +44,11 @@ function TasksWithClient({ selectedWeek, control }: Props) {
   useEffect(() => {
     dispatch(showLoading());
     const params = {
-      user_id: userInfo?.user_id,
-      member_id: member?.user_id,
-      client_id: client?.client_id,
-      project_id: project?.project_id,
-      planned_end_date: when || new Date(),
+      user_id: admin_info?.user_id,
+      member_id: member?.user_id || null,
+      client_id: client?.client_id || null,
+      project_id: project?.project_id || null,
+      planned_end_date: when || null,
     };
     _sendTasksWithCPMD(params);
   }, [client, project, member, when]);

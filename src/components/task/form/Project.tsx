@@ -11,6 +11,7 @@ import CreateAndEditProjectTemplate from '../../project/CreateAndEditProjectTemp
 import { Control, ControllerRenderProps, useWatch } from 'react-hook-form';
 import ModalView from '../../base/ModalView';
 import { ITasksControlFormInput } from '../TasksControl';
+import { toast } from 'react-toastify';
 
 const projectStyles: StylesConfig<ProjectState> = {
   container: styles => ({ ...styles, width: '100%' }),
@@ -109,9 +110,13 @@ function Project({ control, field }: Props) {
     }
   };
   const handleCreate = (value: string) => {
-    setIsCreate(true);
-    setIsLoading(true);
-    setInputValue(value);
+    if (userInfo?.role_id === 1 || userInfo?.role_id === 2) {
+      setIsCreate(true);
+      setIsLoading(true);
+      setInputValue(value);
+    } else {
+      toast.error('Administrator and Manager only can created client!');
+    }
   };
   const onSuccess = (newProject: ProjectState) => {
     if (isCreate) {

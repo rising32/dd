@@ -39,6 +39,7 @@ function TasksControl({ selectedWeek }: Props) {
       project: null,
       task: null,
       deliverable: '',
+      member: null,
       when: null,
     },
   });
@@ -49,6 +50,7 @@ function TasksControl({ selectedWeek }: Props) {
   const dispatch = useAppDispatch();
 
   const onSubmit: SubmitHandler<ITasksControlFormInput> = data => {
+    if (userInfo?.role_id === 3) return;
     if (userInfo && data.task?.task_id) {
       dispatch(showLoading());
       const newAssign: TaskAssignState = {
@@ -132,7 +134,7 @@ function TasksControl({ selectedWeek }: Props) {
           />
           <Controller control={control} name='member' rules={{ required: false }} render={({ field }) => <Member field={field} />} />
           <Controller control={control} name='when' rules={{ required: false }} render={({ field }) => <When field={field} />} />
-          <PlusButton className='flex items-center justify-end my-4' />
+          {(userInfo?.role_id === 1 || userInfo?.role_id === 2) && <PlusButton className='flex items-center justify-end my-4' />}
         </form>
       </SmallLayout>
       <TasksWithClient control={control} selectedWeek={selectedWeek} />
