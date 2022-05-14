@@ -85,6 +85,11 @@ export const userSlice = createSlice({
       state.userInfo = null;
       state.login_id = null;
       state.token = null;
+      state.accountSetting.as_id = null;
+      state.accountSetting.date_format = 0;
+      state.accountSetting.time_format = 0;
+      state.accountSetting.currency = 0;
+      state.accountSetting.decimal_seperator = 0;
     });
     builder.addCase(getAccountSetting.fulfilled, (state, action) => {
       if (action.payload) {

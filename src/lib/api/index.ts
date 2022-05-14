@@ -3,6 +3,7 @@ import { ClientState, UserClientState } from '../../modules/client';
 import { CompanyInfoState, CompanyState } from '../../modules/company';
 import { DeliverableInfoState, DeliverableState } from '../../modules/deliverable';
 import { ClientProjectState, ProjectState, StatisticTableState } from '../../modules/project';
+import { WorkSettingState } from '../../modules/setting';
 import { CPMDState, TaskAssignState, TaskState } from '../../modules/task';
 import { CompanyMemberState } from '../../modules/team';
 import { UserInfoState } from '../../modules/user';
@@ -22,6 +23,10 @@ export const sendUserAll = () => apiClient.get<UserInfoState[]>(userURL.allUsers
 export const sendUpdateUser = (params: UserInfoState) => apiClient.post<UserInfoState>(userURL.updateUser, params);
 export const sendCompanyProfile = (member_id: number) =>
   apiClient.post<{ company: CompanyInfoState }>(userURL.companyProfile, { member_id });
+
+export const sendCreateWorkSetting = (params: WorkSettingState[]) => apiClient.post<WorkSettingState[]>(userURL.createWorkSetting, params);
+export const sendGetWorkSetting = (user_id: number) => apiClient.post<WorkSettingState[]>(userURL.getWorkSetting, { user_id });
+export const sendUpdateWorkSetting = (params: WorkSettingState) => apiClient.post<WorkSettingState>(userURL.updateWorkSetting, params);
 
 //////////////////////////////         Client            ///////////////
 export const sendCreateClient = (client_name: string, is_active: boolean) =>
@@ -48,6 +53,10 @@ export const sendCreateProject = (params: { creator_id: number; project_name: st
   apiClient.post<ProjectState>(projectURL.createProject, params);
 export const sendUpdateProject = (params: ProjectState) => apiClient.post<ProjectState>(projectURL.updateProject, params);
 
+export const sendMyProject = (user_id: number) =>
+  apiClient.post<{
+    project: ProjectState[];
+  }>(projectURL.myProject, { user_id });
 export const sendProjectOfCreater = (creator_id: number) =>
   apiClient.post<{
     project: ProjectState[];
@@ -77,6 +86,7 @@ export const sendCreateTask = (params: {
 }) => apiClient.post<{ task: TaskState }>(taskURL.createTask, params);
 
 export const getUserTasks = (creator_id: number) => apiClient.post<{ task: TaskState[] }>(taskURL.getUserTask, { creator_id });
+export const getMyTasks = (user_id: number) => apiClient.post<{ task: TaskState[] }>(taskURL.getMyTask, { user_id });
 
 export const sendTaskWithProjectId = (company_id: number, project_id: number) =>
   apiClient.post<{ task: TaskState[] }>(taskURL.getTaskListWithProjectId, { company_id, project_id });

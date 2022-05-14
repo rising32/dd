@@ -11,6 +11,7 @@ import { showLoading } from '../../store/features/coreSlice';
 import DateSelect from './form/DateSelect';
 import { UserInfoState } from '../../modules/user';
 import Member from './form/Member';
+import { toast } from 'react-toastify';
 
 export interface IProjectControlFormInput {
   name: string;
@@ -61,6 +62,11 @@ function CreateAndEditProjectTemplate({ value, selectedProject, onCancel, onSucc
   }, [sendUpdateProjectRes]);
 
   const onSubmit: SubmitHandler<IProjectControlFormInput> = data => {
+    if (userInfo?.role_id === 3) {
+      toast.error('Administrator and Manager only can edit client!');
+      onCancel();
+      return;
+    }
     if (userInfo) {
       dispatch(showLoading());
       if (selectedProject) {

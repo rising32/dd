@@ -1,6 +1,6 @@
 import React from 'react';
 import { documentThumbnail, redDocumentThumbnail } from '../../assets/images';
-import { CheckSvg, CrossSvg } from '../../assets/svg';
+import { CheckSvg } from '../../assets/svg';
 
 interface Props {
   isSelected: boolean;

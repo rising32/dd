@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Column, useTable } from 'react-table';
 export interface Props {
   columns: Array<Column<any>>;

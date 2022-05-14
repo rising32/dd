@@ -2,7 +2,6 @@ import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import apiClient from '../../lib/api';
 import { userURL } from '../../lib/api/URL';
 import { CompanyInfoState } from '../../modules/company';
-import { UserInfoState } from '../../modules/user';
 
 const initialState: CompanyInfoState = {
   admin_info: null,

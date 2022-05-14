@@ -84,6 +84,7 @@ const AccountSetting = () => {
           decimal_seperator: selectedDecimal,
         };
         const user_id = userInfo.user_id;
+        console.log('-------------', user_id);
         dispatch(createAccountSetting({ ...setting, user_id }))
           .unwrap()
           .then(() => {

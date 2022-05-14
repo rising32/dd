@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { useSelector } from 'react-redux';
 import { sendProjectWithClientId, sendSetClient } from '../../../lib/api';
 import useRequest from '../../../lib/hooks/useRequest';
-import { DeliverableInfoState } from '../../../modules/deliverable';
 import { ProjectState } from '../../../modules/project';
 import { RootState } from '../../../store';
 import { OnChangeValue, StylesConfig } from 'react-select';
@@ -45,7 +44,6 @@ function Project({ control, field }: Props) {
     name: 'client',
   });
 
-  const { userInfo } = useSelector((state: RootState) => state.user);
   const { admin_info } = useSelector((state: RootState) => state.companyInfo);
   const [_sendProjectWithClientId, , sendProjectWithClientIdRes] = useRequest(sendProjectWithClientId);
   const [_sendSetClient, , sendSetClientRes] = useRequest(sendSetClient);

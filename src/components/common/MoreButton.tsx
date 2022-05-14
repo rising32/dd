@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { OtherSvg, PlusSvg } from '../../assets/svg';
+import React from 'react';
+import { OtherSvg } from '../../assets/svg';
 
 interface Props {
   onMore?: () => void;

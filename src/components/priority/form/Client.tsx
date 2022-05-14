@@ -37,7 +37,6 @@ function Client({ field }: Props) {
   const [isCreate, setIsCreate] = useState(false);
   const [inputValue, setInputValue] = useState('');
 
-  const { userInfo } = useSelector((state: RootState) => state.user);
   const { admin_info } = useSelector((state: RootState) => state.companyInfo);
   const [_sendGetMyClients, , getMyClientsRes] = useRequest(sendGetMyClients);
 

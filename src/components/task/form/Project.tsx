@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { useSelector } from 'react-redux';
 import { sendProjectWithClientId, sendSetClient } from '../../../lib/api';
 import useRequest from '../../../lib/hooks/useRequest';
-import { DeliverableInfoState } from '../../../modules/deliverable';
 import { ProjectState } from '../../../modules/project';
 import { RootState } from '../../../store';
 import { OnChangeValue, StylesConfig } from 'react-select';
@@ -115,7 +114,7 @@ function Project({ control, field }: Props) {
       setIsLoading(true);
       setInputValue(value);
     } else {
-      toast.error('Administrator and Manager only can created client!');
+      toast.error('Administrator and Manager only can creat client!');
     }
   };
   const onSuccess = (newProject: ProjectState) => {

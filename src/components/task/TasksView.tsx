@@ -3,7 +3,7 @@ import { useSelector } from 'react-redux';
 import SmallLayout from '../../container/common/SmallLayout';
 import useRequest from '../../lib/hooks/useRequest';
 import { RootState, useAppDispatch } from '../../store';
-import { getUserTasks } from '../../lib/api';
+import { getMyTasks, getUserTasks } from '../../lib/api';
 import { toast } from 'react-toastify';
 import { TaskState } from '../../modules/task';
 import { PenSvg } from '../../assets/svg';
@@ -17,20 +17,22 @@ function TasksView() {
   const [showModal, setShowModal] = useState(false);
 
   const { userInfo } = useSelector((state: RootState) => state.user);
-  const [_getUserTasks, , getUserTasksRes] = useRequest(getUserTasks);
+  const [_getMyTasks, , getMyTasksRes] = useRequest(getMyTasks);
   const dispatch = useAppDispatch();
 
   React.useEffect(() => {
-    dispatch(showLoading());
-    const creator_id = userInfo?.user_id;
-    _getUserTasks(creator_id);
-  }, []);
+    if (userInfo?.user_id) {
+      dispatch(showLoading());
+      const user_id = userInfo.user_id;
+      _getMyTasks(user_id);
+    }
+  }, [userInfo]);
   React.useEffect(() => {
-    if (getUserTasksRes) {
-      setMyTaskList(getUserTasksRes.task);
+    if (getMyTasksRes) {
+      setMyTaskList(getMyTasksRes.task);
       dispatch(removeLoading());
     }
-  }, [getUserTasksRes]);
+  }, [getMyTasksRes]);
   const onCreateTask = () => {
     setSelectedTask(null);
     setShowModal(!showModal);

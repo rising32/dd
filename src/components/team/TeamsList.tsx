@@ -6,7 +6,6 @@ import { sendUserAll, sendCompanyMembers } from '../../lib/api';
 import { RootState } from '../../store';
 import HeaderWithTitle from '../base/HeaderWithTitle';
 import { UserInfoState } from '../../modules/user';
-import { DefaultUserSvg } from '../../assets/svg';
 import { toast } from 'react-toastify';
 import TeamMemberSetting from './TeamMemberSetting';
 import UserType from '../common/UserType';

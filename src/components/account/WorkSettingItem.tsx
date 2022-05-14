@@ -1,15 +1,20 @@
 import React, { useState } from 'react';
-import { DisplayWorkSettingState } from '../../modules/setting';
+import { WorkSettingState } from '../../modules/setting';
 import Select, { SingleValue } from 'react-select';
 import MultiRangeSlider from '../common/MultiRangeSlider';
 import WorkSettingWeekCalendar from '../calendar/WorkSettingWeekCalendar';
 import { PenSvg } from '../../assets/svg';
 import SelectedAndCompltedIcon from '../common/SelectedAndCompltedIcon';
 import AnimatedView from '../common/AnimatedView';
+import { useAppDispatch } from '../../store';
+import useRequest from '../../lib/hooks/useRequest';
+import { sendUpdateWorkSetting } from '../../lib/api';
+import { removeLoading, showLoading } from '../../store/features/coreSlice';
+import { format } from 'date-fns';
 
 interface Props {
-  displayWorkSetting: DisplayWorkSettingState;
-  onChange: (displayWorkSetting: DisplayWorkSettingState) => void;
+  displayWorkSetting: WorkSettingState;
+  onChange: (displayWorkSetting: WorkSettingState) => void;
 }
 const WorkSettingItem = ({ displayWorkSetting, onChange }: Props) => {
   const [show, setShow] = useState(false);
@@ -20,8 +25,10 @@ const WorkSettingItem = ({ displayWorkSetting, onChange }: Props) => {
   const [isDeliverableChecked, setIsDeliverableChecked] = useState(
     displayWorkSetting.remainder === 2 || displayWorkSetting.remainder === 3 ? true : false,
   );
-  const [values, setValues] = useState([9, 18]);
+  const [values, setValues] = useState([displayWorkSetting.start_work_time, displayWorkSetting.end_work_time]);
   const [workOnWeek, setWorkOnWeek] = useState(displayWorkSetting.work_on_week);
+  const dispach = useAppDispatch();
+  const [_sendUpdateWorkSetting, , sendUpdateWorkSettingRes] = useRequest(sendUpdateWorkSetting);
 
   const onSelectDay = (cloneDay: Date) => {
     setSelectedDate(cloneDay);
@@ -42,6 +49,7 @@ const WorkSettingItem = ({ displayWorkSetting, onChange }: Props) => {
     setWorkOnWeek(newValue.value);
   };
   const onChangeItem = () => {
+    dispach(showLoading());
     const newDisplaySettingItem = displayWorkSetting;
     newDisplaySettingItem.first_day_of_week = selectedDate;
     newDisplaySettingItem.work_on_week = workOnWeek;
@@ -62,9 +70,24 @@ const WorkSettingItem = ({ displayWorkSetting, onChange }: Props) => {
       reminderValue = 3;
     }
     newDisplaySettingItem.remainder = reminderValue;
-    onChange(newDisplaySettingItem);
-    setShow(false);
+
+    if (displayWorkSetting.ws_id) {
+      _sendUpdateWorkSetting({
+        ...newDisplaySettingItem,
+        first_day_of_week: format(new Date(newDisplaySettingItem.first_day_of_week), 'yyyy-MM-dd'),
+      });
+    } else {
+      setShow(false);
+      onChange(newDisplaySettingItem);
+    }
   };
+  React.useEffect(() => {
+    if (sendUpdateWorkSettingRes) {
+      setShow(false);
+      onChange(sendUpdateWorkSettingRes);
+      dispach(removeLoading());
+    }
+  }, [sendUpdateWorkSettingRes]);
 
   return (
     <>

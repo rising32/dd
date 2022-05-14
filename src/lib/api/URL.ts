@@ -8,6 +8,9 @@ export const userURL = {
   getAccountSetting: '/user/get_account_setting',
   createAccountSetting: '/user/create_account_setting',
   updateAccountSetting: '/user/update_account_setting',
+  createWorkSetting: '/user/create_work_setting/by_array',
+  getWorkSetting: '/user/get_work_setting',
+  updateWorkSetting: '/user/update_work_setting',
 };
 
 export const companyURL = {
@@ -27,6 +30,7 @@ export const projectURL = {
   createProject: '/project/create',
   updateProject: '/project/update',
   getUserProject: '/project/get_user_projects',
+  myProject: '/project/get_assigned_me',
   getProjectWithClientId: '/project/get/client_no_assign',
   getProjectWithCompanyID: '/project/get_company_projects',
   setClient: '/project/set_Client',
@@ -38,6 +42,7 @@ export const taskURL = {
   createTask: '/project/task/create',
   updateTask: '/project/task/update',
   getUserTask: '/project/task/get_user_tasks',
+  getMyTask: '/project/task/get_assigned_me',
   getTaskListWithProjectId: '/project/task/get_by_pna',
   getTasksWithCPMD: '/project/task/get_ucpt',
   setDeveloperToTask: '/project/task/assign',

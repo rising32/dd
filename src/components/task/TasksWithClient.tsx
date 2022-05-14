@@ -75,7 +75,7 @@ function TasksWithClient({ selectedWeek, control }: Props) {
             ))}
           </div>
         ))}
-        <MoreButton className='flex items-center justify-end mt-4' onMore={() => navigate('/tasks/taskList')} />
+        <MoreButton className='flex items-center justify-end mt-4' />
       </SmallLayout>
     </>
   );

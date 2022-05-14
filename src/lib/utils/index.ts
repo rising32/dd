@@ -1,4 +1,4 @@
-import { getWeek } from 'date-fns';
+import { addWeeks, getWeek, getYear, startOfWeek, startOfYear } from 'date-fns';
 
 export function validateEmail(email: string) {
   const re =
@@ -14,4 +14,15 @@ export function getLocalDataString(date: Date) {
 
 export function getWeekNumber(date: Date) {
   return getWeek(date, { weekStartsOn: 1, firstWeekContainsDate: 4 });
+}
+
+export function getFirstDayOfYear() {
+  const startDay = startOfYear(new Date(getYear(new Date()), 1, 1));
+  let realStartDay;
+  if (getWeek(startDay, { weekStartsOn: 1, firstWeekContainsDate: 4 }) >= 52) {
+    realStartDay = startOfWeek(addWeeks(startDay, 1), { weekStartsOn: 1 });
+  } else {
+    realStartDay = startDay;
+  }
+  return realStartDay;
 }

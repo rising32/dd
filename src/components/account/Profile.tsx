@@ -21,7 +21,7 @@ function Profile() {
   const onSignOut = async () => {
     if (!userInfo) return;
     try {
-      await dispatch(onSignout({ user_id: userInfo.user_id }));
+      dispatch(onSignout({ user_id: userInfo.user_id }));
     } catch (err) {
       console.log('error', `Fetch failed: `);
     }

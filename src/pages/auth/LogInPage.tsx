@@ -56,6 +56,7 @@ const LogInPage = () => {
       })
       .catch(err => {
         console.log(err);
+        toast.error('Email or Password is incorrect!');
       });
   };
 

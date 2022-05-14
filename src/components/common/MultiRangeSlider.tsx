@@ -12,8 +12,8 @@ function MultiRangeSlider({ values, onSetValue }: Props) {
   const MAX = 24;
 
   return (
-    <div>
-      {/* <Range
+    <div className='flex justify-center flex-wrap w-full'>
+      <Range
         draggableTrack
         values={values}
         step={STEP}
@@ -58,7 +58,7 @@ function MultiRangeSlider({ values, onSetValue }: Props) {
             }}
           />
         )}
-      /> */}
+      />
     </div>
   );
 }

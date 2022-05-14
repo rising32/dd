@@ -1,7 +1,5 @@
 import React, { useState } from 'react';
-import { CalenderSvg } from '../../../assets/svg';
 import FullCalendar from '../../calendar/FullCalendar';
-import AnimatedView from '../../common/AnimatedView';
 import { ControllerRenderProps } from 'react-hook-form';
 import { IProjectControlFormInput } from '../CreateAndEditProjectTemplate';
 import { format } from 'date-fns';

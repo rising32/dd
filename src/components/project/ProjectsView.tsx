@@ -5,11 +5,12 @@ import useRequest from '../../lib/hooks/useRequest';
 import { RootState, useAppDispatch } from '../../store';
 import { ProjectState } from '../../modules/project';
 import SelectedAndCompltedIcon from '../common/SelectedAndCompltedIcon';
-import { sendProjectOfCreater } from '../../lib/api';
+import { sendMyProject, sendProjectOfCreater } from '../../lib/api';
 import { PenSvg } from '../../assets/svg';
 import { removeLoading, showLoading } from '../../store/features/coreSlice';
 import ModalView from '../base/ModalView';
 import CreateAndEditProjectTemplate from './CreateAndEditProjectTemplate';
+import { toast } from 'react-toastify';
 
 function ProjectsView() {
   const [myProjectList, setMyProjectList] = useState<ProjectState[]>([]);
@@ -17,21 +18,23 @@ function ProjectsView() {
   const [showModal, setShowModal] = useState(false);
 
   const { userInfo } = useSelector((state: RootState) => state.user);
-  const [_sendProjectOfCreater, , sendProjectOfCreaterRes] = useRequest(sendProjectOfCreater);
+  const [_sendMyProject, , sendMyProjectRes] = useRequest(sendMyProject);
 
   const dispatch = useAppDispatch();
 
   React.useEffect(() => {
-    dispatch(showLoading());
-    const creator_id = userInfo?.user_id;
-    _sendProjectOfCreater(creator_id);
-  }, []);
+    if (userInfo?.user_id) {
+      dispatch(showLoading());
+      const user_id = userInfo.user_id;
+      _sendMyProject(user_id);
+    }
+  }, [userInfo]);
   React.useEffect(() => {
-    if (sendProjectOfCreaterRes) {
-      setMyProjectList(sendProjectOfCreaterRes.project);
+    if (sendMyProjectRes) {
+      setMyProjectList(sendMyProjectRes.project);
       dispatch(removeLoading());
     }
-  }, [sendProjectOfCreaterRes]);
+  }, [sendMyProjectRes]);
   const onSelectProject = (project: ProjectState) => {
     if (selectedProject?.project_id === project.project_id) {
       setSelectedProject(null);
@@ -67,6 +70,10 @@ function ProjectsView() {
     setSelectedProject(null);
   };
   const onCreateProject = () => {
+    if (userInfo?.role_id === 3) {
+      toast.error('Administrator and Manager only can create client!');
+      return;
+    }
     setShowModal(true);
     setSelectedProject(null);
   };
