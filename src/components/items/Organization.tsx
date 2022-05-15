@@ -20,7 +20,7 @@ function Organization() {
 
   const onEdit = () => {
     if (userInfo && userInfo.role_id !== 1) {
-      toast.error('Only Admin could control!');
+      toast.error('Only Admin can control!');
     } else {
       if (isEdit) {
         setIsEdit(false);

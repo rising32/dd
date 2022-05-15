@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import SmallLayout from '../../container/common/SmallLayout';
-import { sendMyBeforePriorities, sendUpdatePriority } from '../../lib/api';
+import { sendMyBeforePriorities, sendUpdatePriority, sendPriorityByWeek } from '../../lib/api';
 import useRequest from '../../lib/hooks/useRequest';
 import { DeliverableState } from '../../modules/deliverable';
 import { PriorityState } from '../../modules/weekPriority';
@@ -23,6 +23,7 @@ function BeforeWeeklyPriority({ selectedDate, selectedPriority, newCreatedDelive
   const { userInfo } = useSelector((state: RootState) => state.user);
   const navigate = useNavigate();
   const [_sendMyBeforePriorities, , sendMyBeforePrioritiesRes] = useRequest(sendMyBeforePriorities);
+  const [_sendPriorityByWeek, , sendPriorityByWeekRes] = useRequest(sendPriorityByWeek);
   const [_sendUpdatePriority, , sendUpdatePriorityRes] = useRequest(sendUpdatePriority);
 
   useEffect(() => {
@@ -56,13 +57,13 @@ function BeforeWeeklyPriority({ selectedDate, selectedPriority, newCreatedDelive
   useEffect(() => {
     const user_id = userInfo?.user_id;
     const week = getWeek(selectedDate, { weekStartsOn: 1, firstWeekContainsDate: 4 });
-    _sendMyBeforePriorities(user_id, week);
+    _sendPriorityByWeek(user_id, week);
   }, [selectedDate]);
   React.useEffect(() => {
-    if (sendMyBeforePrioritiesRes) {
-      setMyWeeklyPriorities(sendMyBeforePrioritiesRes.priority);
+    if (sendPriorityByWeekRes) {
+      setMyWeeklyPriorities(sendPriorityByWeekRes.priority);
     }
-  }, [sendMyBeforePrioritiesRes]);
+  }, [sendPriorityByWeekRes]);
   return (
     <div className='text-white mt-4'>
       <div className='flex justify-center'>

@@ -1,6 +1,7 @@
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
 import { redDocumentThumbnail } from '../../assets/images';
 import { BriefcaseSvg, ClickArrowSvg, GroupSvg } from '../../assets/svg';
 import SmallLayout from '../../container/common/SmallLayout';
@@ -25,6 +26,13 @@ function Profile() {
     } catch (err) {
       console.log('error', `Fetch failed: `);
     }
+  };
+  const goMemeber = () => {
+    if (userInfo?.role_id === 3) {
+      toast.error('Only Admin can control!');
+      return;
+    }
+    navigate('/account/teams');
   };
 
   return (
@@ -55,7 +63,7 @@ function Profile() {
       </ItemLayout>
 
       <div className='text-lg font-bold uppercase pl-6'>Manage</div>
-      <ItemLayout className='mt-2' onClick={() => navigate('/account/teams')}>
+      <ItemLayout className='mt-2' onClick={goMemeber}>
         <div className='w-10 flex items-center justify-center'>
           <GroupSvg className='w-6 h-6' />
         </div>

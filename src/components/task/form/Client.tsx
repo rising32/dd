@@ -66,7 +66,7 @@ function Client({ field }: Props) {
       setIsLoading(true);
       setInputValue(value);
     } else {
-      toast.error('Administrator only can creat client!');
+      toast.error('Administrator only can create client!');
     }
   };
 

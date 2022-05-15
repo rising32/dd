@@ -114,7 +114,7 @@ function Project({ control, field }: Props) {
       setIsLoading(true);
       setInputValue(value);
     } else {
-      toast.error('Administrator and Manager only can creat client!');
+      toast.error('Administrator and Manager only can create client!');
     }
   };
   const onSuccess = (newProject: ProjectState) => {

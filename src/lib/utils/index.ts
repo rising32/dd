@@ -26,3 +26,11 @@ export function getFirstDayOfYear() {
   }
   return realStartDay;
 }
+
+export function getShortName(name: string) {
+  const short = name
+    .split(' ')
+    .map(x => x[0].toUpperCase())
+    .join('');
+  return short;
+}

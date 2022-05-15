@@ -11,6 +11,7 @@ import CreatableSelect from 'react-select/creatable';
 import CreateAndEditProjectTemplate from '../../project/CreateAndEditProjectTemplate';
 import { Control, ControllerRenderProps, useWatch } from 'react-hook-form';
 import { IDeliverableFormInput } from '../../deliverable/DeliverablePanel';
+import { toast } from 'react-toastify';
 
 const projectStyles: StylesConfig<ProjectState> = {
   container: styles => ({ ...styles, width: '100%' }),
@@ -119,9 +120,13 @@ function FormProjectSelect({ control, deliverableInfo, field }: Props) {
     }
   };
   const handleCreate = (value: string) => {
-    setIsCreate(true);
-    setIsLoading(true);
-    setInputValue(value);
+    if (userInfo?.role_id === 1 || userInfo?.role_id === 2) {
+      setIsCreate(true);
+      setIsLoading(true);
+      setInputValue(value);
+    } else {
+      toast.error('Administrator and Manager only can create client!');
+    }
   };
   const onSuccess = (newProject: ProjectState) => {
     if (isCreate) {

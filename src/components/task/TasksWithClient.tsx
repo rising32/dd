@@ -11,6 +11,7 @@ import { RootState, useAppDispatch } from '../../store';
 import { removeLoading, showLoading } from '../../store/features/coreSlice';
 import { ITasksControlFormInput } from './TasksControl';
 import { Control, useWatch } from 'react-hook-form';
+import { getShortName } from '../../lib/utils';
 
 interface Props {
   selectedWeek: number;
@@ -70,7 +71,7 @@ function TasksWithClient({ selectedWeek, control }: Props) {
             {item.task.map(task => (
               <div key={task.task_id} className='flex items-center'>
                 <SelectedAndCompltedIcon isSelected={false} isCompleted={false} />
-                <span className='pl-2 truncate'>{task.member_name + '-' + 'W' + selectedWeek + ' : ' + task.task_name}</span>
+                <span className='pl-2 truncate'>{getShortName(task.member_name) + '-' + 'W' + selectedWeek + ' : ' + task.task_name}</span>
               </div>
             ))}
           </div>

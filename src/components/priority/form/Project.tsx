@@ -10,6 +10,7 @@ import CreateAndEditProjectTemplate from '../../project/CreateAndEditProjectTemp
 import { Control, ControllerRenderProps, useWatch } from 'react-hook-form';
 import ModalView from '../../base/ModalView';
 import { IPriorityFormInput } from '../PriorityPanel';
+import { toast } from 'react-toastify';
 
 const projectStyles: StylesConfig<ProjectState> = {
   container: styles => ({ ...styles, width: '100%' }),
@@ -44,6 +45,7 @@ function Project({ control, field }: Props) {
     name: 'client',
   });
 
+  const { userInfo } = useSelector((state: RootState) => state.user);
   const { admin_info } = useSelector((state: RootState) => state.companyInfo);
   const [_sendProjectWithClientId, , sendProjectWithClientIdRes] = useRequest(sendProjectWithClientId);
   const [_sendSetClient, , sendSetClientRes] = useRequest(sendSetClient);
@@ -108,9 +110,13 @@ function Project({ control, field }: Props) {
     }
   };
   const handleCreate = (value: string) => {
-    setIsCreate(true);
-    setIsLoading(true);
-    setInputValue(value);
+    if (userInfo?.role_id === 1 || userInfo?.role_id === 2) {
+      setIsCreate(true);
+      setIsLoading(true);
+      setInputValue(value);
+    } else {
+      toast.error('Administrator and Manager only can create client!');
+    }
   };
   const onSuccess = (newProject: ProjectState) => {
     if (isCreate) {
