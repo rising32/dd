@@ -101,8 +101,8 @@ function TeamsList() {
       <HeaderWithTitle title='Manage Teams' />
       <SmallLayout className='flex flex-1 flex-col bg-white py-4 mt-4 text-black'>
         <div className='flex flex-row px-4 items-center justify-between pb-2'>
-          <div className='text-lg text-black font-bold'>Team Members</div>
-          <div className='text-base text-blue' onClick={onOpenAndCloseModal}>
+          <div className='font-bold'>Team Members</div>
+          <div className='text-blue' onClick={onOpenAndCloseModal}>
             Invite
           </div>
         </div>
@@ -117,17 +117,13 @@ function TeamsList() {
         <ul role='list' className='p-4'>
           {myTeamMemberList.map(member => (
             <li key={member.user_id} className='py-1 first:pt-0 last:pb-0'>
-              <div className='flex rounded-md p-2 items-center' onClick={() => onSelectMember(member)}>
+              <div className='flex rounded-md items-center' onClick={() => onSelectMember(member)}>
                 <LazyImage
-                  className='w-8 h-8 rounded-full'
+                  className='w-6 h-6 rounded-full'
                   placeholderImg='https://via.placeholder.com/400x200.png?text=This+Will+Be+Shown+Before+Load'
                   src='https://www.gravatar.com/avatar/205e460b479e2e5b48aec07710c08d50'
                 />
-                <div
-                  className={`flex flex-1 text-lg ml-2 capitalize truncate ${
-                    member.user_id === selectedMember?.user_id && 'text-rouge-blue'
-                  }`}
-                >
+                <div className={`flex flex-1 ml-2 capitalize truncate ${member.user_id === selectedMember?.user_id && 'text-rouge-blue'}`}>
                   {member.display_name}
                 </div>
                 <UserType user={member} />

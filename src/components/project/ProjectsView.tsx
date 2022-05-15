@@ -96,9 +96,11 @@ function ProjectsView() {
       <SmallLayout className='flex flex-1 flex-col bg-white py-4 mt-4 text-black'>
         <div className='flex flex-row px-4 items-center justify-between pb-2'>
           <div className='font-bold'>Projects</div>
-          <div className='text-blue' onClick={onCreateProject}>
-            Create
-          </div>
+          {userInfo?.role_id !== 3 && (
+            <div className='text-blue' onClick={onCreateProject}>
+              Create
+            </div>
+          )}
         </div>
         <ul role='list' className='p-4'>
           {myProjectList.map(project => (
