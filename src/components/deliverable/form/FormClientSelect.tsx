@@ -11,6 +11,7 @@ import ReactModal from 'react-modal';
 import CreateAndEditClientTemplate from '../../client/CreateAndEditClientTemplate';
 import { ControllerRenderProps } from 'react-hook-form';
 import { IDeliverableFormInput } from '../../deliverable/DeliverablePanel';
+import { toast } from 'react-toastify';
 
 const clientStyles: StylesConfig<ClientState> = {
   container: styles => ({ ...styles, width: '100%' }),
@@ -75,11 +76,15 @@ function FormClientSelect({ deliverableInfo, field }: Props) {
   const handleChange = (newValue: OnChangeValue<ClientState, false>) => {
     field.onChange(newValue);
   };
+
   const handleCreate = (value: string) => {
-    console.log(value);
-    setIsCreate(true);
-    setIsLoading(true);
-    setInputValue(value);
+    if (userInfo?.role_id === 1) {
+      setIsCreate(true);
+      setIsLoading(true);
+      setInputValue(value);
+    } else {
+      toast.error('Administrator only can creat client!');
+    }
   };
 
   const onSuccess = (client: ClientState) => {

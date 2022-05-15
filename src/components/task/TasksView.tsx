@@ -17,16 +17,29 @@ function TasksView() {
   const [showModal, setShowModal] = useState(false);
 
   const { userInfo } = useSelector((state: RootState) => state.user);
+  const { admin_info } = useSelector((state: RootState) => state.companyInfo);
   const [_getMyTasks, , getMyTasksRes] = useRequest(getMyTasks);
+  const [_getUserTasks, , getUserTasksRes] = useRequest(getUserTasks);
   const dispatch = useAppDispatch();
 
   React.useEffect(() => {
     if (userInfo?.user_id) {
       dispatch(showLoading());
-      const user_id = userInfo.user_id;
-      _getMyTasks(user_id);
+      if (userInfo.user_id === admin_info?.user_id) {
+        const creator_id = userInfo.user_id;
+        _getUserTasks(creator_id);
+      } else {
+        const user_id = userInfo.user_id;
+        _getMyTasks(user_id);
+      }
     }
   }, [userInfo]);
+  React.useEffect(() => {
+    if (getUserTasksRes) {
+      setMyTaskList(getUserTasksRes.task);
+      dispatch(removeLoading());
+    }
+  }, [getUserTasksRes]);
   React.useEffect(() => {
     if (getMyTasksRes) {
       setMyTaskList(getMyTasksRes.task);
@@ -76,8 +89,8 @@ function TasksView() {
   return (
     <SmallLayout className='flex flex-1 flex-col bg-white py-4 mt-4 text-black'>
       <div className='flex flex-row px-4 items-center justify-between pb-2'>
-        <div className='text-lg text-black font-bold'>Tasks</div>
-        <div className='text-base text-blue' onClick={onCreateTask}>
+        <div className='font-bold'>Tasks</div>
+        <div className='text-blue' onClick={onCreateTask}>
           Create
         </div>
       </div>
@@ -85,7 +98,7 @@ function TasksView() {
         {myTaskList.map(task => (
           <li key={task.task_id} className='py-1 first:pt-0 last:pb-0'>
             <div className='flex p-2'>
-              <div className={`flex flex-1 text-lg capitalize truncate ${task.task_id === selectedTask?.task_id && 'text-rouge-blue'}`}>
+              <div className={`flex flex-1 capitalize truncate ${task.task_id === selectedTask?.task_id && 'text-rouge-blue'}`}>
                 {task.task_name}
               </div>
               <PenSvg

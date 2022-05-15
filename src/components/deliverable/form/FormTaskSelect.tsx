@@ -2,7 +2,7 @@ import { format } from 'date-fns';
 import React, { useState } from 'react';
 import ReactModal from 'react-modal';
 import { useSelector } from 'react-redux';
-import { sendTaskWithProjectId, sendUpdateTask } from '../../../lib/api';
+import { sendTaskWithProjectId, sendUpdateTask, getMyTasks } from '../../../lib/api';
 import useRequest from '../../../lib/hooks/useRequest';
 import { TaskState } from '../../../modules/task';
 import { RootState } from '../../../store';
@@ -48,21 +48,46 @@ function FormTaskSelect({ control, deliverableInfo, field }: Props) {
   });
 
   const { userInfo } = useSelector((state: RootState) => state.user);
+  const { admin_info } = useSelector((state: RootState) => state.companyInfo);
+  const [_getMyTasks, , getMyTasksRes] = useRequest(getMyTasks);
   const [_sendTaskWithProjectId, , sendTaskWithProjectIdRes] = useRequest(sendTaskWithProjectId);
   const [_sendUpdateTask, , sendUpdateTaskRes] = useRequest(sendUpdateTask);
 
   React.useEffect(() => {
     if (project) {
       setIsLoading(true);
-      const creator_id = userInfo?.user_id;
-      const project_id = project.project_id;
-      _sendTaskWithProjectId(creator_id, project_id);
+
+      if (userInfo?.role_id === 3) {
+        const creator_id = userInfo.user_id;
+        _getMyTasks(creator_id);
+      }
+      if (userInfo?.role_id === 1 || userInfo?.role_id === 2) {
+        const creator_id = userInfo?.user_id;
+        const project_id = project.project_id;
+        _sendTaskWithProjectId(creator_id, project_id);
+      }
     } else {
       setTaskList([]);
       setIsLoading(false);
       field.onChange(null);
     }
-  }, [project]);
+  }, [project, userInfo]);
+
+  React.useEffect(() => {
+    if (getMyTasksRes) {
+      setTaskList(getMyTasksRes.task);
+
+      if (deliverableInfo) {
+        getMyTasksRes.task.map(task => {
+          if (task.task_id === deliverableInfo.task_id) {
+            field.onChange(task);
+          }
+        });
+      }
+
+      setIsLoading(false);
+    }
+  }, [getMyTasksRes]);
 
   React.useEffect(() => {
     if (sendTaskWithProjectIdRes) {

@@ -31,6 +31,7 @@ interface Props {
 
 function CreateAndEditProjectTemplate({ value, selectedProject, onCancel, onSuccess }: Props) {
   const { userInfo } = useSelector((state: RootState) => state.user);
+  const { company_id } = useSelector((state: RootState) => state.companyInfo);
   const dispatch = useAppDispatch();
 
   const { handleSubmit, control, register } = useForm<IProjectControlFormInput>({
@@ -86,6 +87,7 @@ function CreateAndEditProjectTemplate({ value, selectedProject, onCancel, onSucc
           project_id: null,
           creator_id: data.member?.user_id,
           project_name: data.name,
+          company_id,
         };
         _sendCreateProject(params);
       }

@@ -18,23 +18,36 @@ function ProjectsView() {
   const [showModal, setShowModal] = useState(false);
 
   const { userInfo } = useSelector((state: RootState) => state.user);
+  const { admin_info } = useSelector((state: RootState) => state.companyInfo);
   const [_sendMyProject, , sendMyProjectRes] = useRequest(sendMyProject);
+  const [_sendProjectOfCreater, , sendProjectOfCreaterRes] = useRequest(sendProjectOfCreater);
 
   const dispatch = useAppDispatch();
 
   React.useEffect(() => {
     if (userInfo?.user_id) {
       dispatch(showLoading());
-      const user_id = userInfo.user_id;
-      _sendMyProject(user_id);
+      if (userInfo.user_id === admin_info?.user_id) {
+        const creator_id = userInfo.user_id;
+        _sendProjectOfCreater(creator_id);
+      } else {
+        const user_id = userInfo.user_id;
+        _sendMyProject(user_id);
+      }
     }
-  }, [userInfo]);
+  }, [userInfo, admin_info]);
   React.useEffect(() => {
     if (sendMyProjectRes) {
       setMyProjectList(sendMyProjectRes.project);
       dispatch(removeLoading());
     }
   }, [sendMyProjectRes]);
+  React.useEffect(() => {
+    if (sendProjectOfCreaterRes) {
+      setMyProjectList(sendProjectOfCreaterRes.project);
+      dispatch(removeLoading());
+    }
+  }, [sendProjectOfCreaterRes]);
   const onSelectProject = (project: ProjectState) => {
     if (selectedProject?.project_id === project.project_id) {
       setSelectedProject(null);
@@ -82,8 +95,8 @@ function ProjectsView() {
     <>
       <SmallLayout className='flex flex-1 flex-col bg-white py-4 mt-4 text-black'>
         <div className='flex flex-row px-4 items-center justify-between pb-2'>
-          <div className='text-lg text-black font-bold'>Projects</div>
-          <div className='text-base text-blue' onClick={onCreateProject}>
+          <div className='font-bold'>Projects</div>
+          <div className='text-blue' onClick={onCreateProject}>
             Create
           </div>
         </div>

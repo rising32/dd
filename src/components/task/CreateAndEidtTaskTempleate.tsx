@@ -37,6 +37,7 @@ function CreateAndEidtTaskTempleate({ value, selectedTask, onCancel, onSuccess }
   });
 
   const { userInfo } = useSelector((state: RootState) => state.user);
+  const { company_id } = useSelector((state: RootState) => state.companyInfo);
   const dispatch = useAppDispatch();
 
   const [_sendCreateTask, , createTaskRes] = useRequest(sendCreateTask);
@@ -89,6 +90,7 @@ function CreateAndEidtTaskTempleate({ value, selectedTask, onCancel, onSuccess }
           is_add_all: false,
           is_active: true,
           is_deleted: 0,
+          company_id: company_id,
         };
         _sendCreateTask(newTask);
       }

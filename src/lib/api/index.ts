@@ -49,7 +49,7 @@ export const sendRegisterMyClient = (user_id: number, client_id: number, is_acti
 export const sendUpdateClient = (params: ClientState) => apiClient.post<ClientState>(clientURL.updateClient, params);
 
 /////////////////////            Project                ///////////////////////////////
-export const sendCreateProject = (params: { creator_id: number; project_name: string }) =>
+export const sendCreateProject = (params: { creator_id: number; project_name: string; company_id: number }) =>
   apiClient.post<ProjectState>(projectURL.createProject, params);
 export const sendUpdateProject = (params: ProjectState) => apiClient.post<ProjectState>(projectURL.updateProject, params);
 
@@ -83,6 +83,7 @@ export const sendCreateTask = (params: {
   is_add_all: boolean;
   is_active: boolean;
   is_deleted: number;
+  company_id: number;
 }) => apiClient.post<{ task: TaskState }>(taskURL.createTask, params);
 
 export const getUserTasks = (creator_id: number) => apiClient.post<{ task: TaskState[] }>(taskURL.getUserTask, { creator_id });

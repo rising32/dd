@@ -74,21 +74,19 @@ function ClientsView() {
     <>
       <SmallLayout className='flex flex-1 flex-col bg-white py-4 mt-4 text-black'>
         <div className='flex flex-row px-4 items-center justify-between pb-2'>
-          <div className='text-lg text-black font-bold'>Clients</div>
-          <div className='text-base text-blue' onClick={onCreateClient}>
+          <div className='font-bold'>Clients</div>
+          <div className='text-blue' onClick={onCreateClient}>
             Create
           </div>
         </div>
         <ul role='list' className='p-4'>
           {myClientList.map(client => (
             <li key={client.client_id} className='flex rounded-md pb-2 items-center first:pt-0 last:pb-0'>
-              <div
-                className={`flex flex-1 text-lg uppercase truncate ${client.client_id === selectedClient?.client_id && 'text-rouge-blue'}`}
-              >
+              <div className={`flex flex-1 uppercase truncate ${client.client_id === selectedClient?.client_id && 'text-rouge-blue'}`}>
                 {client.client_name}
               </div>
               <PenSvg
-                className={`w-6 h-6 ${client.client_id === selectedClient?.client_id && 'stroke-rouge-blue'}`}
+                className={`w-4 h-4 ${client.client_id === selectedClient?.client_id && 'stroke-rouge-blue'}`}
                 onClick={() => onSelectClient(client)}
               />
             </li>
