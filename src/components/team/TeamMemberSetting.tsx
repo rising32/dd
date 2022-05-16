@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { sendAddMember, sendUpdateMember } from '../../lib/api';
+import { sendAddMember, sendUpdateCompanyMember, sendUpdateUser } from '../../lib/api';
 import useRequest from '../../lib/hooks/useRequest';
 import { CompanyMemberState } from '../../modules/team';
 import { UserInfoState } from '../../modules/user';
@@ -26,7 +26,8 @@ const TeamMemberSetting = ({ selectedMember, filterUserList, onCancel, onSuccess
   const { admin_info, company_id } = useSelector((state: RootState) => state.companyInfo);
   const dispatch = useAppDispatch();
   const [_sendAddMember, , sendAddMemberRes] = useRequest(sendAddMember);
-  const [_sendUpdateMember, , sendUpdateMemberRes] = useRequest(sendUpdateMember);
+  const [_sendUpdateCompanyMember, , sendUpdateCompanyMemberRes] = useRequest(sendUpdateCompanyMember);
+  const [_sendUpdateUser, , sendUpdateUserRes] = useRequest(sendUpdateUser);
 
   const onChangeMemberName = (event: React.FormEvent<HTMLInputElement>) => {
     setMemberName(event.currentTarget.value);
@@ -48,7 +49,7 @@ const TeamMemberSetting = ({ selectedMember, filterUserList, onCancel, onSuccess
         ...selectedMember,
         role_id: isManager ? 2 : 3,
       };
-      _sendUpdateMember(params);
+      _sendUpdateCompanyMember(params);
     } else {
       if (selectedUser) {
         const params = {
@@ -68,11 +69,15 @@ const TeamMemberSetting = ({ selectedMember, filterUserList, onCancel, onSuccess
     }
   }, [sendAddMemberRes]);
   useEffect(() => {
-    if (sendUpdateMemberRes && selectedMember) {
-      console.log(sendUpdateMemberRes);
-      onSuccess({ ...selectedMember, role_id: sendUpdateMemberRes.role_id });
+    if (sendUpdateCompanyMemberRes && selectedMember && userInfo) {
+      const updateUser: UserInfoState = {
+        ...selectedMember,
+        role_id: sendUpdateCompanyMemberRes.role_id,
+      };
+      _sendUpdateUser(updateUser);
+      onSuccess({ ...selectedMember, role_id: sendUpdateCompanyMemberRes.role_id });
     }
-  }, [sendUpdateMemberRes]);
+  }, [sendUpdateCompanyMemberRes]);
 
   return (
     <div className='px-4 my-4 relative'>

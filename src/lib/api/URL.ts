@@ -16,6 +16,8 @@ export const userURL = {
 export const companyURL = {
   updateCompany: '/user/update_company',
   getCompanyMembers: '/company/get_company_members',
+  addCompanyMember: '/company/add_member',
+  updateCompanyMember: '/company/update_member',
 };
 
 export const clientURL = {
@@ -48,11 +50,11 @@ export const taskURL = {
   setDeveloperToTask: '/project/task/assign',
 };
 
-export const teamURL = {
-  addCompanyMember: '/company/add_member',
-  updateCompanyMember: '/company/update_by_member',
-  getTeamMember: '/team/get_team_members',
-};
+// export const teamURL = {
+//   addCompanyMember: '/company/add_member',
+//   updateCompanyMember: '/company/update_by_member',
+//   getTeamMember: '/team/get_team_members',
+// };
 
 export const priorityURL = {
   createPriority: '/priority/create',

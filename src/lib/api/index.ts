@@ -8,7 +8,7 @@ import { CPMDState, TaskAssignState, TaskState } from '../../modules/task';
 import { CompanyMemberState } from '../../modules/team';
 import { UserInfoState } from '../../modules/user';
 import { PriorityState } from '../../modules/weekPriority';
-import { clientURL, companyURL, deliverableURL, priorityURL, projectURL, taskURL, teamURL, userURL } from './URL';
+import { clientURL, companyURL, deliverableURL, priorityURL, projectURL, taskURL, userURL } from './URL';
 
 const host = process.env.REACT_APP_API_HOST;
 const apiClient = axios.create({
@@ -184,5 +184,6 @@ export const sendCompanyMembers = (user_id: number) =>
     member: CompanyMemberState[];
   }>(companyURL.getCompanyMembers, { user_id });
 
-export const sendAddMember = (params: CompanyMemberState) => apiClient.post<CompanyMemberState>(teamURL.addCompanyMember, params);
-export const sendUpdateMember = (params: CompanyMemberState) => apiClient.post<CompanyMemberState>(teamURL.updateCompanyMember, params);
+export const sendAddMember = (params: CompanyMemberState) => apiClient.post<CompanyMemberState>(companyURL.addCompanyMember, params);
+export const sendUpdateCompanyMember = (params: CompanyMemberState) =>
+  apiClient.post<CompanyMemberState>(companyURL.updateCompanyMember, params);
